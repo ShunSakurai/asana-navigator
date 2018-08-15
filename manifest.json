@@ -1,0 +1,30 @@
+{
+  "author": "Shun Sakurai",
+  "background": {
+    "scripts":["background.js"]
+  },
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "js": ["content_script.js"],
+      "matches": ["https://app.asana.com/0/*"],
+      "run_at": "document_idle"
+    }
+  ],
+  "description" : "Enhance navigation for Asana tasks",
+  "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
+  "icons": {
+    "128": "images/an128.jpg"
+  },
+  "incognito": "split",
+  "manifest_version": 2,
+  "name": "Asana Navigator",
+  "offline_enabled": false,
+  "options_page": "options.html",
+  "permissions": [
+    "https://app.asana.com/0/*",
+    "activeTab", "storage", "webNavigation"
+  ],
+  "short_name": "AsaNavigator",
+  "version": "0.0"
+}

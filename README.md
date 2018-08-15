@@ -7,7 +7,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 ### Prep:
 - [x] Register as a Chrome developer
 - [x] Create GitHub project
-- [ ] Set up Chrome extension's content script template
+- [x] Set up Chrome extension's content script structure
 - [ ] Write base XMLHttpRequest function
 - [ ] Create an icon
 
@@ -20,13 +20,15 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 #### Going to sibling subtasks:
 - [ ] Display drop-down lists to go to sibling subtasks
 
+- [ ] Publish on Chrome Web Store
+
 ### Later:
 
 #### Going to sibling subtasks:
 - [ ] Implement keyboard shortcuts to go to sibling subtasks
 
 #### Setting new parent tasks:
-- [ ] Display text box to set new parent
+- [ ] Display text box near the breadcrumb to set new parent
 - [ ] Set new parent from "More actions"
 - [ ] Implement keyboard shortcut to set new parent
 
@@ -37,14 +39,15 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 ### Maybe later:
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
-- [ ] Remove duplicate links in the task description 
+- [ ] Remove duplicate links in the task description
 - [ ] Implement donation page
 
 ## Usage
 
 - Install it from [Chrome Web Store]()
-- You can also `git clone` this repository to install it as a developer
+- You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
 - The features are automatically enabled when you are on an Asana task page
+- Options are accessible from [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
 ## Special thanks
 
@@ -52,7 +55,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 ## Design decisions
 
-- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in the Asana task webpages, using content script.
+- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in the Asana task webpages, using content script and DOM methods.
 - By doing so, I can use simple HTTP requests, rather than complicated API calls including authentication.
 - Also by doing so, I can implement features seamlessly using same classes/CSS used by Asana.
 - I'd like to make all tools I create to be minutely customizable to each user's preference. So I'll create an options page where users can switch features on/off.
