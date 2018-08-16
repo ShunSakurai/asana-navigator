@@ -8,7 +8,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [x] Register as a Chrome developer
 - [x] Create GitHub project
 - [x] Set up Chrome extension's content script structure
-- [ ] Write base XMLHttpRequest function
+- [x] Write base XMLHttpRequest function
 - [ ] Create an icon
 
 ### MVP:
