@@ -9,7 +9,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [x] Create GitHub project
 - [x] Set up Chrome extension's content script structure
 - [x] Write base XMLHttpRequest function
-- [ ] Create an icon
+- [x] Create the icon
 
 ### MVP:
 

@@ -14,7 +14,9 @@
   "description" : "Enhance navigation for Asana tasks",
   "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
   "icons": {
-    "128": "images/an128.jpg"
+    "128": "images/an128.png",
+    "48": "images/an48.png",
+    "16": "images/an16.png"
   },
   "incognito": "split",
   "manifest_version": 2,
