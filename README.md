@@ -14,7 +14,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 ### MVP:
 
 #### Putting projects on top:
-- [ ] Display projects on top
+- [x] Display projects on top
 - [ ] Place project section selectors on top
 
 #### Going to sibling subtasks:
@@ -28,8 +28,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [ ] Implement keyboard shortcuts to go to sibling subtasks
 
 #### Setting new parent tasks:
-- [ ] Display text box near the breadcrumb to set new parent
-- [ ] Set new parent from "More actions"
+- [ ] Set new parent from the toolbar
 - [ ] Implement keyboard shortcut to set new parent
 
 #### Others:

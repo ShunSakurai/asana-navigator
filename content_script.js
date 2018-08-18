@@ -23,11 +23,11 @@ var callAsanaApi = function (path, options, callback, request) {
 };
 
 var displayHealthStatus = function (url) {
-  console.log(url);
+  var TaskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+  if (TaskProjectsProjectList) return;
   var taskId = findTaskId(url);
   callAsanaApi(`tasks/${taskId}`, {}, function (xhttp) {
     var response = JSON.parse(xhttp.response);
-    console.log(response);
     var taskName = response.data.name;
     var TaskAncestryString = `<div class="TaskAncestry-ancestorProjects"><a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/0/${taskId}">Asana Navigator is working for: ${taskName}</a></div>`;
     var TaskAncestry = document.querySelector('.TaskAncestry');
@@ -42,6 +42,28 @@ var displayHealthStatus = function (url) {
   });
 };
 
+var displayProjectsOnTop = function () {
+  var TaskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+  if (!TaskProjectsProjectList) return;
+  var TaskAncestry = document.querySelector('.TaskAncestry');
+  if (TaskAncestry) return;
+  var taskId = findTaskId(window.location.href);
+  var TaskAncestryString = '<div class="TaskAncestry-ancestorProjects">';
+  Array.from(TaskProjectsProjectList.children).forEach(function(li) {
+    var projectUrl = li.children[0].href;
+    var projectId = findProjectId(projectUrl);
+    var projectName = li.children[0].children[0].textContent;
+    TaskAncestryString += `<a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/${projectId}/${taskId}">${projectName}</a>`;
+  });
+  TaskAncestryString += '</div>';
+  TaskAncestry = document.createElement('DIV');
+  TaskAncestry.setAttribute('class', 'TaskAncestry');
+  TaskAncestry.innerHTML = TaskAncestryString;
+  var SingleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+  var SingleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+  SingleTaskPaneBody.insertBefore(TaskAncestry, SingleTaskPaneTitleRow);
+};
+
 var findTaskId = function (url) {
   var taskIdRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
@@ -51,19 +73,25 @@ var findTaskId = function (url) {
   for (var i = 0; i <= taskIdRegexPatterns.length - 1; i++) {
     var pattern = taskIdRegexPatterns[i];
     if (pattern.exec(url)) {
-      console.log(pattern.exec(url)[1]);
       return pattern.exec(url)[1];
     }
   }
 };
 
+var findProjectId = function (url) {
+  var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
+  return projectIdRegexPattern.exec(url)[1];
+};
+
 window.addEventListener('load', function () {
   displayHealthStatus(window.location.href);
+  displayProjectsOnTop();
 });
 
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (typeof message.url === 'string' && message.url.includes('https://app.asana.com/0/')) {
       displayHealthStatus(message.url);
+      displayProjectsOnTop();
     }
 });
