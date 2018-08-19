@@ -1,11 +1,7 @@
-var callAsanaApi = function (path, options, callback, request) {
-  callback = callback || function (xhttp) {
-    console.log(xhttp.response);
-  };
-  request = request || 'GET';
+var callAsanaApi = function (request, path, options, callback) {
   var xhr = new XMLHttpRequest();
   xhr.addEventListener('load', function () {
-      callback(this);
+      callback(JSON.parse(this.response));
   });
   var requestUrl = 'https://app.asana.com/api/1.1/' + path;
   if (options) {
@@ -23,45 +19,44 @@ var callAsanaApi = function (path, options, callback, request) {
 };
 
 var displayHealthStatus = function (url) {
-  var TaskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  if (TaskProjectsProjectList) return;
+  var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+  if (taskProjectsProjectList) return;
   var taskId = findTaskId(url);
-  callAsanaApi(`tasks/${taskId}`, {}, function (xhttp) {
-    var response = JSON.parse(xhttp.response);
+  callAsanaApi('GET', `tasks/${taskId}`, {}, function (response) {
     var taskName = response.data.name;
-    var TaskAncestryString = `<div class="TaskAncestry-ancestorProjects"><a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/0/${taskId}">Asana Navigator is working for: ${taskName}</a></div>`;
-    var TaskAncestry = document.querySelector('.TaskAncestry');
-    if (!TaskAncestry) {
-      TaskAncestry = document.createElement('DIV');
-      TaskAncestry.setAttribute('class', 'TaskAncestry');
+    var taskAncestryString = `<div class="TaskAncestry-ancestorProjects"><a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/0/${taskId}">Asana Navigator is working for: ${taskName}</a></div>`;
+    var taskAncestry = document.querySelector('.TaskAncestry');
+    if (!taskAncestry) {
+      taskAncestry = document.createElement('DIV');
+      taskAncestry.setAttribute('class', 'TaskAncestry');
     }
-    TaskAncestry.innerHTML = TaskAncestryString;
-    var SingleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-    var SingleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-    SingleTaskPaneBody.insertBefore(TaskAncestry, SingleTaskPaneTitleRow);
+    taskAncestry.innerHTML = taskAncestryString;
+    var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+    var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+    singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
   });
 };
 
 var displayProjectsOnTop = function () {
-  var TaskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  if (!TaskProjectsProjectList) return;
-  var TaskAncestry = document.querySelector('.TaskAncestry');
-  if (TaskAncestry) return;
+  var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+  if (!taskProjectsProjectList) return;
+  var taskAncestry = document.querySelector('.TaskAncestry');
+  if (taskAncestry) return;
   var taskId = findTaskId(window.location.href);
-  var TaskAncestryString = '<div class="TaskAncestry-ancestorProjects">';
-  Array.from(TaskProjectsProjectList.children).forEach(function(li) {
+  var taskAncestryString = '<div class="TaskAncestry-ancestorProjects">';
+  Array.from(taskProjectsProjectList.children).forEach(function(li) {
     var projectUrl = li.children[0].href;
     var projectId = findProjectId(projectUrl);
     var projectName = li.children[0].children[0].textContent;
-    TaskAncestryString += `<a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/${projectId}/${taskId}">${projectName}</a>`;
+    taskAncestryString += `<a class="NavigationLink TaskAncestry-ancestorProject" href="https://app.asana.com/0/${projectId}/${taskId}">${projectName}</a>`;
   });
-  TaskAncestryString += '</div>';
-  TaskAncestry = document.createElement('DIV');
-  TaskAncestry.setAttribute('class', 'TaskAncestry');
-  TaskAncestry.innerHTML = TaskAncestryString;
-  var SingleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var SingleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-  SingleTaskPaneBody.insertBefore(TaskAncestry, SingleTaskPaneTitleRow);
+  taskAncestryString += '</div>';
+  taskAncestry = document.createElement('DIV');
+  taskAncestry.setAttribute('class', 'TaskAncestry');
+  taskAncestry.innerHTML = taskAncestryString;
+  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+  var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
 var findTaskId = function (url) {
@@ -70,7 +65,7 @@ var findTaskId = function (url) {
     /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+\/?f?/,
     /https:\/\/app\.asana\.com\/0\/search\/\d+\/(\d+)\/?f?/
   ];
-  for (var i = 0; i <= taskIdRegexPatterns.length - 1; i++) {
+  for (var i = 0; i < taskIdRegexPatterns.length; i++) {
     var pattern = taskIdRegexPatterns[i];
     if (pattern.exec(url)) {
       return pattern.exec(url)[1];
