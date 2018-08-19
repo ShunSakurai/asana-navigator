@@ -20,20 +20,24 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 #### Going to sibling subtasks:
 - [ ] Display drop-down lists to go to sibling subtasks
 
+#### Setting new parent tasks:
+- [ ] Create SVG icon for new parent
+- [ ] Set new parent from the toolbar
+
+### Publishing
 - [ ] Publish on Chrome Web Store
 
 ### Later:
 
 #### Going to sibling subtasks:
-- [ ] Implement keyboard shortcuts to go to sibling subtasks
+- [ ] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
 
 #### Setting new parent tasks:
-- [ ] Set new parent from the toolbar
-- [ ] Implement keyboard shortcut to set new parent
+- [ ] Implement keyboard shortcut to set new parent (Tab+R)
 
 #### Others:
-- [ ] Create SVG icon for new parent
-- [ ] Write options page to enable/disable each feature
+- [ ] Write the options page to enable/disable each feature
+- [ ] Take screenshots and capture video
 
 ### Maybe later:
 - [ ] Create subtasks in bulk
@@ -46,7 +50,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - Install it from [Chrome Web Store]()
 - You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
 - The features are automatically enabled when you are on an Asana task page
-- Options are accessible from [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
+- Options are accessible by clicking the icon from the toolbar by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
 ## Special thanks
 
