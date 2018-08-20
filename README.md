@@ -15,7 +15,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 
 #### Putting projects on top:
 - [x] Display projects on top
-- [ ] Place project section selectors on top
+- [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
 - [ ] Display drop-down lists to go to sibling subtasks
