@@ -4,7 +4,7 @@ var callAsanaApi = function (request, path, options, callback) {
       callback(JSON.parse(this.response));
   });
   var requestUrl = 'https://app.asana.com/api/1.1/' + path;
-  if (options) {
+  if (Object.keys(options).length) {
     var parameters = '';
     for (var key in options) {
       if (options.hasOwnProperty(key)) {
@@ -21,7 +21,7 @@ var callAsanaApi = function (request, path, options, callback) {
 var clickSectionSelector = function (a) {
   var taskProjectsProjectId = findProjectId(a.previousSibling.href);
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  var floatingSelectLabel = '';
+  var floatingSelectLabel;
   for (var i = 0; i < taskProjectsProjectList.children.length; i++) {
     if (findProjectId(taskProjectsProjectList.children[i].children[0].href) === taskProjectsProjectId) {
       floatingSelectLabel = taskProjectsProjectList.children[i].children[1];

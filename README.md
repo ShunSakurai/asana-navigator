@@ -36,7 +36,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [ ] Implement keyboard shortcut to set new parent (Tab+R)
 
 #### Others:
-- [ ] Write the options page to enable/disable each feature
+- [ ] Write an options page to enable/disable each feature
 - [ ] Take screenshots and capture video
 
 ### Maybe later:
@@ -47,10 +47,10 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 
 ## Usage
 
-- Install it from [Chrome Web Store]()
+- Install it from the [Chrome Web Store]()
 - You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
 - The features are automatically enabled when you are on an Asana task page
-- Options are accessible by clicking the icon from the toolbar by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
+- Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
 ## Special thanks
 
@@ -58,16 +58,15 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 ## Design decisions
 
-- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in the Asana task webpages, using content script and DOM methods.
+- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using a content script and DOM methods.
 - By doing so, I can use simple HTTP requests, rather than complicated API calls including authentication.
-- Also by doing so, I can implement features seamlessly using same classes/CSS used by Asana.
-- I'd like to make all tools I create to be minutely customizable to each user's preference. So I'll create an options page where users can switch features on/off.
-- I'm using pure JavaScript as a practice, rather than using frameworks/libraries.
+- Also, I can implement features seamlessly using the same classes/CSS used by Asana.
+- I'd like to make all tools I create be customizable to each user's preference. Therefore, I'll create an options page where users can switch features on/off.
 
 ## Feedback and contribution
 
-I'd love to hear from the users and developers.
-Please feel free to post feature requests, bug reports, and questions through [Chrome Web Store](), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests.
+I'd love to hear from users and developers.
+Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests.
 
 ## License
 
