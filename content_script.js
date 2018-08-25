@@ -56,8 +56,8 @@ var displayLinksToSiblingSubtasks = function () {
       var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
       var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
       var siblingButtons = document.createElement('SPAN');
-      var innerHTMLPrevious = (indexPrevious)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
-      var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
+      var innerHTMLPrevious = (indexPrevious)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
+      var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
       siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
       singleTaskTitleInputTaskName.appendChild(siblingButtons);
     });
@@ -123,6 +123,35 @@ var findProjectId = function (url) {
   var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
   return projectIdRegexPattern.exec(url)[1];
 };
+
+window.tabKeyIsDown = false;
+
+window.addEventListener('keydown', function (event) {
+  if (event.ctrlKey || event.altKey || event.metaKey) return;
+  if (event.keyCode === 9) {
+      window.tabKeyIsDown = true;
+    }
+});
+
+window.addEventListener('keyup', function (event) {
+  switch (event.keyCode){
+    case 9:
+      window.tabKeyIsDown = false;
+      break;
+    case 'J'.charCodeAt(0):
+      if (window.tabKeyIsDown) {
+        var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
+        if (arrowPreviousSubtask) arrowPreviousSubtask.click();
+      }
+      break;
+    case 'K'.charCodeAt(0):
+      if (window.tabKeyIsDown) {
+        var arrowNextSubtask = document.querySelector('#arrowNextSubtask');
+        if (arrowNextSubtask) arrowNextSubtask.click();
+      }
+      break;
+  }
+});
 
 window.addEventListener('load', function () {
   displayLinksToSiblingSubtasks();

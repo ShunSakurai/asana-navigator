@@ -19,19 +19,20 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 
 #### Going to sibling subtasks:
 - [x] Display arrows to go to previous/next sibling subtasks
-- [ ] Display drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
 - [ ] Create SVG icon for new parent
 - [ ] Set new parent from the toolbar
 
-### Publishing
+#### Publishing:
 - [ ] Publish on Chrome Web Store
 
 ### Later:
 
 #### Going to sibling subtasks:
-- [ ] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
+- [x] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
+- [ ] Display drop-down list to go to sibling subtasks
+- [ ] Display the new key combinations in Keyboard Shortcuts list
 
 #### Setting new parent tasks:
 - [ ] Implement keyboard shortcut to set new parent (Tab+R)
