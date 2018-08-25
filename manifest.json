@@ -6,8 +6,9 @@
   "content_scripts": [
     {
       "all_frames": true,
+      "css": ["main.css"],
       "js": ["content_script.js"],
-      "matches": ["https://app.asana.com/0/*"],
+      "matches": ["https://app.asana.com/*"],
       "run_at": "document_idle"
     }
   ],
@@ -24,7 +25,7 @@
   "offline_enabled": false,
   "options_page": "options.html",
   "permissions": [
-    "https://app.asana.com/0/*",
+    "https://app.asana.com/*",
     "activeTab", "storage", "webNavigation"
   ],
   "short_name": "AsaNavigator",

@@ -18,7 +18,8 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
-- [ ] Display drop-down lists to go to sibling subtasks
+- [x] Display arrows to go to previous/next sibling subtasks
+- [ ] Display drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
 - [ ] Create SVG icon for new parent
@@ -59,8 +60,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 ## Design decisions
 
 - Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using a content script and DOM methods.
-- By doing so, I can use simple HTTP requests, rather than complicated API calls including authentication.
-- Also, I can implement features seamlessly using the same classes/CSS used by Asana.
+- By doing so, I can implement features seamlessly using the same classes/CSS used by Asana.
 - I'd like to make all tools I create be customizable to each user's preference. Therefore, I'll create an options page where users can switch features on/off.
 
 ## Feedback and contribution

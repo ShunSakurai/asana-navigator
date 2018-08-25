@@ -1,7 +1,7 @@
 var callAsanaApi = function (request, path, options, callback) {
   var xhr = new XMLHttpRequest();
   xhr.addEventListener('load', function () {
-      callback(JSON.parse(this.response));
+    callback(JSON.parse(this.response));
   });
   var requestUrl = 'https://app.asana.com/api/1.1/' + path;
   if (Object.keys(options).length) {
@@ -34,6 +34,36 @@ var clickSectionSelector = function (a) {
   }, 100);
 };
 
+var displayLinksToSiblingSubtasks = function () {
+  var taskAncestryTaskNames = document.querySelector('.TaskAncestry-taskNames');
+  if (!taskAncestryTaskNames) return;
+  var taskId = findTaskId(window.location.href);
+  var containerId = findProjectId(window.location.href) || '0';
+
+  callAsanaApi('GET', `tasks/${taskId}`, {}, function (response) {
+    var parentId = response.data.parent.id;
+
+    callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, function (response) {
+      var subtaskList = response.data;
+      var indexCurrent;
+      for (var i = 0; i < subtaskList.length; i++) {
+        if (subtaskList[i].gid === taskId) {
+          indexCurrent = i;
+          break;
+        }
+      }
+      var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
+      var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
+      var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
+      var siblingButtons = document.createElement('SPAN');
+      var innerHTMLPrevious = (indexPrevious)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
+      var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
+      siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
+      singleTaskTitleInputTaskName.appendChild(siblingButtons);
+    });
+  });
+};
+
 var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   if (!taskProjectsProjectList) return;
@@ -60,7 +90,7 @@ var displayProjectsOnTop = function () {
 
       if (response.data.length) {
         var taskAncestryAncestorProjectSectionSelector = document.createElement('A');
-        taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'FloatingSelect TaskAncestry-ancestorProject');
+        taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
         taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
         taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProjectSectionSelector);
         taskAncestryAncestorProjectSectionSelector.addEventListener('click', function () {
@@ -95,12 +125,14 @@ var findProjectId = function (url) {
 };
 
 window.addEventListener('load', function () {
+  displayLinksToSiblingSubtasks();
   displayProjectsOnTop();
 });
 
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (typeof message.url === 'string' && message.url.includes('https://app.asana.com/0/')) {
+      displayLinksToSiblingSubtasks();
       displayProjectsOnTop();
     }
 });
