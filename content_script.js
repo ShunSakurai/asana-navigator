@@ -35,40 +35,37 @@ var clickSectionSelector = function (a) {
 };
 
 var displayLinksToSiblingSubtasks = function () {
-  var taskAncestryTaskNames = document.querySelector('.TaskAncestry-taskNames');
-  if (!taskAncestryTaskNames) return;
+  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  if (!taskAncestryTaskLinks.length) return;
+  var parentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   var taskId = findTaskId(window.location.href);
   var containerId = findProjectId(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${taskId}`, {}, function (response) {
-    var parentId = response.data.parent.id;
-
-    callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, function (response) {
-      var subtaskList = response.data;
-      var indexCurrent;
-      for (var i = 0; i < subtaskList.length; i++) {
-        if (subtaskList[i].gid === taskId) {
-          indexCurrent = i;
-          break;
-        }
+  callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, function (response) {
+    var subtaskList = response.data;
+    var indexCurrent;
+    for (var i = 0; i < subtaskList.length; i++) {
+      if (subtaskList[i].gid === taskId) {
+        indexCurrent = i;
+        break;
       }
-      var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
-      var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
-      var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
-      var siblingButtons = document.createElement('SPAN');
-      var innerHTMLPrevious = (indexPrevious)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
-      var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
-      siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
-      singleTaskTitleInputTaskName.appendChild(siblingButtons);
-    });
+    }
+    var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
+    var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
+    var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
+    var siblingButtons = document.createElement('SPAN');
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
+    siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
+    singleTaskTitleInputTaskName.appendChild(siblingButtons);
   });
 };
 
 var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   if (!taskProjectsProjectList) return;
-  var taskAncestryTaskNames = document.querySelector('.TaskAncestry-taskNames');
-  if (taskAncestryTaskNames) return;
+  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  if (taskAncestryTaskLinks.length) return;
   taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
   var taskAncestryAncestorProjects = document.createElement('DIV');
@@ -160,8 +157,10 @@ window.addEventListener('load', function () {
 
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
-    if (typeof message.url === 'string' && message.url.includes('https://app.asana.com/0/')) {
-      displayLinksToSiblingSubtasks();
+    if (message.name && message.name === 'asanaNavigatorOnUpdated') {
+      setTimeout(function() {
+        displayLinksToSiblingSubtasks();
+      }, 500);
       displayProjectsOnTop();
     }
 });
