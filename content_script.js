@@ -193,9 +193,19 @@ var findProjectId = function (url) {
   if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
-var runIfEnabled = function (key, func) {
-  chrome.storage.sync.get({key: true}, function (items) {
-    if (items[key]) func();
+var displayLinksToSiblingSubtasksIfEnabled = function () {
+  chrome.storage.sync.get({'anOptionsSubtasks': true}, function (items) {
+    if (items.anOptionsSubtasks) {
+      displayLinksToSiblingSubtasks();
+  } else {
+    console.log('anOptionsSubtasks', false);
+  }
+  });
+};
+
+var displayProjectsOnTopIfEnabled = function () {
+  chrome.storage.sync.get({'anOptionsProjects': true}, function (items) {
+    if (items.anOptionsProjects) displayProjectsOnTop();
   });
 };
 
@@ -283,8 +293,8 @@ window.addEventListener('keyup', function (event) {
 });
 
 window.addEventListener('load', function () {
-  runIfEnabled('anOptionsSubtasks', displayLinksToSiblingSubtasks);
-  runIfEnabled('anOptionsProjects', displayProjectsOnTop);
+  displayLinksToSiblingSubtasksIfEnabled();
+  displayProjectsOnTopIfEnabled();
   addSetParentToExtraActions();
 });
 
@@ -292,8 +302,8 @@ chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       setTimeout(function() {
-        runIfEnabled('anOptionsSubtasks', displayLinksToSiblingSubtasks);
+        displayLinksToSiblingSubtasksIfEnabled();
       }, 500);
-      runIfEnabled('anOptionsProjects', displayProjectsOnTop);
+      displayProjectsOnTopIfEnabled();
     }
 });
