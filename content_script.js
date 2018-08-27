@@ -1,4 +1,24 @@
-var callAsanaApi = function (request, path, options, callback) {
+var addSetParentToExtraActions = function () {
+  if (document.querySelector('.SingleTaskPaneExtraActionsButton')) {
+    document.querySelector('.SingleTaskPaneExtraActionsButton').addEventListener('click', function () {
+      var setParentButton = document.createElement('A');
+      setParentButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-setParent SingleTaskPaneExtraActionsButton-menuItem');
+      setParentButton.addEventListener('click', function () {
+        displaySetParentDrawer();
+        var layerPositionerLayer = document.querySelector('.LayerPositioner-layer');
+        if (layerPositionerLayer) layerPositionerLayer.remove();
+      });
+      setParentButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Convert to a Subtask...</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>';
+
+      setTimeout(function() {
+        var convertToProjectButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject');
+        convertToProjectButton.parentNode.insertBefore(setParentButton, convertToProjectButton);
+      }, 100);
+    });
+  }
+};
+
+var callAsanaApi = function (request, path, options, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.addEventListener('load', function () {
     callback(JSON.parse(this.response));
@@ -15,7 +35,18 @@ var callAsanaApi = function (request, path, options, callback) {
     requestUrl += '?' + parameters;
   }
   xhr.open(request, encodeURI(requestUrl));
-  xhr.send();
+  var manifest = chrome.runtime.getManifest();
+  var client_name = ["chrome-extension", manifest.version, manifest.name].join(":"); // Be polite to Asana API
+  var requestData;
+  if (request === 'POST' || request === 'PUT') {
+    requestData = JSON.stringify({'data': data});
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-Allow-Asana-Client', '1'); // Required to avoid 401 unauthorized error
+    options.client_name = client_name;
+  } else {
+    options.opt_client_name = client_name;
+  }
+  xhr.send(requestData);
 };
 
 var clickSectionSelector = function (a) {
@@ -34,14 +65,23 @@ var clickSectionSelector = function (a) {
   }, 100);
 };
 
+var closeSetParentDrawer = function () {
+  var setParentDrawer = document.querySelector('.SetParentDrawer');
+  if (setParentDrawer) setParentDrawer.remove();
+};
+
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (!taskAncestryTaskLinks.length) return;
+  if (!taskAncestryTaskLinks.length) {
+    var siblingButtons = document.querySelector('#SiblingButtons');
+    if (siblingButtons) siblingButtons.remove();
+    return;
+  }
   var parentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   var taskId = findTaskId(window.location.href);
   var containerId = findProjectId(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, function (response) {
+  callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, {}, function (response) {
     var subtaskList = response.data;
     var indexCurrent;
     for (var i = 0; i < subtaskList.length; i++) {
@@ -54,6 +94,7 @@ var displayLinksToSiblingSubtasks = function () {
     var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
     var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
     var siblingButtons = document.createElement('SPAN');
+    siblingButtons.setAttribute('id', 'SiblingButtons');
     var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
     var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
@@ -61,15 +102,40 @@ var displayLinksToSiblingSubtasks = function () {
   });
 };
 
+var displaySetParentDrawer = function () {
+  var setParentDrawer = document.createElement('DIV');
+  setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
+  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task" type="text" role="combobox" value=""><noscript></noscript></div>`;
+
+  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+  var singleTaskPaneToolbar = document.querySelector('.SingleTaskPaneToolbar');
+  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneToolbar.nextSibling);
+
+  document.querySelector('#setParentDrawerCloseButton').addEventListener('click', function () {
+    closeSetParentDrawer();
+  });
+  document.querySelector('#SetParentSwitch').addEventListener('click', function () {
+    toggleSetParentSwitch(this);
+  });
+  document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('input', function () {
+    selectNewParentTask(this);
+  });
+  document.querySelector('.SetParentDrawer-typeaheadInput').focus();
+};
+
 var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  if (!taskProjectsProjectList) return;
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (taskAncestryTaskLinks.length) return;
+  if (!taskProjectsProjectList || taskAncestryTaskLinks.length) {
+    var taskAncestryProjectNameOnTop = document.querySelector('#TaskAncestryProjectNameOnTop');
+    if (taskAncestryProjectNameOnTop) taskAncestryProjectNameOnTop.remove();
+    return;
+  }
   taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
   var taskAncestryAncestorProjects = document.createElement('DIV');
   taskAncestryAncestorProjects.setAttribute('class', 'TaskAncestry-ancestorProjects');
+  taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNameOnTop');
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
   var taskId = findTaskId(window.location.href);
@@ -78,7 +144,7 @@ var displayProjectsOnTop = function () {
     var projectId = findProjectId(projectUrl);
     var projectName = li.children[0].children[0].textContent;
 
-    callAsanaApi('GET', `projects/${projectId}/sections`, {}, function (response) {
+    callAsanaApi('GET', `projects/${projectId}/sections`, {}, {}, function (response) {
       var taskAncestryAncestorProject = document.createElement('A');
       taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
       taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectId}/${taskId}`);
@@ -98,8 +164,8 @@ var displayProjectsOnTop = function () {
   });
 
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
+  var singleTaskPaneToolbar = document.querySelector('.SingleTaskPaneToolbar');
+  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneToolbar.nextSibling);
 };
 
 var findTaskId = function (url) {
@@ -121,13 +187,58 @@ var findProjectId = function (url) {
   return projectIdRegexPattern.exec(url)[1];
 };
 
+var selectNewParentTask = function (input) {
+  var taskId = findTaskId(window.location.href);
+  callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
+    var workspaceId = response.data.workspace.id;
+    input.addEventListener('input', function () {
+      var dropdownContainer = document.createElement('DIV');
+      dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
+      input.parentNode.appendChild(dropdownContainer);
+      var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
+      callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value}, {}, function (response) {
+        while (typeaheadSearchScrollableContents.lastChild) {
+          typeaheadSearchScrollableContents.lastChild.remove();
+        }
+        for (i = 0; i < response.data.length; i++) {
+          if (response.data[i].id === Number(taskId)) continue;
+          var dropdownItem = document.createElement('DIV');
+          dropdownItem.innerHTML = `<div role="option" data-id="${response.data[i].id}"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${response.data[i].name}</span></div></div></div></div>`;
+          typeaheadSearchScrollableContents.appendChild(dropdownItem);
+          dropdownItem.addEventListener('mouseover', function () {
+            this.firstChild.firstChild.classList.add('TypeaheadItemStructure--highlighted');
+          });
+          dropdownItem.addEventListener('mouseout', function () {
+            this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
+          });
+          dropdownItem.addEventListener('click', function () {
+            var parentId = this.children[0].dataset.id;
+            var setParentOptions = document.querySelector('#SetParentSwitch').classList.contains('checked')? {'insert_before': null}: {'insert_after': null};
+            setParentOptions.parent = parentId;
+            callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
+              closeSetParentDrawer();
+              window.dispatchEvent(new Event('load'));
+            });
+          });
+        }
+      });
+    });
+  });
+};
+
+var toggleSetParentSwitch = function (input) {
+  if (input.classList.contains('checked')) {
+    input.classList.remove('checked');
+  } else {
+    input.classList.add('checked');
+  }
+};
+
 window.tabKeyIsDown = false;
 
 window.addEventListener('keydown', function (event) {
   if (event.ctrlKey || event.altKey || event.metaKey) return;
-  if (event.keyCode === 9) {
-      window.tabKeyIsDown = true;
-    }
+  if (event.keyCode === 9) window.tabKeyIsDown = true;
 });
 
 window.addEventListener('keyup', function (event) {
@@ -147,12 +258,22 @@ window.addEventListener('keyup', function (event) {
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
+    case 'R'.charCodeAt(0):
+      if (window.tabKeyIsDown) {
+        if (document.querySelector('.SetParentDrawer')) {
+          closeSetParentDrawer();
+        } else {
+          displaySetParentDrawer();
+        }
+      }
+      break;
   }
 });
 
 window.addEventListener('load', function () {
   displayLinksToSiblingSubtasks();
   displayProjectsOnTop();
+  addSetParentToExtraActions();
 });
 
 chrome.runtime.onMessage.addListener(

@@ -1,3 +1,14 @@
 .NoBorderBottom {
   border-bottom: none !important;
 }
+
+.SetParentDrawer-typeaheadInput {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* #7ac8ee comes from the average of two background colors #14aaf5 and #e0e6e8, used in Asana's My Profile Settings */
+.SetParentSwitchView .switch.checked {
+    background-color: #7ac8ee !important;
+    border-color: #7ac8ee !important;
+}
