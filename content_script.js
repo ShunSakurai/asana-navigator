@@ -194,7 +194,7 @@ var findProjectId = function (url) {
 };
 
 var runIfEnabled = function (key, func) {
-  chrome.storage.sync.get([key], function (items) {
+  chrome.storage.sync.get({key: true}, function (items) {
     if (items[key]) func();
   });
 };
