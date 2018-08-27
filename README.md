@@ -70,6 +70,11 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 - By doing so, I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
 - I'd like to make all tools I create be customizable to each user's preference. Therefore, I'll create an options page where users can switch features on/off.
 
+## Privacy policy and terms of use
+
+We don't store your data. We physically can't. (Borrowed part from [here](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy))
+I try my best to maintain the quality and safety of this extension, but please use it at your own risk. The author doesn't take any responsibility for any damage caused by use of this extension.
+
 ## Feedback and contribution
 
 I'd love to hear from users and developers.
