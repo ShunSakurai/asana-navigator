@@ -1,6 +1,6 @@
 # Asana Navigator
 
-Google Chrome extension to enhance navigation for [Asana](https://asana.com/) tasks
+[Google Chrome extension](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) to enhance navigation for [Asana](https://asana.com/) tasks
 
 ## Feature list as well as to-do list
 
@@ -24,7 +24,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 - [x] Set new parent from the toolbar
 
 #### Publishing:
-- [ ] Publish on Chrome Web Store
+- [x] Publish on Chrome Web Store
 
 ### Later:
 
@@ -55,7 +55,7 @@ Google Chrome extension to enhance navigation for [Asana](https://asana.com/) ta
 
 ## Usage
 
-- Install it from the [Chrome Web Store]()
+- Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne)
 - You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
 - The features are automatically enabled when you are on an Asana task page
 - Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
@@ -78,7 +78,7 @@ I try my best to maintain the quality and safety of this extension, but please u
 ## Feedback and contribution
 
 I'd love to hear from users and developers.
-Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests.
+Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests.
 
 ## License
 
