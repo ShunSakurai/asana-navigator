@@ -21,7 +21,7 @@
 - [x] Display arrows to go to previous/next sibling subtasks
 
 #### Setting new parent tasks:
-- [x] Set new parent from the toolbar
+- [x] Set new parent task from the toolbar
 
 #### Publishing:
 - [x] Publish on Chrome Web Store
@@ -30,7 +30,7 @@
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
-- [x] Implement keyboard shortcut to set new parent (Tab+R)
+- [x] Implement keyboard shortcut to set new parent task (Tab+R)
 - [ ] Display the new key combinations in Keyboard Shortcuts list
 
 #### Going to sibling subtasks:
@@ -44,8 +44,8 @@
 - [ ] Use tool tips with black background
 
 #### Others:
-- [ ] Write an options page to enable/disable each feature
-- [ ] Take screenshots and capture video
+- [x] Write an options page to enable/disable each feature
+- [x] Take screenshots for Chrome Web Store
 
 ### Maybe later:
 - [ ] Create subtasks in bulk
@@ -68,7 +68,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 - Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using a content script and DOM methods.
 - By doing so, I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
-- I'd like to make all tools I create be customizable to each user's preference. Therefore, I'll create an options page where users can switch features on/off.
+- I'd like to make all tools I create be customizable to each user's preference. Therefore, I created an options page where users can switch features on/off.
 
 ## Privacy policy and terms of use
 

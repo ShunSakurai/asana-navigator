@@ -193,6 +193,12 @@ var findProjectId = function (url) {
   if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
+var runIfEnabled = function (key, func) {
+  chrome.storage.sync.get([key], function (items) {
+    if (items[key]) func();
+  });
+};
+
 var selectNewParentTask = function (input) {
   var taskId = findTaskId(window.location.href);
   callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
@@ -277,8 +283,8 @@ window.addEventListener('keyup', function (event) {
 });
 
 window.addEventListener('load', function () {
-  displayLinksToSiblingSubtasks();
-  displayProjectsOnTop();
+  runIfEnabled('anOptionsSubtasks', displayLinksToSiblingSubtasks);
+  runIfEnabled('anOptionsProjects', displayProjectsOnTop);
   addSetParentToExtraActions();
 });
 
@@ -286,8 +292,8 @@ chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       setTimeout(function() {
-        displayLinksToSiblingSubtasks();
+        runIfEnabled('anOptionsSubtasks', displayLinksToSiblingSubtasks);
       }, 500);
-      displayProjectsOnTop();
+      runIfEnabled('anOptionsProjects', displayProjectsOnTop);
     }
 });
