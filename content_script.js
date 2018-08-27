@@ -70,11 +70,15 @@ var closeSetParentDrawer = function () {
   if (setParentDrawer) setParentDrawer.remove();
 };
 
+var deleteSiblingButtons = function () {
+  var siblingButtonsToDelete = document.querySelector('#SiblingButtons');
+  if (siblingButtonsToDelete) siblingButtonsToDelete.remove();
+};
+
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) {
-    var siblingButtons = document.querySelector('#SiblingButtons');
-    if (siblingButtons) siblingButtons.remove();
+    deleteSiblingButtons();
     return;
   }
   var parentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
@@ -92,12 +96,13 @@ var displayLinksToSiblingSubtasks = function () {
     }
     var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
     var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
-    var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
+    deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
     var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
     var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
+    var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskTitleInputTaskName.appendChild(siblingButtons);
   });
 };
@@ -184,7 +189,8 @@ var findTaskId = function (url) {
 
 var findProjectId = function (url) {
   var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
-  return projectIdRegexPattern.exec(url)[1];
+  var findProjectIdMatch = projectIdRegexPattern.exec(url);
+  if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
 var selectNewParentTask = function (input) {
