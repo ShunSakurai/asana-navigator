@@ -11,8 +11,8 @@ var addSetParentToExtraActions = function () {
       setParentButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Convert to a Subtask...</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>';
 
       setTimeout(function() {
-        var convertToProjectButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject');
-        convertToProjectButton.parentNode.insertBefore(setParentButton, convertToProjectButton);
+        var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
+        nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
     });
   }
