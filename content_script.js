@@ -102,8 +102,14 @@ var displayLinksToSiblingSubtasks = function () {
     var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
     var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
-    var singleTaskTitleInputTaskName = document.querySelector('.SingleTaskPane-titleRow');
-    singleTaskTitleInputTaskName.appendChild(siblingButtons);
+    var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+    singleTaskPaneTitleRow.appendChild(siblingButtons);
+  });
+};
+
+var displayLinksToSiblingSubtasksIfEnabled = function () {
+  chrome.storage.sync.get({'anOptionsSubtasks': true}, function (items) {
+    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
   });
 };
 
@@ -113,8 +119,8 @@ var displaySetParentDrawer = function () {
   setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var singleTaskPaneToolbar = document.querySelector('.SingleTaskPaneToolbar');
-  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneToolbar.nextSibling);
+  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
+  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
   document.querySelector('#setParentDrawerCloseButton').addEventListener('click', function () {
     closeSetParentDrawer();
@@ -136,7 +142,7 @@ var displayProjectsOnTop = function () {
     if (taskAncestryProjectNameOnTop) taskAncestryProjectNameOnTop.remove();
     return;
   }
-  taskAncestry = document.createElement('DIV');
+  var taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
   var taskAncestryAncestorProjects = document.createElement('DIV');
   taskAncestryAncestorProjects.setAttribute('class', 'TaskAncestry-ancestorProjects');
@@ -167,10 +173,15 @@ var displayProjectsOnTop = function () {
       }
     });
   });
-
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var singleTaskPaneToolbar = document.querySelector('.SingleTaskPaneToolbar');
-  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneToolbar.nextSibling);
+  var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
+};
+
+var displayProjectsOnTopIfEnabled = function () {
+  chrome.storage.sync.get({'anOptionsProjects': true}, function (items) {
+    if (items.anOptionsProjects) displayProjectsOnTop();
+  });
 };
 
 var findTaskId = function (url) {
@@ -193,22 +204,6 @@ var findProjectId = function (url) {
   if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
-var displayLinksToSiblingSubtasksIfEnabled = function () {
-  chrome.storage.sync.get({'anOptionsSubtasks': true}, function (items) {
-    if (items.anOptionsSubtasks) {
-      displayLinksToSiblingSubtasks();
-  } else {
-    console.log('anOptionsSubtasks', false);
-  }
-  });
-};
-
-var displayProjectsOnTopIfEnabled = function () {
-  chrome.storage.sync.get({'anOptionsProjects': true}, function (items) {
-    if (items.anOptionsProjects) displayProjectsOnTop();
-  });
-};
-
 var selectNewParentTask = function (input) {
   var taskId = findTaskId(window.location.href);
   callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
@@ -218,6 +213,7 @@ var selectNewParentTask = function (input) {
       dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
       input.parentNode.appendChild(dropdownContainer);
       var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
+
       callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value}, {}, function (response) {
         while (typeaheadSearchScrollableContents.lastChild) {
           typeaheadSearchScrollableContents.lastChild.remove();

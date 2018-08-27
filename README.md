@@ -37,7 +37,7 @@
 - [ ] Display drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
-- [ ] Search for task ID when all number is input
+- [ ] Search for task ID when the input is an integer
 - [ ] Display recent tasks for blank input
 
 #### More seamless UI:
@@ -57,7 +57,7 @@
 
 - Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne)
 - You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
-- The features are automatically enabled when you are on an Asana task page
+- The features are automatically enabled when you are on an Asana task page. Please reload the Asana task page if this doesn't work just after installation or update.
 - Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
 ## Special thanks
@@ -73,6 +73,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 ## Privacy policy and terms of use
 
 We don't store your data. We physically can't. (Borrowed part from [here](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy))
+
 I try my best to maintain the quality and safety of this extension, but please use it at your own risk. The author doesn't take any responsibility for any damage caused by use of this extension.
 
 ## Feedback and contribution
