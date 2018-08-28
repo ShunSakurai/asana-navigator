@@ -107,11 +107,6 @@ var displayLinksToSiblingSubtasks = function () {
   });
 };
 
-var displayLinksToSiblingSubtasksIfEnabled = function () {
-  chrome.storage.sync.get({'anOptionsSubtasks': true}, function (items) {
-    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-  });
-};
 
 var displaySetParentDrawer = function () {
   var setParentDrawer = document.createElement('DIV');
@@ -178,12 +173,6 @@ var displayProjectsOnTop = function () {
   singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
-var displayProjectsOnTopIfEnabled = function () {
-  chrome.storage.sync.get({'anOptionsProjects': true}, function (items) {
-    if (items.anOptionsProjects) displayProjectsOnTop();
-  });
-};
-
 var findTaskId = function (url) {
   var taskIdRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
@@ -202,6 +191,16 @@ var findProjectId = function (url) {
   var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
   var findProjectIdMatch = projectIdRegexPattern.exec(url);
   if (findProjectIdMatch) return findProjectIdMatch[1];
+};
+
+var runAllFunctionsIfEnabled = function () {
+  chrome.storage.sync.get({
+    'anOptionsSubtasks': true, 'anOptionsProjects': true
+  }, function (items) {
+    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+    if (items.anOptionsProjects) displayProjectsOnTop();
+  });
+  addSetParentToExtraActions();
 };
 
 var selectNewParentTask = function (input) {
@@ -289,18 +288,14 @@ window.addEventListener('keyup', function (event) {
 });
 
 window.addEventListener('load', function () {
-  displayLinksToSiblingSubtasksIfEnabled();
-  displayProjectsOnTopIfEnabled();
-  addSetParentToExtraActions();
+  runAllFunctionsIfEnabled();
 });
 
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       setTimeout(function() {
-        displayLinksToSiblingSubtasksIfEnabled();
-        addSetParentToExtraActions();
+        runAllFunctionsIfEnabled();
       }, 500);
-      displayProjectsOnTopIfEnabled();
     }
 });
