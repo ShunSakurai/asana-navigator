@@ -299,6 +299,7 @@ chrome.runtime.onMessage.addListener(
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       setTimeout(function() {
         displayLinksToSiblingSubtasksIfEnabled();
+        addSetParentToExtraActions();
       }, 500);
       displayProjectsOnTopIfEnabled();
     }
