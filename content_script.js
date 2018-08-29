@@ -87,25 +87,30 @@ var displayLinksToSiblingSubtasks = function () {
 
   callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, {}, function (response) {
     var subtaskList = response.data;
+    var subtaskListFiltered = subtaskList.filter(function (subtask) {
+      return !subtask.name.endsWith(':') || subtask.gid === taskId;
+    });
     var indexCurrent;
-    for (var i = 0; i < subtaskList.length; i++) {
-      if (subtaskList[i].gid === taskId) {
+    for (var i = 0; i < subtaskListFiltered.length; i++) {
+      if (subtaskListFiltered[i].gid === taskId) {
         indexCurrent = i;
         break;
       }
     }
     var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
-    var indexNext = (indexCurrent < subtaskList.length - 1)? indexCurrent + 1: null;
+    var indexNext = (indexCurrent < subtaskListFiltered.length - 1)? indexCurrent + 1: null;
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskList[indexPrevious].name}">∧</a>`: '';
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskList[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskList[indexNext].name}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
   });
 };
+
+
 
 
 var displaySetParentDrawer = function () {
@@ -294,7 +299,7 @@ window.addEventListener('load', function () {
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
-      setTimeout(function() {
+      setTimeout(function() { // We can only receive "loading" status, not "complete"
         runAllFunctionsIfEnabled();
       }, 500);
     }

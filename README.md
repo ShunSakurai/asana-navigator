@@ -38,10 +38,12 @@
 
 #### Setting new parent tasks:
 - [ ] Search for task ID when the input is an integer
-- [ ] Display recent tasks for blank input
+- [ ] Display recent tasks and tasks with similar names for blank input
+- [ ] Display information such as project and completed/incomplete
 
 #### More seamless UI:
 - [ ] Use tool tips with black background
+- [ ] Display undo toast on bottom left
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
@@ -50,6 +52,7 @@
 ### Maybe later:
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
+- [ ] Add template subtasks in bulk
 - [ ] Remove duplicate links in the task description
 - [ ] Implement donation page
 
@@ -57,7 +60,7 @@
 
 - Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne)
 - You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
-- The features are automatically enabled when you are on an Asana task page. Please reload the Asana task page if this doesn't work just after installation or update.
+- The features are automatically enabled when you are on an Asana task page. Please reload the Asana task page if this extension doesn't work well.
 - Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
 ## Special thanks
