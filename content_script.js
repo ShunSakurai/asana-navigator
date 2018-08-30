@@ -110,9 +110,6 @@ var displayLinksToSiblingSubtasks = function () {
   });
 };
 
-
-
-
 var displaySetParentDrawer = function () {
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
@@ -200,12 +197,14 @@ var findProjectId = function (url) {
 
 var runAllFunctionsIfEnabled = function () {
   chrome.storage.sync.get({
-    'anOptionsSubtasks': true, 'anOptionsProjects': true
+    'anOptionsSubtasks': true,
+    'anOptionsProjects': true,
+    'anOptionsParent': true
   }, function (items) {
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsProjects) displayProjectsOnTop();
+    if (items.anOptionsParent) addSetParentToExtraActions();
   });
-  addSetParentToExtraActions();
 };
 
 var selectNewParentTask = function (input) {
@@ -285,7 +284,9 @@ window.addEventListener('keyup', function (event) {
         if (document.querySelector('.SetParentDrawer')) {
           closeSetParentDrawer();
         } else {
-          displaySetParentDrawer();
+          chrome.storage.sync.get({'anOptionsParent': true}, function (items) {
+            if (items.anOptionsParent) displaySetParentDrawer();
+          });
         }
       }
       break;
