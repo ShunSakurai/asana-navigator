@@ -196,7 +196,7 @@ var findProjectId = function (url) {
 };
 
 var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value}, {}, function (response) {
+  callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastChild) {
       typeaheadSearchScrollableContents.lastChild.remove();
@@ -205,7 +205,7 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
     for (i = 0; i < response.data.length; i++) {
       if (response.data[i].id === Number(taskId)) continue;
       var dropdownItem = document.createElement('DIV');
-      dropdownItem.innerHTML = `<div role="option" data-id="${response.data[i].id}"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${response.data[i].name}</span></div></div></div></div>`;
+      dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
       dropdownItem.addEventListener('mouseover', function () {
         this.firstChild.firstChild.classList.add('TypeaheadItemStructure--highlighted');
@@ -228,6 +228,20 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
       });
     }
   });
+};
+
+var returnTypeAheadInnerHTML = function (task) {
+  var parentName = (task.parent)? task.parent.name: '';
+  var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
+  return `<div role="option" data-id="${task.id}" title="` +
+  task.name + `${(parentName)? '&#13;‹ ' + parentName: ''}` + `${(projectNameList)? '&#13;(' + projectNameList + ')': ''}` +
+  `"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">` +
+  `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
+  `</div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span><span>${task.name}</span></span>` +
+  `${(parentName)? '<span class="TaskTypeaheadItem-parentTask">' + parentName + '</span>': ''}`+
+  '</div>' +
+  `${(projectNameList)? '<div class="TypeaheadItemStructure-subtitle">' + projectNameList + '</div>': ''}`+
+  '</div></div></div>';
 };
 
 var runAllFunctionsIfEnabled = function () {

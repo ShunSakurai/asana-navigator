@@ -38,7 +38,7 @@
 
 #### Setting new parent tasks:
 - [x] Search for task ID when the input is an integer
-- [ ] Display information such as project and completed/incomplete
+- [x] Display information such as projects and completed/incomplete
 
 #### More seamless UI:
 - [ ] Use tool tips with black background
