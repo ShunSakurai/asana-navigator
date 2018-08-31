@@ -41,7 +41,7 @@ var callAsanaApi = function (request, path, options, data, callback) {
   if (request === 'POST' || request === 'PUT') {
     requestData = JSON.stringify({'data': data});
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-Allow-Asana-Client', '1'); // Required to avoid 401 unauthorized error
+    xhr.setRequestHeader('X-Allow-Asana-Client', '1'); // Required to authenticate
     options.client_name = client_name;
   } else {
     options.opt_client_name = client_name;
@@ -113,7 +113,7 @@ var displayLinksToSiblingSubtasks = function () {
 var displaySetParentDrawer = function () {
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
-  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task" type="text" role="combobox" value=""><noscript></noscript></div>`;
+  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task by its name or ID" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
   var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
@@ -125,7 +125,7 @@ var displaySetParentDrawer = function () {
   document.querySelector('#SetParentSwitch').addEventListener('click', function () {
     toggleSetParentSwitch(this);
   });
-  document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('input', function () {
+  document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('focus', function () {
     selectNewParentTask(this);
   });
   document.querySelector('.SetParentDrawer-typeaheadInput').focus();
@@ -195,6 +195,41 @@ var findProjectId = function (url) {
   if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
+var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
+  callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value}, {}, function (response) {
+    var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
+    while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastChild) {
+      typeaheadSearchScrollableContents.lastChild.remove();
+    }
+    if (potentialTask) response.data.unshift(potentialTask);
+    for (i = 0; i < response.data.length; i++) {
+      if (response.data[i].id === Number(taskId)) continue;
+      var dropdownItem = document.createElement('DIV');
+      dropdownItem.innerHTML = `<div role="option" data-id="${response.data[i].id}"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${response.data[i].name}</span></div></div></div></div>`;
+      typeaheadSearchScrollableContents.appendChild(dropdownItem);
+      dropdownItem.addEventListener('mouseover', function () {
+        this.firstChild.firstChild.classList.add('TypeaheadItemStructure--highlighted');
+      });
+      dropdownItem.addEventListener('mouseout', function () {
+        this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
+      });
+      dropdownItem.addEventListener('click', function () {
+        var parentId = this.children[0].dataset.id;
+        var setParentOptions = {'parent': parentId};
+        if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
+          setParentOptions.insert_before = null;
+        } else {
+          setParentOptions.insert_after = null;
+        }
+        callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
+          closeSetParentDrawer();
+          window.dispatchEvent(new Event('load'));
+        });
+      });
+    }
+  });
+};
+
 var runAllFunctionsIfEnabled = function () {
   chrome.storage.sync.get({
     'anOptionsSubtasks': true,
@@ -212,37 +247,23 @@ var selectNewParentTask = function (input) {
   callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
     var workspaceId = response.data.workspace.id;
     input.addEventListener('input', function () {
-      var dropdownContainer = document.createElement('DIV');
-      dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
-      input.parentNode.appendChild(dropdownContainer);
-      var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
-
-      callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value}, {}, function (response) {
-        while (typeaheadSearchScrollableContents.lastChild) {
-          typeaheadSearchScrollableContents.lastChild.remove();
-        }
-        for (i = 0; i < response.data.length; i++) {
-          if (response.data[i].id === Number(taskId)) continue;
-          var dropdownItem = document.createElement('DIV');
-          dropdownItem.innerHTML = `<div role="option" data-id="${response.data[i].id}"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${response.data[i].name}</span></div></div></div></div>`;
-          typeaheadSearchScrollableContents.appendChild(dropdownItem);
-          dropdownItem.addEventListener('mouseover', function () {
-            this.firstChild.firstChild.classList.add('TypeaheadItemStructure--highlighted');
-          });
-          dropdownItem.addEventListener('mouseout', function () {
-            this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
-          });
-          dropdownItem.addEventListener('click', function () {
-            var parentId = this.children[0].dataset.id;
-            var setParentOptions = document.querySelector('#SetParentSwitch').classList.contains('checked')? {'insert_before': null}: {'insert_after': null};
-            setParentOptions.parent = parentId;
-            callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
-              closeSetParentDrawer();
-              window.dispatchEvent(new Event('load'));
-            });
-          });
-        }
-      });
+      if (!document.querySelector('#DropdownContainer')) {
+        var dropdownContainer = document.createElement('DIV');
+        dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
+        dropdownContainer.setAttribute('id', 'DropdownContainer');
+        input.parentNode.appendChild(dropdownContainer);
+      }
+      var potentialTask;
+      var potentialTaskIdMatch = /^\d{15}$/.exec(input.value.trim());
+      var potentialTaskId = (potentialTaskIdMatch)? potentialTaskIdMatch[0]: findTaskId(input.value);
+      if (potentialTaskId) {
+        callAsanaApi('GET', `tasks/${potentialTaskId}`, {}, {}, function (response) {
+          potentialTask = response.data;
+          populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+        });
+      } else {
+        populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+      }
     });
   });
 };

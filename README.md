@@ -37,8 +37,7 @@
 - [ ] Display drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
-- [ ] Search for task ID when the input is an integer
-- [ ] Display recent tasks and tasks with similar names for blank input
+- [x] Search for task ID when the input is an integer
 - [ ] Display information such as project and completed/incomplete
 
 #### More seamless UI:
