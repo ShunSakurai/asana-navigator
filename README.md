@@ -46,13 +46,12 @@
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
-- [x] Take screenshots for Chrome Web Store
 
 ### Maybe later:
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
 - [ ] Add template subtasks in bulk
-- [ ] Remove duplicate links in the task description
+- [x] Remove duplicate links and replace HTML entities in the task description
 - [ ] Implement donation page
 
 ## Usage
