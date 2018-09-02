@@ -1,3 +1,22 @@
+var addReplaceNotesToExtraActions = function () {
+  if (document.querySelector('.SingleTaskPaneExtraActionsButton')) {
+    document.querySelector('.SingleTaskPaneExtraActionsButton').addEventListener('click', function () {
+      var replaceNotesButton = document.createElement('A');
+      replaceNotesButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceNotes SingleTaskPaneExtraActionsButton-menuItem');
+      replaceNotesButton.addEventListener('click', function () {
+        replaceNotes();
+        closeSingleTaskPaneExtraActionsMenu();
+      });
+      replaceNotesButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Clean up Notes</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>';
+
+      setTimeout(function() {
+        var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
+        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceNotesButton, nextExtraActionButton);
+      }, 100);
+    });
+  }
+};
+
 var addSetParentToExtraActions = function () {
   if (document.querySelector('.SingleTaskPaneExtraActionsButton')) {
     document.querySelector('.SingleTaskPaneExtraActionsButton').addEventListener('click', function () {
@@ -5,14 +24,13 @@ var addSetParentToExtraActions = function () {
       setParentButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-setParent SingleTaskPaneExtraActionsButton-menuItem');
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
-        var layerPositionerLayer = document.querySelector('.LayerPositioner-layer');
-        if (layerPositionerLayer) layerPositionerLayer.remove();
+        closeSingleTaskPaneExtraActionsMenu();
       });
       setParentButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Convert to a Subtask...</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>';
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
-        nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
+        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
     });
   }
@@ -63,6 +81,13 @@ var clickSectionSelector = function (a) {
   setTimeout(function () {
       floatingSelectLabel.click();
   }, 100);
+};
+
+var closeSingleTaskPaneExtraActionsMenu = function () {
+  var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+  if (singleTaskPaneExtraActionsButton.classList.contains('CircularButton--active') || singleTaskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
+    singleTaskPaneExtraActionsButton.click();
+  }
 };
 
 var closeSetParentDrawer = function () {
@@ -175,6 +200,30 @@ var displayProjectsOnTop = function () {
   singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
+var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
+  var toastManager = document.querySelector('.ToastManager');
+  if (!toastManager) return;
+  var toastDiv = document.createElement('DIV');
+  toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
+    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.id}">${(task.completed)? '✓ ': ''}${task.name}</a>${messagesBeforeAfter[1]}` +
+    '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div><div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">Undo</div></div></div></div>';
+  var closeButton = toastDiv.firstChild.firstChild.firstChild.firstChild.children[1];
+  closeButton.addEventListener('click', function () {
+    toastDiv.remove();
+  });
+  var undoButton = toastDiv.firstChild.firstChild.firstChild.children[1];
+  undoButton.addEventListener('click', function () {
+    undoButton.outerText = '(Undoing...)';
+    callback(function () {
+      toastDiv.remove();
+    });
+  });
+  toastManager.appendChild(toastDiv);
+  setTimeout(function() {
+    toastDiv.remove();
+  }, 15000);
+};
+
 var findTaskId = function (url) {
   var taskIdRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
@@ -230,6 +279,32 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
   });
 };
 
+var replaceNotes = function () {
+  var taskId = findTaskId(window.location.href);
+  callAsanaApi('GET', `tasks/${taskId}`, {'opt_fields': 'html_notes'}, {}, function (response) {
+    var htmlNotesOriginal = response.data.html_notes;
+    var htmlNotes = htmlNotesOriginal;
+    var replaceTextList = replaceRegexList.concat(replaceEntityList);
+    for (var i = 0; i < replaceTextList.length; i ++) {
+      var pair = replaceTextList[i];
+      htmlNotes = htmlNotes.replace(pair[0],pair[1]);
+    }
+    callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotes}, function (response) {
+      closeSingleTaskPaneExtraActionsMenu();
+      displaySuccessToast(response.data, ['Notes replaced:', ''], function (callback) {
+        callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
+          callback();
+        });
+      });
+    });
+  });
+};
+
+var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)? &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
+
+// exclude XML entities: [['&amp;', '&'], ['&apos;', '\''], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
+var replaceEntityList = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&circ;', 'ˆ'], ['&copy;', '©'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&deg;', '°'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&ge;', '≥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&iquest;', '¿'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&laquo;', '«'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&ndash;', '–'], ['&ne;', '≠'], ['&not;', '¬'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&permil;', '‰'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&raquo;', '»'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sect;', '§'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&szlig;', 'ß'], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';
   var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
@@ -248,11 +323,13 @@ var runAllFunctionsIfEnabled = function () {
   chrome.storage.sync.get({
     'anOptionsSubtasks': true,
     'anOptionsProjects': true,
-    'anOptionsParent': true
+    'anOptionsParent': true,
+    'anOptionsNotes': true
   }, function (items) {
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsParent) addSetParentToExtraActions();
+    if (items.anOptionsNotes) addReplaceNotesToExtraActions();
   });
 };
 
@@ -301,6 +378,19 @@ window.addEventListener('keyup', function (event) {
   switch (event.keyCode){
     case 9:
       window.tabKeyIsDown = false;
+      break;
+    case 'E'.charCodeAt(0):
+      if (window.tabKeyIsDown) {
+        chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
+          if (items.anOptionsNotes) {
+            document.querySelector('.SingleTaskPaneExtraActionsButton').click();
+            replaceNotes();
+            setTimeout(function() {
+              document.querySelector('.SingleTaskPaneExtraActionsButton-replaceNotes').classList.add('ResponsiveHighlight');
+            }, 200);
+          }
+        });
+      }
       break;
     case 'J'.charCodeAt(0):
       if (window.tabKeyIsDown) {

@@ -2,10 +2,12 @@ function saveOptions() {
   var projectsEnabled = document.getElementById('projects').checked;
   var subtasksEnabled = document.getElementById('subtasks').checked;
   var parentEnabled = document.getElementById('parent').checked;
+  var notesEnabled = document.getElementById('notes').checked;
   chrome.storage.sync.set({
     'anOptionsProjects': projectsEnabled,
     'anOptionsSubtasks': subtasksEnabled,
-    'anOptionsParent': parentEnabled
+    'anOptionsParent': parentEnabled,
+    'anOptionsNotes': notesEnabled
   }, function() {
     var status = document.getElementById('status');
     status.textContent = 'Options saved';
@@ -18,11 +20,13 @@ function loadOptions() {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
-    'anOptionsParent': true
+    'anOptionsParent': true,
+    'anOptionsNotes': true
   }, function(items) {
     document.getElementById('projects').checked = items.anOptionsProjects;
     document.getElementById('subtasks').checked = items.anOptionsSubtasks;
     document.getElementById('parent').checked = items.anOptionsParent;
+    document.getElementById('notes').checked = items.anOptionsNotes;
   });
 }
 document.addEventListener('DOMContentLoaded', loadOptions);
