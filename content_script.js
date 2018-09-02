@@ -5,14 +5,13 @@ var addReplaceNotesToExtraActions = function () {
       replaceNotesButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceNotes SingleTaskPaneExtraActionsButton-menuItem');
       replaceNotesButton.addEventListener('click', function () {
         replaceNotes();
-        var layerPositionerLayer = document.querySelector('.LayerPositioner-layer');
-        if (layerPositionerLayer) layerPositionerLayer.remove();
+        closeSingleTaskPaneExtraActionsMenu();
       });
       replaceNotesButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Clean up Notes</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>';
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
-        nextExtraActionButton.parentNode.insertBefore(replaceNotesButton, nextExtraActionButton);
+        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceNotesButton, nextExtraActionButton);
       }, 100);
     });
   }
@@ -25,14 +24,13 @@ var addSetParentToExtraActions = function () {
       setParentButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-setParent SingleTaskPaneExtraActionsButton-menuItem');
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
-        var layerPositionerLayer = document.querySelector('.LayerPositioner-layer');
-        if (layerPositionerLayer) layerPositionerLayer.remove();
+        closeSingleTaskPaneExtraActionsMenu();
       });
       setParentButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Convert to a Subtask...</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>';
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
-        nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
+        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
     });
   }
@@ -83,6 +81,13 @@ var clickSectionSelector = function (a) {
   setTimeout(function () {
       floatingSelectLabel.click();
   }, 100);
+};
+
+var closeSingleTaskPaneExtraActionsMenu = function () {
+  var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+  if (singleTaskPaneExtraActionsButton.classList.contains('CircularButton--active') || singleTaskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
+    singleTaskPaneExtraActionsButton.click();
+  }
 };
 
 var closeSetParentDrawer = function () {
@@ -285,6 +290,7 @@ var replaceNotes = function () {
       htmlNotes = htmlNotes.replace(pair[0],pair[1]);
     }
     callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotes}, function (response) {
+      closeSingleTaskPaneExtraActionsMenu();
       displaySuccessToast(response.data, ['Notes replaced:', ''], function (callback) {
         callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
           callback();
@@ -294,7 +300,7 @@ var replaceNotes = function () {
   });
 };
 
-var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>) &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5&gt;/g, '$1$2$3$4$3$5']];
+var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)? &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
 
 // exclude XML entities: [['&amp;', '&'], ['&apos;', '\''], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
 var replaceEntityList = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&circ;', 'ˆ'], ['&copy;', '©'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&deg;', '°'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&ge;', '≥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&iquest;', '¿'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&laquo;', '«'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&ndash;', '–'], ['&ne;', '≠'], ['&not;', '¬'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&permil;', '‰'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&raquo;', '»'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sect;', '§'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&szlig;', 'ß'], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
@@ -375,8 +381,14 @@ window.addEventListener('keyup', function (event) {
       break;
     case 'E'.charCodeAt(0):
       if (window.tabKeyIsDown) {
-          chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
-            if (items.anOptionsNotes) replaceNotes();
+        chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
+          if (items.anOptionsNotes) {
+            document.querySelector('.SingleTaskPaneExtraActionsButton').click();
+            replaceNotes();
+            setTimeout(function() {
+              document.querySelector('.SingleTaskPaneExtraActionsButton-replaceNotes').classList.add('ResponsiveHighlight');
+            }, 200);
+          }
         });
       }
       break;
