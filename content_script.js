@@ -83,16 +83,16 @@ var clickSectionSelector = function (a) {
   }, 100);
 };
 
+var closeSetParentDrawer = function () {
+  var setParentDrawer = document.querySelector('.SetParentDrawer');
+  if (setParentDrawer) setParentDrawer.remove();
+};
+
 var closeSingleTaskPaneExtraActionsMenu = function () {
   var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton.classList.contains('CircularButton--active') || singleTaskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     singleTaskPaneExtraActionsButton.click();
   }
-};
-
-var closeSetParentDrawer = function () {
-  var setParentDrawer = document.querySelector('.SetParentDrawer');
-  if (setParentDrawer) setParentDrawer.remove();
 };
 
 var deleteSiblingButtons = function () {
@@ -133,27 +133,6 @@ var displayLinksToSiblingSubtasks = function () {
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
   });
-};
-
-var displaySetParentDrawer = function () {
-  var setParentDrawer = document.createElement('DIV');
-  setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
-  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task by its name or ID" type="text" role="combobox" value=""><noscript></noscript></div>`;
-
-  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
-  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
-
-  document.querySelector('#setParentDrawerCloseButton').addEventListener('click', function () {
-    closeSetParentDrawer();
-  });
-  document.querySelector('#SetParentSwitch').addEventListener('click', function () {
-    toggleSetParentSwitch(this);
-  });
-  document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('focus', function () {
-    selectNewParentTask(this);
-  });
-  document.querySelector('.SetParentDrawer-typeaheadInput').focus();
 };
 
 var displayProjectsOnTop = function () {
@@ -200,6 +179,28 @@ var displayProjectsOnTop = function () {
   singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
+var displaySetParentDrawer = function () {
+  if (document.querySelector('.SetParentDrawer')) return;
+  var setParentDrawer = document.createElement('DIV');
+  setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
+  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task by its name or ID" type="text" role="combobox" value=""><noscript></noscript></div>`;
+
+  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
+  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
+
+  document.querySelector('#setParentDrawerCloseButton').addEventListener('click', function () {
+    closeSetParentDrawer();
+  });
+  document.querySelector('#SetParentSwitch').addEventListener('click', function () {
+    toggleSetParentSwitch(this);
+  });
+  document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('focus', function () {
+    selectNewParentTask(this);
+  });
+  document.querySelector('.SetParentDrawer-typeaheadInput').focus();
+};
+
 var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
   var toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
@@ -224,6 +225,12 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
   }, 15000);
 };
 
+var findProjectId = function (url) {
+  var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
+  var findProjectIdMatch = projectIdRegexPattern.exec(url);
+  if (findProjectIdMatch) return findProjectIdMatch[1];
+};
+
 var findTaskId = function (url) {
   var taskIdRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
@@ -236,12 +243,6 @@ var findTaskId = function (url) {
       return pattern.exec(url)[1];
     }
   }
-};
-
-var findProjectId = function (url) {
-  var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
-  var findProjectIdMatch = projectIdRegexPattern.exec(url);
-  if (findProjectIdMatch) return findProjectIdMatch[1];
 };
 
 var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
@@ -300,10 +301,10 @@ var replaceNotes = function () {
   });
 };
 
-var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)? &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
-
 // exclude XML entities: [['&amp;', '&'], ['&apos;', '\''], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
 var replaceEntityList = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&circ;', 'ˆ'], ['&copy;', '©'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&deg;', '°'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&ge;', '≥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&iquest;', '¿'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&laquo;', '«'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&ndash;', '–'], ['&ne;', '≠'], ['&not;', '¬'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&permil;', '‰'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&raquo;', '»'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sect;', '§'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&szlig;', 'ß'], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+
+var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)? &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
 
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';

@@ -2,6 +2,12 @@
   border-bottom: none !important;
 }
 
+/* Copied from .menuItem-button:hover */
+.ResponsiveHighlight {
+    background-color: #14aaf5;
+    color: #fff !important;
+}
+
 .SetParentDrawer-typeaheadInput {
     margin-top: 10px;
     width: 100%;
@@ -11,10 +17,4 @@
 .SetParentSwitchView .switch.checked {
     background-color: #7ac8ee !important;
     border-color: #7ac8ee !important;
-}
-
-/* Copied from .menuItem-button:hover */
-.ResponsiveHighlight {
-    background-color: #14aaf5;
-    color: #fff !important;
 }
