@@ -42,7 +42,7 @@
 
 #### More seamless UI:
 - [ ] Use tool tips with black background
-- [ ] Display undo toast on bottom left
+- [x] Display undo toast on bottom left
 
 #### Others:
 - [x] Write an options page to enable/disable each feature

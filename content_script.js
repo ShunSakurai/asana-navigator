@@ -195,6 +195,30 @@ var displayProjectsOnTop = function () {
   singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
+var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
+  var toastManager = document.querySelector('.ToastManager');
+  if (!toastManager) return;
+  var toastDiv = document.createElement('DIV');
+  toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
+    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.id}">${(task.completed)? '✓ ': ''}${task.name}</a>${messagesBeforeAfter[1]}` +
+    '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div><div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">Undo</div></div></div></div>';
+  var closeButton = toastDiv.firstChild.firstChild.firstChild.firstChild.children[1];
+  closeButton.addEventListener('click', function () {
+    toastDiv.remove();
+  });
+  var undoButton = toastDiv.firstChild.firstChild.firstChild.children[1];
+  undoButton.addEventListener('click', function () {
+    undoButton.outerText = '(Undoing...)';
+    callback(function () {
+      toastDiv.remove();
+    });
+  });
+  toastManager.appendChild(toastDiv);
+  setTimeout(function() {
+    toastDiv.remove();
+  }, 15000);
+};
+
 var findTaskId = function (url) {
   var taskIdRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
@@ -253,15 +277,19 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
 var replaceNotes = function () {
   var taskId = findTaskId(window.location.href);
   callAsanaApi('GET', `tasks/${taskId}`, {'opt_fields': 'html_notes'}, {}, function (response) {
-    var htmlNotes = response.data.html_notes;
+    var htmlNotesOriginal = response.data.html_notes;
+    var htmlNotes = htmlNotesOriginal;
     var replaceTextList = replaceRegexList.concat(replaceEntityList);
     for (var i = 0; i < replaceTextList.length; i ++) {
       var pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0],pair[1]);
     }
     callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotes}, function (response) {
-      console.log('Replaced:', response.data);
-      // Show undo toast
+      displaySuccessToast(response.data, ['Notes replaced:', ''], function (callback) {
+        callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
+          callback();
+        });
+      });
     });
   });
 };
