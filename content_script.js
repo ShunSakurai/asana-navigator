@@ -196,7 +196,7 @@ var displaySetParentDrawer = function () {
     toggleSetParentSwitch(this);
   });
   document.querySelector('.SetParentDrawer-typeaheadInput').addEventListener('focus', function () {
-    selectNewParentTask(this);
+    inputNewParentTask(this);
   });
   document.querySelector('.SetParentDrawer-typeaheadInput').focus();
 };
@@ -245,6 +245,55 @@ var findTaskId = function (url) {
   }
 };
 
+var getOriginalParentAndSetNew = function (taskId, setParentOptions) {
+  var originalParentId, originalPreviousSiblingId;
+  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  if (!taskAncestryTaskLinks.length) {
+    [originalParentId, originalPreviousSiblingId] = [null, null];
+    setNewParentTask(taskId, setParentOptions, originalParentId, originalPreviousSiblingId);
+  } else {
+    originalParentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+    callAsanaApi('GET', `tasks/${originalParentId}/subtasks`, {}, {}, function (response) {
+      var subtaskList = response.data;
+      var indexCurrent;
+      for (var i = 0; i < subtaskList.length; i++) {
+        if (subtaskList[i].gid === taskId) {
+          indexCurrent = i;
+          break;
+        }
+      }
+      originalPreviousSiblingId = (indexCurrent > 0)? subtaskList[indexCurrent - 1].id: null;
+      setNewParentTask(taskId, setParentOptions, originalParentId, originalPreviousSiblingId);
+    });
+  }
+};
+
+var inputNewParentTask = function (input) {
+  var taskId = findTaskId(window.location.href);
+  callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
+    var workspaceId = response.data.workspace.id;
+    input.addEventListener('input', function () {
+      if (!document.querySelector('#DropdownContainer')) {
+        var dropdownContainer = document.createElement('DIV');
+        dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
+        dropdownContainer.setAttribute('id', 'DropdownContainer');
+        input.parentNode.appendChild(dropdownContainer);
+      }
+      var potentialTask;
+      var potentialTaskIdMatch = /^\d{15}$/.exec(input.value.trim());
+      var potentialTaskId = (potentialTaskIdMatch)? potentialTaskIdMatch[0]: findTaskId(input.value);
+      if (potentialTaskId) {
+        callAsanaApi('GET', `tasks/${potentialTaskId}`, {}, {}, function (response) {
+          potentialTask = response.data;
+          populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+        });
+      } else {
+        populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+      }
+    });
+  });
+};
+
 var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
@@ -271,10 +320,7 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
         } else {
           setParentOptions.insert_after = null;
         }
-        callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
-          closeSetParentDrawer();
-          window.dispatchEvent(new Event('load'));
-        });
+        getOriginalParentAndSetNew(taskId, setParentOptions);
       });
     }
   });
@@ -334,29 +380,17 @@ var runAllFunctionsIfEnabled = function () {
   });
 };
 
-var selectNewParentTask = function (input) {
-  var taskId = findTaskId(window.location.href);
-  callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
-    var workspaceId = response.data.workspace.id;
-    input.addEventListener('input', function () {
-      if (!document.querySelector('#DropdownContainer')) {
-        var dropdownContainer = document.createElement('DIV');
-        dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
-        dropdownContainer.setAttribute('id', 'DropdownContainer');
-        input.parentNode.appendChild(dropdownContainer);
-      }
-      var potentialTask;
-      var potentialTaskIdMatch = /^\d{15}$/.exec(input.value.trim());
-      var potentialTaskId = (potentialTaskIdMatch)? potentialTaskIdMatch[0]: findTaskId(input.value);
-      if (potentialTaskId) {
-        callAsanaApi('GET', `tasks/${potentialTaskId}`, {}, {}, function (response) {
-          potentialTask = response.data;
-          populateFromTypeahead(taskId, workspaceId, input, potentialTask);
-        });
-      } else {
-        populateFromTypeahead(taskId, workspaceId, input, potentialTask);
-      }
+var setNewParentTask = function (taskId, setParentOptions, originalParentId, originalPreviousSiblingId) {
+  callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
+    closeSetParentDrawer();
+    displaySuccessToast(response.data, ['Made a subtask:', ''], function (callback) {
+      callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, {'parent': originalParentId, 'insert_after': originalPreviousSiblingId}, function (response) {
+        callback();
+      });
     });
+    setTimeout(function() {
+      window.dispatchEvent(new Event('load'));
+    }, 100);
   });
 };
 
