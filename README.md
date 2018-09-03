@@ -73,7 +73,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 ## Privacy policy and terms of use
 
-We don't store your data. We physically can't. (Borrowed part from [here](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy))
+We don't store your data. We physically can't. (Borrowed part from [here](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy).) All communications are between you and Asana API. All options are saved to your Google Chrome, not on our servers.
 
 I try my best to maintain the quality and safety of this extension, but please use it at your own risk. The author doesn't take any responsibility for any damage caused by use of this extension.
 
