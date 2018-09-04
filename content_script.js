@@ -95,9 +95,14 @@ var closeSingleTaskPaneExtraActionsMenu = function () {
   }
 };
 
+var deleteProjectNamesOnTop = function () {
+  var projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
+  if (projectNamesOnTop) projectNamesOnTop.remove();
+};
+
 var deleteSiblingButtons = function () {
-  var siblingButtonsToDelete = document.querySelector('#SiblingButtons');
-  if (siblingButtonsToDelete) siblingButtonsToDelete.remove();
+  var SiblingButtons = document.querySelector('#SiblingButtons');
+  if (SiblingButtons) SiblingButtons.remove();
 };
 
 var displayLinksToSiblingSubtasks = function () {
@@ -139,15 +144,14 @@ var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskProjectsProjectList || taskAncestryTaskLinks.length) {
-    var taskAncestryProjectNameOnTop = document.querySelector('#TaskAncestryProjectNameOnTop');
-    if (taskAncestryProjectNameOnTop) taskAncestryProjectNameOnTop.remove();
+    deleteProjectNamesOnTop();
     return;
   }
   var taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
   var taskAncestryAncestorProjects = document.createElement('DIV');
   taskAncestryAncestorProjects.setAttribute('class', 'TaskAncestry-ancestorProjects');
-  taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNameOnTop');
+  taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNamesOnTop');
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
   var taskId = findTaskId(window.location.href);
@@ -174,6 +178,7 @@ var displayProjectsOnTop = function () {
       }
     });
   });
+  deleteProjectNamesOnTop();
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
   var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
   singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
@@ -350,7 +355,7 @@ var replaceNotes = function () {
 // exclude XML entities: [['&amp;', '&'], ['&apos;', '\''], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
 var replaceEntityList = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Alpha;', 'Α'], ['&alpha;', 'α'], ['&and;', '∧'], ['&ang;', '∠'], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&Beta;', 'Β'], ['&beta;', 'β'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&cap;', '∩'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&Chi;', 'Χ'], ['&chi;', 'χ'], ['&circ;', 'ˆ'], ['&clubs;', '♣'], ['&cong;', '≅'], ['&copy;', '©'], ['&crarr;', '↵'], ['&cup;', '∪'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&darr;', '↓'], ['&deg;', '°'], ['&Delta;', 'Δ'], ['&delta;', 'δ'], ['&diams;', '♦'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&empty;', '∅'], ['&emsp;', ' '], ['&ensp;', ' '], ['&Epsilon;', 'Ε'], ['&epsilon;', 'ε'], ['&equiv;', '≡'], ['&Eta;', 'Η'], ['&eta;', 'η'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&exist;', '∃'], ['&fnof;', 'ƒ'], ['&forall;', '∀'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&Gamma;', 'Γ'], ['&gamma;', 'γ'], ['&ge;', '≥'], ['&harr;', '↔'], ['&hearts;', '♥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&infin;', '∞'], ['&int;', '∫'], ['&Iota;', 'Ι'], ['&iota;', 'ι'], ['&iquest;', '¿'], ['&isin;', '∈'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&Kappa;', 'Κ'], ['&kappa;', 'κ'], ['&Lambda;', 'Λ'], ['&lambda;', 'λ'], ['&laquo;', '«'], ['&larr;', '←'], ['&lceil;', '⌈'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lfloor;', '⌊'], ['&lowast;', '∗'], ['&loz;', '◊'], ['&lrm;', '‎'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&minus;', '−'], ['&Mu;', 'Μ'], ['&mu;', 'μ'], ['&nabla;', '∇'], ['&ndash;', '–'], ['&ne;', '≠'], ['&ni;', '∋'], ['&not;', '¬'], ['&notin;', '∉'], ['&nsub;', '⊄'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Nu;', 'Ν'], ['&nu;', 'ν'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&oline;', '‾'], ['&Omega;', 'Ω'], ['&omega;', 'ω'], ['&Omicron;', 'Ο'], ['&omicron;', 'ο'], ['&oplus;', '⊕'], ['&or;', '∨'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&otimes;', '⊗'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&part;', '∂'], ['&permil;', '‰'], ['&perp;', '⊥'], ['&Phi;', 'Φ'], ['&phi;', 'φ'], ['&Pi;', 'Π'], ['&pi;', 'π'], ['&piv;', 'ϖ'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&prod;', '∏'], ['&prop;', '∝'], ['&Psi;', 'Ψ'], ['&psi;', 'ψ'], ['&radic;', '√'], ['&raquo;', '»'], ['&rarr;', '→'], ['&rceil;', '⌉'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rfloor;', '⌋'], ['&Rho;', 'Ρ'], ['&rho;', 'ρ'], ['&rlm;', '‏'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sdot;', '⋅'], ['&sect;', '§'], ['&Sigma;', 'Σ'], ['&sigma;', 'σ'], ['&sigmaf;', 'ς'], ['&sim;', '∼'], ['&spades;', '♠'], ['&sub;', '⊂'], ['&sube;', '⊆'], ['&sum;', '∑'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&sup;', '⊃'], ['&supe;', '⊇'], ['&szlig;', 'ß'], ['&Tau;', 'Τ'], ['&tau;', 'τ'], ['&there4;', '∴'], ['&Theta;', 'Θ'], ['&theta;', 'θ'], ['&thetasym;', 'ϑ'], ['&thinsp;', ' '], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&uarr;', '↑'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&upsih;', 'ϒ'], ['&Upsilon;', 'Υ'], ['&upsilon;', 'υ'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Xi;', 'Ξ'], ['&xi;', 'ξ'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ'], ['&Zeta;', 'Ζ'], ['&zeta;', 'ζ'], ['&zwj;', '‍'], ['&zwnj;', '‌']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
 
-var replaceRegexList = [[/(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)? &lt;\2\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
+var replaceRegexList = [[/(?:&lt;|&quot;)?(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#@]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;)? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;/g, '$1$2$3$4$3$5$6']];
 
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';
@@ -368,15 +373,25 @@ var returnTypeAheadInnerHTML = function (task) {
 
 var runAllFunctionsIfEnabled = function () {
   chrome.storage.sync.get({
-    'anOptionsSubtasks': true,
     'anOptionsProjects': true,
+    'anOptionsSubtasks': true,
     'anOptionsParent': true,
     'anOptionsNotes': true
   }, function (items) {
-    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsProjects) displayProjectsOnTop();
+    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsParent) addSetParentToExtraActions();
     if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+  });
+};
+
+var runFunctionsThatCreateElementsIfEnabled = function () {
+  chrome.storage.sync.get({
+    'anOptionsProjects': true,
+    'anOptionsSubtasks': true
+  }, function (items) {
+    if (items.anOptionsProjects) displayProjectsOnTop();
+    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
   });
 };
 
@@ -389,7 +404,7 @@ var setNewParentTask = function (taskId, setParentOptions, originalParentId, ori
       });
     });
     setTimeout(function() {
-      window.dispatchEvent(new Event('load'));
+      runFunctionsThatCreateElementsIfEnabled();
     }, 100);
   });
 };
