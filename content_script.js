@@ -181,7 +181,7 @@ var displayProjectsOnTop = function () {
   deleteProjectNamesOnTop();
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
   var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-  singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
+  if (singleTaskPaneBody) singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
 var displaySetParentDrawer = function () {
@@ -204,6 +204,7 @@ var displaySetParentDrawer = function () {
     inputNewParentTask(this);
   });
   document.querySelector('.SetParentDrawer-typeaheadInput').focus();
+  saveOriginalParent();
 };
 
 var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
@@ -247,29 +248,6 @@ var findTaskId = function (url) {
     if (pattern.exec(url)) {
       return pattern.exec(url)[1];
     }
-  }
-};
-
-var getOriginalParentAndSetNew = function (taskId, setParentOptions) {
-  var originalParentId, originalPreviousSiblingId;
-  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (!taskAncestryTaskLinks.length) {
-    [originalParentId, originalPreviousSiblingId] = [null, null];
-    setNewParentTask(taskId, setParentOptions, originalParentId, originalPreviousSiblingId);
-  } else {
-    originalParentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
-    callAsanaApi('GET', `tasks/${originalParentId}/subtasks`, {}, {}, function (response) {
-      var subtaskList = response.data;
-      var indexCurrent;
-      for (var i = 0; i < subtaskList.length; i++) {
-        if (subtaskList[i].gid === taskId) {
-          indexCurrent = i;
-          break;
-        }
-      }
-      originalPreviousSiblingId = (indexCurrent > 0)? subtaskList[indexCurrent - 1].id: null;
-      setNewParentTask(taskId, setParentOptions, originalParentId, originalPreviousSiblingId);
-    });
   }
 };
 
@@ -318,14 +296,14 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
         this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        var parentId = this.children[0].dataset.id;
+        var parentId = this.children[0].dataset.taskId;
         var setParentOptions = {'parent': parentId};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentOptions.insert_before = null;
         } else {
           setParentOptions.insert_after = null;
         }
-        getOriginalParentAndSetNew(taskId, setParentOptions);
+        setNewParentTask(taskId, setParentOptions);
       });
     }
   });
@@ -360,7 +338,7 @@ var replaceRegexList = [[/(?:&lt;|&quot;)?(<a href=")(mailto:)?([A-Za-z0-9\-:;/.
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';
   var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
-  return `<div role="option" data-id="${task.id}" title="` +
+  return `<div role="option" data-task-id="${task.id}" title="` +
   task.name + `${(parentName)? '&#13;‹ ' + parentName: ''}` + `${(projectNameList)? '&#13;(' + projectNameList + ')': ''}` +
   `"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">` +
   `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
@@ -414,7 +392,35 @@ var runFunctionsThatCreateElementsIfEnabled = function () {
   });
 };
 
-var setNewParentTask = function (taskId, setParentOptions, originalParentId, originalPreviousSiblingId) {
+var saveOriginalParent = function () {
+  var taskId = findTaskId(window.location.href);
+  var setParentDrawer = document.querySelector('.SetParentDrawer');
+  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  if (!taskAncestryTaskLinks.length) {
+    setParentDrawer.setAttribute('data-original-parent-id', null);
+    setParentDrawer.setAttribute('data-original-previous-sibling-id', null);
+  } else {
+    var originalParentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+    callAsanaApi('GET', `tasks/${originalParentId}/subtasks`, {}, {}, function (response) {
+      var subtaskList = response.data;
+      var indexCurrent;
+      for (var i = 0; i < subtaskList.length; i++) {
+        if (subtaskList[i].gid === taskId) {
+          indexCurrent = i;
+          break;
+        }
+      }
+      var originalPreviousSiblingId = (indexCurrent > 0)? subtaskList[indexCurrent - 1].id: null;
+      setParentDrawer.setAttribute('data-original-parent-id', originalParentId);
+      setParentDrawer.setAttribute('data-original-previous-sibling-id', originalPreviousSiblingId);
+    });
+  }
+};
+
+var setNewParentTask = function (taskId, setParentOptions) {
+  var setParentDrawer = document.querySelector('.SetParentDrawer');
+  var originalParentId = setParentDrawer.dataset.originalParentId;
+  var originalPreviousSiblingId = setParentDrawer.dataset.originalPreviousSiblingId;
   callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
     closeSetParentDrawer();
     displaySuccessToast(response.data, ['Made a subtask:', ''], function (callback) {

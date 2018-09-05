@@ -53,6 +53,7 @@
 - [ ] Add template subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
 - [ ] Add options to replace custom strings
+- [ ] Support other languages
 - [ ] Implement donation page
 
 ## Usage
