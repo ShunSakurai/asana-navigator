@@ -52,6 +52,7 @@
 - [ ] Convert tasks into subtasks in bulk
 - [ ] Add template subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
+- [ ] Add options to replace custom strings
 - [ ] Implement donation page
 
 ## Usage
