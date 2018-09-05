@@ -12,7 +12,7 @@
       "run_at": "document_idle"
     }
   ],
-  "description" : "Enhance navigation for Asana tasks - display projects on top, go to previous/next subtasks, convert to a subtask of other task.",
+  "description" : "Enhance navigation for Asana tasks - display projects on top, go to previous/next subtasks, convert to a subtask of other task, etc.",
   "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
   "icons": {
     "128": "images/an128.png",
@@ -29,5 +29,5 @@
     "activeTab", "storage"
   ],
   "short_name": "AsaNavigator",
-  "version": "1.3.6"
+  "version": "1.3.7"
 }

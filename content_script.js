@@ -371,17 +371,36 @@ var returnTypeAheadInnerHTML = function (task) {
   '</div></div></div>';
 };
 
-var runAllFunctionsIfEnabled = function () {
+var runAllFunctionsIfEnabled = function (retry) {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
     'anOptionsParent': true,
     'anOptionsNotes': true
   }, function (items) {
-    if (items.anOptionsProjects) displayProjectsOnTop();
-    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-    if (items.anOptionsParent) addSetParentToExtraActions();
-    if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+    if (retry) {
+      if (items.anOptionsProjects) {
+        var retryProjects = setInterval(function () {
+          displayProjectsOnTop();
+          if (document.querySelector('.TaskProjects-projectList') && !document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retryProjects);
+        }, 100);
+      }
+      if (items.anOptionsSubtasks) {
+        var retrySubtasks = setInterval(function () {
+          displayLinksToSiblingSubtasks();
+          if (document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retrySubtasks);
+        }, 100);
+      }
+      setTimeout(function() {
+        if (items.anOptionsParent) addSetParentToExtraActions();
+        if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+      }, 500);
+    } else {
+      if (items.anOptionsProjects) displayProjectsOnTop();
+      if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+      if (items.anOptionsParent) addSetParentToExtraActions();
+      if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+    }
   });
 };
 
@@ -401,6 +420,9 @@ var setNewParentTask = function (taskId, setParentOptions, originalParentId, ori
     displaySuccessToast(response.data, ['Made a subtask:', ''], function (callback) {
       callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, {'parent': originalParentId, 'insert_after': originalPreviousSiblingId}, function (response) {
         callback();
+        setTimeout(function() {
+          runFunctionsThatCreateElementsIfEnabled();
+        }, 100);
       });
     });
     setTimeout(function() {
@@ -479,8 +501,6 @@ window.addEventListener('load', function () {
 chrome.runtime.onMessage.addListener(
   function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
-      setTimeout(function() { // We can only receive "loading" status, not "complete"
-        runAllFunctionsIfEnabled();
-      }, 500);
+      runAllFunctionsIfEnabled(true); // We can only receive "loading" status, not "complete"
     }
 });
