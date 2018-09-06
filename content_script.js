@@ -7,7 +7,7 @@ var addReplaceNotesToExtraActions = function () {
         replaceNotes();
         closeSingleTaskPaneExtraActionsMenu();
       });
-      replaceNotesButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Clean up Notes</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>';
+      replaceNotesButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceNotes']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
@@ -26,7 +26,7 @@ var addSetParentToExtraActions = function () {
         displaySetParentDrawer();
         closeSingleTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = '<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">Convert to a Subtask...</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>';
+      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>`;
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
@@ -132,8 +132,8 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Previous sibling subtask (Tab+J)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="Next sibling subtask (Tab+K)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+J)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+K)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
@@ -188,7 +188,8 @@ var displaySetParentDrawer = function () {
   if (document.querySelector('.SetParentDrawer')) return;
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
-  setParentDrawer.innerHTML = `<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a><div class="switch-view SetParentSwitchView">Make this task a subtask of other task. Insert at: Top&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;Bottom</div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="Find a task by its name or ID" type="text" role="combobox" value=""><noscript></noscript></div>`;
+  setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
+  `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-list'][0]}&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;${locStrings['drawerSwitch-setParent-list'][1]}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
   var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
@@ -212,15 +213,16 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
   if (!toastManager) return;
   var toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
-    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.id}">${(task.completed)? '✓ ': ''}${task.name}</a>${messagesBeforeAfter[1]}` +
-    '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div><div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">Undo</div></div></div></div>';
+    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.id}">${(task.completed)? '✓ ': ''}${task.name}</a> ${messagesBeforeAfter[1]}` +
+    '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
+    `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
   var closeButton = toastDiv.firstChild.firstChild.firstChild.firstChild.children[1];
   closeButton.addEventListener('click', function () {
     toastDiv.remove();
   });
   var undoButton = toastDiv.firstChild.firstChild.firstChild.children[1];
   undoButton.addEventListener('click', function () {
-    undoButton.outerText = '(Undoing...)';
+    undoButton.outerText = locStrings['toastButtton-undoing'];
     callback(function () {
       toastDiv.remove();
     });
@@ -247,6 +249,25 @@ var findTaskId = function (url) {
     var pattern = taskIdRegexPatterns[i];
     if (pattern.exec(url)) {
       return pattern.exec(url)[1];
+    }
+  }
+};
+
+var getLocaleAndSetLocalizedStrings = function () {
+  var locale = 'en';
+  var scriptArray = Array.from(document.scripts);
+  for (var i = 0; i < scriptArray.length; i++) {
+    var match = /cloudfront\.net\/compressed\/build\/bundles\/[0-9a-f]+\/translations\/([a-z]{2})\.bundle\.js/.exec(scriptArray[i].src);
+    if (match) {
+      if (localizationStrings.hasOwnProperty(match[1])) locale = match[1];
+      break;
+    }
+  }
+  for (var key in localizationStrings.en) {
+    if (localizationStrings[locale].hasOwnProperty(key)) {
+      locStrings[key] = localizationStrings[locale][key];
+    } else {
+      locStrings[key] = localizationStrings.en[key];
     }
   }
 };
@@ -321,7 +342,7 @@ var replaceNotes = function () {
     }
     callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotes}, function (response) {
       closeSingleTaskPaneExtraActionsMenu();
-      displaySuccessToast(response.data, ['Notes replaced:', ''], function (callback) {
+      displaySuccessToast(response.data, locStrings['toastContent-notesReplaced-list'], function (callback) {
         callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
           callback();
         });
@@ -423,7 +444,7 @@ var setNewParentTask = function (taskId, setParentOptions) {
   var originalPreviousSiblingId = setParentDrawer.dataset.originalPreviousSiblingId;
   callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
     closeSetParentDrawer();
-    displaySuccessToast(response.data, ['Made a subtask:', ''], function (callback) {
+    displaySuccessToast(response.data, locStrings['toastContent-setParent-list'], function (callback) {
       callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, {'parent': originalParentId, 'insert_after': originalPreviousSiblingId}, function (response) {
         callback();
         setTimeout(function() {
@@ -501,6 +522,7 @@ window.addEventListener('keyup', function (event) {
 });
 
 window.addEventListener('load', function () {
+  getLocaleAndSetLocalizedStrings();
   runAllFunctionsIfEnabled();
 });
 

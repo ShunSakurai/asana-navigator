@@ -53,7 +53,7 @@
 - [ ] Add template subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
 - [ ] Add options to replace custom strings
-- [ ] Support other languages
+- [x] Support other languages
 - [ ] Implement donation page
 
 ## Usage
@@ -82,7 +82,12 @@ I try my best to maintain the quality and safety of this extension, but please u
 ## Feedback and contribution
 
 I'd love to hear from users and developers.
-Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests.
+Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests and help with translating the UI.
+
+### Localization style guide:
+- Follow the style in localized UI in Asana as much as possible
+- JP: Insert space between half-width character and full-width character, don't insert space between Katakana compounds, and use half-width symbols
+- ES, FR, PT: Compared to EN where menu items often use capital letters such as "Add to **P**roject (Tab+P)", these languages tend to use lower letters such as "Ajouter à un **p**rojet (Tab+P)"
 
 ## License
 
