@@ -6,6 +6,7 @@ var localizationStrings = {
     'drawerPlaceholder-setParent': 'Finden Sie eine Aufgabe',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
+    'typeaheadItem-NoMatch': 'Keine Übereinstimmungen gefunden',
   },
   'en': {
     // Commenting the same or relevant UI from translations/en.bundle.js
@@ -20,6 +21,7 @@ var localizationStrings = {
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-notesReplaced-list': ['Notes replaced:', ''],
     'toastContent-setParent-list': ['Made a subtask:', ''],
+    'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
   'es': {
     'drawerLabel-setParent': 'Transformar esta tarea en una subtarea de otra tarea.',
@@ -28,6 +30,7 @@ var localizationStrings = {
     'menuButton-setParent': 'Convert to a subtask...',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
+    'typeaheadItem-NoMatch': 'No se encontraron coincidencias',
   },
   'fr': {
     'drawerLabel-setParent': 'Transformez cette tâche en sous-tâche d\'une autre tâche.',
@@ -36,6 +39,7 @@ var localizationStrings = {
     'menuButton-setParent': 'Convert to a subtask...',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
+    'typeaheadItem-NoMatch': 'Aucune correspondance',
   },
   'ja': {
     'arrowTitle-nextSibling': '次のサブタスク',
@@ -49,6 +53,7 @@ var localizationStrings = {
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-notesReplaced-list': ['', 'の説明を整形しました。'],
     'toastContent-setParent-list': ['サブタスクにしました:', ''],
+    'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした',
   },
   'pt': {
     'drawerLabel-setParent': 'Tornar esta uma subtarefa de outra tarefa.',
@@ -57,6 +62,7 @@ var localizationStrings = {
     'menuButton-setParent': 'Convert to a subtask...',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
+    'typeaheadItem-NoMatch': 'Nenhuma correspondência encontrada',
   }
 };
 
