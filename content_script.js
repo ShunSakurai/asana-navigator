@@ -56,7 +56,7 @@ var callAsanaApi = function (request, path, options, data, callback) {
   }
   xhr.open(request, encodeURI(requestUrl));
   var manifest = chrome.runtime.getManifest();
-  var client_name = ["chrome-extension", manifest.version, manifest.name].join(":"); // Be polite to Asana API
+  var client_name = ['chrome-extension', manifest.version, manifest.name].join(':'); // Be polite to Asana API
   var requestData;
   if (request === 'POST' || request === 'PUT') {
     requestData = JSON.stringify({'data': data});
@@ -139,8 +139,8 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+J)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+K)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+K)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+J)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
@@ -380,7 +380,7 @@ var returnTypeAheadInnerHTML = function (task) {
   var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
   return `<div role="option" data-task-id="${task.id}" title="` +
   task.name + `${(parentName)? '&#13;‹ ' + parentName: ''}` + `${(projectNameList)? '&#13;(' + projectNameList + ')': ''}` +
-  `"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">` +
+  '"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">' +
   `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
   `</div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span><span>${task.name}</span></span>` +
   `${(parentName)? '<span class="TaskTypeaheadItem-parentTask">' + parentName + '</span>': ''}`+
@@ -518,14 +518,14 @@ window.addEventListener('keyup', function (event) {
       break;
     case 'J'.charCodeAt(0):
       if (window.tabKeyIsDown) {
-        var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
-        if (arrowPreviousSubtask) arrowPreviousSubtask.click();
+        var arrowNextSubtask = document.querySelector('#arrowNextSubtask');
+        if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
     case 'K'.charCodeAt(0):
       if (window.tabKeyIsDown) {
-        var arrowNextSubtask = document.querySelector('#arrowNextSubtask');
-        if (arrowNextSubtask) arrowNextSubtask.click();
+        var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
+        if (arrowPreviousSubtask) arrowPreviousSubtask.click();
       }
       break;
     case 'R'.charCodeAt(0):

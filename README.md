@@ -18,7 +18,7 @@
 - [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
-- [x] Display arrows to go to previous/next sibling subtasks
+- [x] Display arrows to go to next/previous sibling subtasks
 
 #### Setting new parent tasks:
 - [x] Set new parent task from the toolbar
@@ -41,13 +41,13 @@
 - [x] Display information such as projects and completed/incomplete
 
 #### More seamless UI:
-- [ ] Use tool tips with black background
 - [x] Display undo toast on bottom left
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
 
 ### Maybe later:
+- [ ] Use tool tips with black background
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
 - [ ] Add template subtasks in bulk
