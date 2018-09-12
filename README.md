@@ -47,10 +47,10 @@
 - [x] Write an options page to enable/disable each feature
 
 ### Maybe later:
+- [ ] Search in the current open page, e.g. "search in this project"
 - [ ] Use tool tips with black background
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
-- [ ] Add template subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
 - [ ] Add options to replace custom strings
 - [x] Support other languages
@@ -69,7 +69,7 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 ## Design decisions
 
-- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using a content script and DOM methods.
+- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using content scripts and DOM methods.
 - By doing so, I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
 - I'd like to make all tools I create be customizable to each user's preference. Therefore, I created an options page where users can switch features on/off.
 
