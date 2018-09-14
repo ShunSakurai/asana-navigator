@@ -485,20 +485,15 @@ var toggleSetParentSwitch = function (input) {
   }
 };
 
-window.tabKeyIsDown = false;
+document.tabKeyIsDown = false;
 
-window.addEventListener('keydown', function (event) {
-  if (event.ctrlKey || event.altKey || event.metaKey) return;
-  if (event.keyCode === 9) window.tabKeyIsDown = true;
-});
-
-window.addEventListener('keyup', function (event) {
-  switch (event.keyCode){
-    case 9:
-      window.tabKeyIsDown = false;
+document.addEventListener('keydown', function (event) {
+  switch (event.key){
+    case 'Tab':
+      document.tabKeyIsDown = true;
       break;
-    case 'E'.charCodeAt(0):
-      if (window.tabKeyIsDown) {
+    case 'e':
+      if (document.tabKeyIsDown) {
         chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
           if (items.anOptionsNotes) {
             var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
@@ -516,20 +511,20 @@ window.addEventListener('keyup', function (event) {
         });
       }
       break;
-    case 'J'.charCodeAt(0):
-      if (window.tabKeyIsDown) {
+    case 'j':
+      if (document.tabKeyIsDown) {
         var arrowNextSubtask = document.querySelector('#arrowNextSubtask');
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
-    case 'K'.charCodeAt(0):
-      if (window.tabKeyIsDown) {
+    case 'k':
+      if (document.tabKeyIsDown) {
         var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
         if (arrowPreviousSubtask) arrowPreviousSubtask.click();
       }
       break;
-    case 'R'.charCodeAt(0):
-      if (window.tabKeyIsDown) {
+    case 'r':
+      if (document.tabKeyIsDown) {
         if (document.querySelector('.SetParentDrawer')) {
           closeSetParentDrawer();
         } else {
@@ -540,6 +535,10 @@ window.addEventListener('keyup', function (event) {
       }
       break;
   }
+});
+
+document.addEventListener('keyup', function (event) {
+  if (event.key === 'Tab') document.tabKeyIsDown = false;
 });
 
 window.addEventListener('load', function () {
