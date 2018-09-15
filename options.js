@@ -1,4 +1,4 @@
-function saveOptions() {
+var saveOptions = function () {
   var projectsEnabled = document.getElementById('projects').checked;
   var subtasksEnabled = document.getElementById('subtasks').checked;
   var parentEnabled = document.getElementById('parent').checked;
@@ -15,8 +15,9 @@ function saveOptions() {
       status.textContent = '';
     }, 1000);
   });
-}
-function loadOptions() {
+};
+
+var loadOptions = function () {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
@@ -28,7 +29,7 @@ function loadOptions() {
     document.getElementById('parent').checked = items.anOptionsParent;
     document.getElementById('notes').checked = items.anOptionsNotes;
   });
-}
+};
+
 document.addEventListener('DOMContentLoaded', loadOptions);
-document.getElementById('save').addEventListener('click',
-    saveOptions);
+document.getElementById('save').addEventListener('click', saveOptions);

@@ -92,11 +92,11 @@ var callAsanaApi = function (request, path, options, data, callback) {
 };
 
 var clickSectionSelector = function (a) {
-  var taskProjectsProjectId = findProjectId(a.previousSibling.href);
+  var taskProjectsProjectGid = findProjectGid(a.previousSibling.href);
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   var floatingSelectLabel;
   for (var i = 0; i < taskProjectsProjectList.children.length; i++) {
-    if (findProjectId(taskProjectsProjectList.children[i].children[0].href) === taskProjectsProjectId) {
+    if (findProjectGid(taskProjectsProjectList.children[i].children[0].href) === taskProjectsProjectGid) {
       floatingSelectLabel = taskProjectsProjectList.children[i].children[1];
       break;
     }
@@ -140,18 +140,18 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     return;
   }
-  var parentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
-  var taskId = findTaskId(window.location.href);
-  var containerId = findProjectId(window.location.href) || '0';
+  var parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+  var taskGid = findTaskGid(window.location.href);
+  var containerGid = findProjectGid(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentId}/subtasks`, {}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {}, {}, function (response) {
     var subtaskList = response.data;
     var subtaskListFiltered = subtaskList.filter(function (subtask) {
-      return !subtask.name.endsWith(':') || subtask.gid === taskId;
+      return !subtask.name.endsWith(':') || subtask.gid === taskGid;
     });
     var indexCurrent;
     for (var i = 0; i < subtaskListFiltered.length; i++) {
-      if (subtaskListFiltered[i].gid === taskId) {
+      if (subtaskListFiltered[i].gid === taskGid) {
         indexCurrent = i;
         break;
       }
@@ -161,8 +161,8 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+K)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerId}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+J)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+K)&#13;${subtaskListFiltered[indexPrevious].name}">∧</a>`: '';
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+J)&#13;${subtaskListFiltered[indexNext].name}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
@@ -183,16 +183,16 @@ var displayProjectsOnTop = function () {
   taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNamesOnTop');
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
-  var taskId = findTaskId(window.location.href);
+  var taskGid = findTaskGid(window.location.href);
   Array.from(taskProjectsProjectList.children).forEach(function(li) {
     var projectUrl = li.children[0].href;
-    var projectId = findProjectId(projectUrl);
+    var projectGid = findProjectGid(projectUrl);
     var projectName = li.children[0].children[0].textContent;
 
-    callAsanaApi('GET', `projects/${projectId}/sections`, {}, {}, function (response) {
+    callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function (response) {
       var taskAncestryAncestorProject = document.createElement('A');
       taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
-      taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectId}/${taskId}`);
+      taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
       taskAncestryAncestorProject.textContent = projectName;
       taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
 
@@ -247,7 +247,7 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
   if (!toastManager) return;
   var toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
-    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.id}">${(task.completed)? '✓ ': ''}${task.name}</a> ${messagesBeforeAfter[1]}` +
+    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${task.name}</a> ${messagesBeforeAfter[1]}` +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
   var closeButton = toastDiv.firstChild.firstChild.firstChild.firstChild.children[1];
@@ -267,20 +267,20 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
   }, 15000);
 };
 
-var findProjectId = function (url) {
-  var projectIdRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
-  var findProjectIdMatch = projectIdRegexPattern.exec(url);
-  if (findProjectIdMatch) return findProjectIdMatch[1];
+var findProjectGid = function (url) { // gid spec might change
+  var projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
+  var findProjectGidMatch = projectGidRegexPattern.exec(url);
+  if (findProjectGidMatch) return findProjectGidMatch[1];
 };
 
-var findTaskId = function (url) {
-  var taskIdRegexPatterns = [
+var findTaskGid = function (url) { // gid spec might change
+  var taskGidRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
     /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+\/?f?/,
     /https:\/\/app\.asana\.com\/0\/search\/\d+\/(\d+)\/?f?/
   ];
-  for (var i = 0; i < taskIdRegexPatterns.length; i++) {
-    var pattern = taskIdRegexPatterns[i];
+  for (var i = 0; i < taskGidRegexPatterns.length; i++) {
+    var pattern = taskGidRegexPatterns[i];
     if (pattern.exec(url)) {
       return pattern.exec(url)[1];
     }
@@ -307,9 +307,9 @@ var getLocaleAndSetLocalizedStrings = function () {
 };
 
 var inputNewParentTask = function (input) {
-  var taskId = findTaskId(window.location.href);
-  callAsanaApi('GET', `tasks/${taskId}`, {}, {}, function (response) {
-    var workspaceId = response.data.workspace.id;
+  var taskGid = findTaskGid(window.location.href);
+  callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
+    var workspaceGid = response.data.workspace.gid;
     input.addEventListener('input', function () {
       if (!document.querySelector('#DropdownContainer')) {
         var dropdownContainer = document.createElement('DIV');
@@ -318,15 +318,15 @@ var inputNewParentTask = function (input) {
         input.parentNode.appendChild(dropdownContainer);
       }
       var potentialTask;
-      var potentialTaskIdMatch = /^\d{15}$/.exec(input.value.trim());
-      var potentialTaskId = (potentialTaskIdMatch)? potentialTaskIdMatch[0]: findTaskId(input.value);
-      if (potentialTaskId) {
-        callAsanaApi('GET', `tasks/${potentialTaskId}`, {}, {}, function (response) {
+      var potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
+      var potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
+      if (potentialTaskGid) {
+        callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
           potentialTask = response.data;
-          populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+          populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
         });
       } else {
-        populateFromTypeahead(taskId, workspaceId, input, potentialTask);
+        populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
       }
     });
   });
@@ -353,8 +353,8 @@ var listenClickOnKeyboardShortcutList = function () {
   });
 };
 
-var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
+var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTask) {
+  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastChild) {
       typeaheadSearchScrollableContents.lastChild.remove();
@@ -367,7 +367,7 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
       typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
     }
     for (var i = 0; i < response.data.length; i++) {
-      if (response.data[i].id === Number(taskId)) continue;
+      if (response.data[i].gid === taskGid) continue;
       var dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
@@ -378,23 +378,23 @@ var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask)
         this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        var parentId = this.children[0].dataset.taskId;
-        var setParentOptions = {'parent': parentId};
+        var parentGid = this.children[0].dataset.taskGid;
+        var setParentOptions = {'parent': parentGid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentOptions.insert_before = null;
         } else {
           setParentOptions.insert_after = null;
         }
-        setNewParentTask(taskId, setParentOptions);
+        setNewParentTask(taskGid, setParentOptions);
       });
     }
   });
 };
 
 var replaceNotes = function () {
-  var taskId = findTaskId(window.location.href);
-  if (isNaN(taskId)) return;
-  callAsanaApi('GET', `tasks/${taskId}`, {'opt_fields': 'html_notes'}, {}, function (response) {
+  var taskGid = findTaskGid(window.location.href);
+  if (isNaN(taskGid)) return; // gid spec might change
+  callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function (response) {
     var htmlNotesOriginal = response.data.html_notes;
     var htmlNotes = htmlNotesOriginal;
     var replaceTextList = replaceRegexList.concat(replaceEntityList);
@@ -402,10 +402,10 @@ var replaceNotes = function () {
       var pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0],pair[1]);
     }
-    callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotes}, function (response) {
+    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotes}, function (response) {
       closeSingleTaskPaneExtraActionsMenu();
       displaySuccessToast(response.data, locStrings['toastContent-notesReplaced-list'], function (callback) {
-        callAsanaApi('PUT', `tasks/${taskId}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
+        callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
           callback();
         });
       });
@@ -421,7 +421,7 @@ var replaceRegexList = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9\-:;
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';
   var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
-  return `<div role="option" data-task-id="${task.id}" title="` +
+  return `<div role="option" data-task-gid="${task.gid}" title="` +
   task.name + `${(parentName)? '&#13;‹ ' + parentName: ''}` + `${(projectNameList)? '&#13;(' + projectNameList + ')': ''}` +
   '"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">' +
   `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
@@ -476,38 +476,38 @@ var runFunctionsThatCreateElementsIfEnabled = function () {
 };
 
 var saveOriginalParent = function () {
-  var taskId = findTaskId(window.location.href);
+  var taskGid = findTaskGid(window.location.href);
   var setParentDrawer = document.querySelector('.SetParentDrawer');
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) {
-    setParentDrawer.setAttribute('data-original-parent-id', null);
-    setParentDrawer.setAttribute('data-original-previous-sibling-id', null);
+    setParentDrawer.setAttribute('data-original-parent-gid', null);
+    setParentDrawer.setAttribute('data-original-previous-sibling-gid', null);
   } else {
-    var originalParentId = findTaskId(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
-    callAsanaApi('GET', `tasks/${originalParentId}/subtasks`, {}, {}, function (response) {
+    var originalParentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+    callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
       var subtaskList = response.data;
       var indexCurrent;
       for (var i = 0; i < subtaskList.length; i++) {
-        if (subtaskList[i].gid === taskId) {
+        if (subtaskList[i].gid === taskGid) {
           indexCurrent = i;
           break;
         }
       }
-      var originalPreviousSiblingId = (indexCurrent > 0)? subtaskList[indexCurrent - 1].id: null;
-      setParentDrawer.setAttribute('data-original-parent-id', originalParentId);
-      setParentDrawer.setAttribute('data-original-previous-sibling-id', originalPreviousSiblingId);
+      var originalPreviousSiblingGid = (indexCurrent > 0)? subtaskList[indexCurrent - 1].gid: null;
+      setParentDrawer.setAttribute('data-original-parent-gid', originalParentGid);
+      setParentDrawer.setAttribute('data-original-previous-sibling-gid', originalPreviousSiblingGid);
     });
   }
 };
 
-var setNewParentTask = function (taskId, setParentOptions) {
+var setNewParentTask = function (taskGid, setParentOptions) {
   var setParentDrawer = document.querySelector('.SetParentDrawer');
-  var originalParentId = setParentDrawer.dataset.originalParentId;
-  var originalPreviousSiblingId = setParentDrawer.dataset.originalPreviousSiblingId;
-  callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, setParentOptions, function (response) {
+  var originalParentGid = setParentDrawer.dataset.originalParentGid;
+  var originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
+  callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, setParentOptions, function (response) {
     closeSetParentDrawer();
     displaySuccessToast(response.data, locStrings['toastContent-setParent-list'], function (callback) {
-      callAsanaApi('POST', `tasks/${taskId}/setParent`, {}, {'parent': originalParentId, 'insert_after': originalPreviousSiblingId}, function (response) {
+      callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
         callback();
         setTimeout(function() {
           runFunctionsThatCreateElementsIfEnabled();
