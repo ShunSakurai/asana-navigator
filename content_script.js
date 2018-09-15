@@ -38,6 +38,28 @@ var addSetParentToExtraActions = function () {
   }
 };
 
+var addToKeyboardShortcutsList = function () {
+  var keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
+  if (!keyboardShortcutsModal) return;
+  var keyboardShortcutsModalANSection = document.createElement('DIV');
+  keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
+  keyboardShortcutsModal.firstChild.children[1].lastChild.appendChild(keyboardShortcutsModalANSection);
+  var separator = 'separator';
+  var shortcutsArray = [
+    [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'K', separator, 'Tab', 'J']],
+    [locStrings['menuButton-replaceNotes'], ['Tab', 'E']],
+    [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'R']],
+  ];
+  for (var i = 0; i < shortcutsArray.length; i++) {
+    var [description, keyList] = shortcutsArray[i];
+    var keyboardShortcutsModalRow = document.createElement('DIV');
+    keyboardShortcutsModalRow.setAttribute('class', 'KeyboardShortcutsModal-row');
+    keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys">` +
+    keyList.map(a => (a === separator)? '/': '<span class="KeyboardShortcutsModal-key">' + a + '</span>').join('') + '</span>';
+    keyboardShortcutsModalANSection.appendChild(keyboardShortcutsModalRow);
+  }
+};
+
 var callAsanaApi = function (request, path, options, data, callback) {
   var xhr = new XMLHttpRequest();
   xhr.addEventListener('load', function () {
@@ -310,6 +332,27 @@ var inputNewParentTask = function (input) {
   });
 };
 
+var listenClickOnKeyboardShortcutList = function () {
+  var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
+  if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
+    setTimeout(function() {
+      var menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
+      var helpButtonKeyboardShortcuts;
+      for (var i = 0; i < menuItems.length; i++) {
+        if (menuItems[i].firstChild.innerText === locStrings['helpButton-keyboardShortcuts']) {
+          helpButtonKeyboardShortcuts = menuItems[i];
+          break;
+        }
+      }
+      helpButtonKeyboardShortcuts.addEventListener('click', function () {
+        setTimeout(function() {
+          addToKeyboardShortcutsList();
+        }, 100);
+      });
+    }, 100);
+  });
+};
+
 var populateFromTypeahead = function (taskId, workspaceId, input, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceId}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
@@ -492,6 +535,11 @@ document.addEventListener('keydown', function (event) {
     case 'Tab':
       document.tabKeyIsDown = true;
       break;
+    case '/':
+      if (event.metaKey || event.ctrlKey) {
+        addToKeyboardShortcutsList();
+      }
+      break;
     case 'e':
       if (document.tabKeyIsDown) {
         chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
@@ -543,6 +591,7 @@ document.addEventListener('keyup', function (event) {
 
 window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
+  listenClickOnKeyboardShortcutList();
   runAllFunctionsIfEnabled();
 });
 
