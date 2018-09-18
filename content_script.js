@@ -110,6 +110,7 @@ var clickSectionSelector = function (a) {
 var closeSetParentDrawer = function () {
   var setParentDrawer = document.querySelector('.SetParentDrawer');
   if (setParentDrawer) setParentDrawer.remove();
+  document.removeEventListener('click', listenToClickToCloseSetParentDropdown);
 };
 
 var closeSingleTaskPaneExtraActionsMenu = function () {
@@ -119,14 +120,35 @@ var closeSingleTaskPaneExtraActionsMenu = function () {
   }
 };
 
-var deleteDropdownItemHintText = function () {
-  var dropdownItemHintText = document.querySelector('.HintTextTypeaheadItem');
-  if (dropdownItemHintText) dropdownItemHintText.remove();
+var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
+  var setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
+  if (!setParentDropdownContainer) {
+    setParentDropdownContainer = document.createElement('DIV');
+    setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
+    setParentDropdownContainer.setAttribute('id', 'SetParentDropdownContainer');
+    input.parentNode.appendChild(setParentDropdownContainer);
+  }
+  var potentialTask;
+  var potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
+  var potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
+  if (potentialTaskGid) {
+    callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
+      potentialTask = response.data;
+      populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
+    });
+  } else {
+    populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
+  }
 };
 
 var deleteProjectNamesOnTop = function () {
   var projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
   if (projectNamesOnTop) projectNamesOnTop.remove();
+};
+
+var deleteSetParentTypeaheadDropdown = function () {
+  var setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
+  if (setParentDropdownContainer) setParentDropdownContainer.remove();
 };
 
 var deleteSiblingButtons = function () {
@@ -233,11 +255,18 @@ var displaySetParentDrawer = function () {
   });
   var setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
   setParentDrawerTypeaheadInput.addEventListener('focus', function () {
-    inputNewParentTask(this);
+    var taskGid = findTaskGid(window.location.href);
+    callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
+      var workspaceGid = response.data.workspace.gid;
+      setParentDrawerTypeaheadInput.addEventListener('input', function () {
+        createSetParentDropdownContainer(this, taskGid, workspaceGid);
+      });
+      setParentDrawerTypeaheadInput.addEventListener('click', function () {
+        createSetParentDropdownContainer(this, taskGid, workspaceGid);
+      });
+    });
   });
-  setParentDrawerTypeaheadInput.addEventListener('blur', function () {
-    deleteDropdownItemHintText();
-  });
+  document.addEventListener('click', listenToClickToCloseSetParentDropdown);
   setParentDrawerTypeaheadInput.focus();
   saveOriginalParent();
 };
@@ -306,33 +335,7 @@ var getLocaleAndSetLocalizedStrings = function () {
   }
 };
 
-var inputNewParentTask = function (input) {
-  var taskGid = findTaskGid(window.location.href);
-  callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
-    var workspaceGid = response.data.workspace.gid;
-    input.addEventListener('input', function () {
-      if (!document.querySelector('#DropdownContainer')) {
-        var dropdownContainer = document.createElement('DIV');
-        dropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable AddDependencyTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
-        dropdownContainer.setAttribute('id', 'DropdownContainer');
-        input.parentNode.appendChild(dropdownContainer);
-      }
-      var potentialTask;
-      var potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
-      var potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
-      if (potentialTaskGid) {
-        callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
-          potentialTask = response.data;
-          populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
-        });
-      } else {
-        populateFromTypeahead(taskGid, workspaceGid, input, potentialTask);
-      }
-    });
-  });
-};
-
-var listenClickOnKeyboardShortcutList = function () {
+var listenToClickOnKeyboardShortcutList = function () {
   var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
     setTimeout(function() {
@@ -353,6 +356,15 @@ var listenClickOnKeyboardShortcutList = function () {
   });
 };
 
+var listenToClickToCloseSetParentDropdown = function (event) {
+  var setParentDrawer = document.querySelector('.SetParentDrawer');
+  if (setParentDrawer) {
+    if (!setParentDrawer.contains(event.target)) {
+      deleteSetParentTypeaheadDropdown();
+    }
+  }
+};
+
 var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
@@ -363,7 +375,7 @@ var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTas
     if (!response.data.length) {
       var dropdownItemHintText = document.createElement('DIV');
       dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
-      dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch']; // Fix the behavior when clicked
+      dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
       typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
     }
     for (var i = 0; i < response.data.length; i++) {
@@ -460,7 +472,7 @@ var runAllFunctionsIfEnabled = function (retry) {
     } else { // on "load"
       if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-      if (items.anOptionsShortcuts) listenClickOnKeyboardShortcutList();
+      if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
       if (items.anOptionsParent) addSetParentToExtraActions();
       if (items.anOptionsNotes) addReplaceNotesToExtraActions();
     }
