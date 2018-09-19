@@ -1,4 +1,5 @@
 // Unlocalized UI elements are shown in English
+// The UI strings shouldn't include HTML special characters
 
 var localizationStrings = {
   'de': {
