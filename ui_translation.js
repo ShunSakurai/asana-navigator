@@ -12,8 +12,8 @@ var localizationStrings = {
   },
   'en': {
     // Commenting the same or relevant UI from translations/en.bundle.js
-    'arrowTitle-nextSibling': 'Next sibling subtask',
-    'arrowTitle-previousSibling': 'Previous sibling subtask',
+    'arrowTitle-nextSibling': 'Next subtask',
+    'arrowTitle-previousSibling': 'Previous subtask',
     'drawerLabel-setParent': 'Make this task a subtask of another task.', // krtmmb:[0,"Make this task a subtask of another task. It will be removed from the current project."]
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-list': ['Insert at: Top', 'Bottom'],
