@@ -46,7 +46,7 @@ var addToKeyboardShortcutsList = function () {
   keyboardShortcutsModal.firstChild.children[1].lastChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
   var shortcutsArray = [
-    [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'K', separator, 'Tab', 'J']],
+    [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'G', separator, 'Tab', 'J']],
     [locStrings['shortcutDescription-subtasksDropdown'], ['Tab', 'N']],
     [locStrings['menuButton-replaceNotes'], ['Tab', 'E']],
     [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'R']],
@@ -203,7 +203,7 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+K)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+G)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
     var innerHTMLMiddle = `<a id="arrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Tab+N)">&gt;</a>`;
     var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
@@ -625,7 +625,7 @@ document.addEventListener('keydown', function (event) {
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
-    case 'k': // TODO: This needs to be changed as it conflicts with liking/hearting
+    case 'g':
       if (document.tabKeyIsDown) {
         var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
         if (arrowPreviousSubtask) arrowPreviousSubtask.click();

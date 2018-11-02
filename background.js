@@ -6,3 +6,11 @@ chrome.tabs.onUpdated.addListener(
     }
   }
 );
+
+chrome.runtime.onInstalled.addListener(
+  function(details) {
+    if (details.reason === 'update') {
+      chrome.tabs.create({url: 'update.html'});
+    }
+  }
+);
