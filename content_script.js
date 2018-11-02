@@ -47,6 +47,7 @@ var addToKeyboardShortcutsList = function () {
   var separator = 'separator';
   var shortcutsArray = [
     [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'K', separator, 'Tab', 'J']],
+    [locStrings['shortcutDescription-subtasksDropdown'], ['Tab', 'N']],
     [locStrings['menuButton-replaceNotes'], ['Tab', 'E']],
     [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'R']],
   ];
@@ -141,6 +142,19 @@ var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
   }
 };
 
+var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
+  var siblingDropdown = document.createElement('DIV');
+  siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
+  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
+    subtaskListFiltered.map(
+      subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
+      `${(subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': ''}${(subtask.name.endsWith(':'))? '<strong><u>' + subtask.name + '</u></strong>': subtask.name}</span></a>`
+    ).join('') +
+    '</div></div></div>';
+  document.querySelector('.SingleTaskPane').appendChild(siblingDropdown);
+  document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
+};
+
 var deleteProjectNamesOnTop = function () {
   var projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
   if (projectNamesOnTop) projectNamesOnTop.remove();
@@ -154,6 +168,12 @@ var deleteSetParentTypeaheadDropdown = function () {
 var deleteSiblingButtons = function () {
   var SiblingButtons = document.querySelector('#SiblingButtons');
   if (SiblingButtons) SiblingButtons.remove();
+};
+
+var deleteSiblingSubtasksDropdown = function () {
+  var siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+  if (siblingDropdown) siblingDropdown.remove();
+  document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
 var displayLinksToSiblingSubtasks = function () {
@@ -183,11 +203,14 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSibling']} (Tab+K)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSibling']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
-    siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLNext].join('<br>');
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+K)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
+    var innerHTMLMiddle = `<a id="arrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Tab+N)">&gt;</a>`;
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
+    siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
+    document.querySelector('#arrowMiddleSubtask').addEventListener('click', function () {createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
+    });
   });
 };
 
@@ -372,6 +395,16 @@ var listenToClickToCloseSetParentDropdown = function (event) {
   if (setParentDrawer) {
     if (!setParentDrawer.contains(event.target)) {
       deleteSetParentTypeaheadDropdown();
+    }
+  }
+};
+
+var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
+  var siblingButtons = document.querySelector('#SiblingButtons');
+  var siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+  if (siblingDropdown) {
+    if (!siblingButtons.contains(event.target) && !siblingDropdown.contains(event.target)) {
+        deleteSiblingSubtasksDropdown();
     }
   }
 };
@@ -592,10 +625,16 @@ document.addEventListener('keydown', function (event) {
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
-    case 'k':
+    case 'k': // TODO: This needs to be changed as it conflicts with liking/hearting
       if (document.tabKeyIsDown) {
         var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
         if (arrowPreviousSubtask) arrowPreviousSubtask.click();
+      }
+      break;
+    case 'n':
+      if (document.tabKeyIsDown) {
+        var arrowMiddleSubtask = document.querySelector('#arrowMiddleSubtask');
+        if (arrowMiddleSubtask) arrowMiddleSubtask.click();
       }
       break;
     case 'r':

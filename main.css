@@ -22,3 +22,11 @@
     background-color: #7ac8ee !important;
     border-color: #7ac8ee !important;
 }
+
+/* TODO: Size needs to be responsive */
+.SiblingSubtasksDropdownContainer {
+  max-height: 525px;
+  position: fixed;
+  right: 40px;
+  top: 225px;
+}

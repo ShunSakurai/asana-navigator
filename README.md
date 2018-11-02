@@ -32,9 +32,10 @@
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
 - [x] Implement keyboard shortcut to set new parent task (Tab+R)
 - [x] Display the new key combinations in Keyboard Shortcuts list
+- [ ] Change Tab+K to another key as it now conflicts with liking/hearting
 
 #### Going to sibling subtasks:
-- [ ] Display drop-down list to go to sibling subtasks
+- [x] Display drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
 - [x] Search for task ID when the input is an integer
