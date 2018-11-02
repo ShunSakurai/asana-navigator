@@ -424,6 +424,7 @@ var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTas
     }
     for (var i = 0; i < response.data.length; i++) {
       if (response.data[i].gid === taskGid) continue;
+      if (response.data[i].name.endsWith(':')) continue;
       var dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
