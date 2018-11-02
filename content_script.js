@@ -633,8 +633,12 @@ document.addEventListener('keydown', function (event) {
       break;
     case 'n':
       if (document.tabKeyIsDown) {
-        var arrowMiddleSubtask = document.querySelector('#arrowMiddleSubtask');
-        if (arrowMiddleSubtask) arrowMiddleSubtask.click();
+        if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
+          deleteSiblingSubtasksDropdown();
+        } else {
+          var arrowMiddleSubtask = document.querySelector('#arrowMiddleSubtask');
+          if (arrowMiddleSubtask) arrowMiddleSubtask.click();
+        }
       }
       break;
     case 'r':
