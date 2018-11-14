@@ -54,7 +54,7 @@
 - [ ] Create subtasks in bulk
 - [ ] Convert tasks into subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
-- [ ] Add options to replace custom strings
+- [ ] Replace text in the task description
 - [x] Support other languages
 - [ ] Implement donation page
 
@@ -68,6 +68,7 @@
 ## Special thanks
 
 I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg87/asana-chrome-plugin) project. That extension is very nicely made. I learned a lot from him and his code.
+Thank you also to [Hiro-san](https://github.com/hiroyamada/) for giving me advice when I was struggling to implement the subtask dropdown feature.
 
 ## Design decisions
 
