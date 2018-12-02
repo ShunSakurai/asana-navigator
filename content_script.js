@@ -660,6 +660,10 @@ document.addEventListener('keyup', function (event) {
   if (event.key === 'Tab') document.tabKeyIsDown = false;
 });
 
+window.addEventListener('blur', function () {
+  document.tabKeyIsDown = false;
+});
+
 window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
   runAllFunctionsIfEnabled();
