@@ -51,8 +51,6 @@
 - [ ] Search in the current open page, e.g. "search in this project"
 - [ ] Use tool tips with black background
 - [ ] Only update the right pane when navigating subtasks
-- [ ] Create subtasks in bulk
-- [ ] Convert tasks into subtasks in bulk
 - [x] Remove duplicate links and replace HTML entities in the task description
 - [ ] Replace text in the task description
 - [x] Support other languages
