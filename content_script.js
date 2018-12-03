@@ -41,7 +41,9 @@ var addSetParentToExtraActions = function () {
 var addToKeyboardShortcutsList = function () {
   var keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
   if (!keyboardShortcutsModal) return;
+  if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
   var keyboardShortcutsModalANSection = document.createElement('DIV');
+  keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection')
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
   keyboardShortcutsModal.firstChild.children[1].lastChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
