@@ -1,18 +1,18 @@
-var addReplaceNotesToExtraActions = function () {
+var addReplaceDescriptionToExtraActions = function () {
   var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
     singleTaskPaneExtraActionsButton.addEventListener('click', function () {
-      var replaceNotesButton = document.createElement('A');
-      replaceNotesButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceNotes SingleTaskPaneExtraActionsButton-menuItem');
-      replaceNotesButton.addEventListener('click', function () {
-        displayReplaceNotesDialog();
+      var replaceDescriptionButton = document.createElement('A');
+      replaceDescriptionButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
+      replaceDescriptionButton.addEventListener('click', function () {
+        displayReplaceDescriptionDialog();
         closeSingleTaskPaneExtraActionsMenu();
       });
-      replaceNotesButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceNotes']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
+      replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
       setTimeout(function() {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
-        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceNotesButton, nextExtraActionButton);
+        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
       }, 100);
     });
   }
@@ -48,7 +48,7 @@ var addToKeyboardShortcutsList = function () {
   var shortcutsArray = [
     [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'G', separator, 'Tab', 'J']],
     [locStrings['shortcutDescription-subtasksDropdown'], ['Tab', 'N']],
-    [locStrings['menuButton-replaceNotes'].replace('...', ''), ['Tab', 'E']],
+    [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
     [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'R']],
   ];
   for (var i = 0; i < shortcutsArray.length; i++) {
@@ -108,9 +108,9 @@ var clickSectionSelector = function (a) {
   }, 100);
 };
 
-var closeReplaceNotesDialog = function () {
-  var replaceNotesDialogView = document.querySelector('#ReplaceNotesDialogView');
-  if (replaceNotesDialogView) replaceNotesDialogView.remove();
+var closeReplaceDescriptionDialog = function () {
+  var replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
+  if (replaceDescriptionDialogView) replaceDescriptionDialogView.remove();
 };
 
 var closeSetParentDrawer = function () {
@@ -265,41 +265,41 @@ var displayProjectsOnTop = function () {
   if (singleTaskPaneBody) singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
-var displayReplaceNotesDialog = function () {
-  var replaceNotesDialog = document.createElement('DIV');
-  replaceNotesDialog.setAttribute('id', 'ReplaceNotesDialogView');
-  replaceNotesDialog.setAttribute('class', 'tab-ring');
-  replaceNotesDialog.setAttribute('tabindex', '-1');
-  replaceNotesDialog.innerHTML = `<div>
+var displayReplaceDescriptionDialog = function () {
+  var replaceDescriptionDialog = document.createElement('DIV');
+  replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
+  replaceDescriptionDialog.setAttribute('class', 'tab-ring');
+  replaceDescriptionDialog.setAttribute('tabindex', '-1');
+  replaceDescriptionDialog.innerHTML = `<div>
     <div class="dialog-background"></div>
-    <div id="replace_notes_dialog" class="dialog-box" style="position: fixed; top: 150px;">
-      <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceNotesDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceNotes'].replace('...', '')}</div></div>
+    <div id="replace_description_dialog" class="dialog-box" style="position: fixed; top: 150px;">
+      <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
             <table>
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td></tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
               </tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
               </tr>
             </table>
           </div>
         </div>
       </div>
-      <div class="buttons"><div id="replace_notes_dialog_preset_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceNotesPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="buttons"><div id="replace_description_dialog_preset_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
             <table>
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0"></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_notes_name_input" tabindex="0"></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0"></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0"></td>
                 <td><a class="delete-row-link">&nbsp;×</a></td>
               </tr>
             </table>
@@ -308,10 +308,10 @@ var displayReplaceNotesDialog = function () {
         <div><a class="add-row-link">+ ${locStrings['dialogLink-addRow']}</a></div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="replace_notes_dialog_replace_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" disabled><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div id="replace_description_dialog_replace_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" disabled><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
-  document.body.appendChild(replaceNotesDialog);
+  document.body.appendChild(replaceDescriptionDialog);
 };
 
 var displaySetParentDrawer = function () {
@@ -502,7 +502,7 @@ var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTas
   });
 };
 
-var replaceNotes = function (replaceTextList) {
+var replaceDescription = function (replaceTextList) {
   var taskGid = findTaskGid(window.location.href);
   if (isNaN(taskGid)) return; // gid spec might change
   callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function (response) {
@@ -514,8 +514,8 @@ var replaceNotes = function (replaceTextList) {
     }
     callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotes}, function (response) {
       closeSingleTaskPaneExtraActionsMenu();
-      closeReplaceNotesDialog();
-      displaySuccessToast(response.data, locStrings['toastContent-notesReplaced-list'], function (callback) {
+      closeReplaceDescriptionDialog();
+      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-list'], function (callback) {
         callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
           callback();
         });
@@ -524,9 +524,9 @@ var replaceNotes = function (replaceTextList) {
   });
 };
 
-var replaceNotesPreset = function () {
+var replaceDescriptionPreset = function () {
   var replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
-  replaceNotes(replaceTextList);
+  replaceDescription(replaceTextList);
 };
 
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
@@ -554,7 +554,7 @@ var runAllFunctionsIfEnabled = function (retry) {
     'anOptionsSubtasks': true,
     'anOptionsShortcuts': true,
     'anOptionsParent': true,
-    'anOptionsNotes': true
+    'anOptionsDescription': true
   }, function (items) {
     if (retry) { // on "loading"
       if (items.anOptionsProjects) {
@@ -571,14 +571,14 @@ var runAllFunctionsIfEnabled = function (retry) {
       }
       setTimeout(function() {
         if (items.anOptionsParent) addSetParentToExtraActions();
-        if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+        if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       }, 500);
     } else { // on "load"
       if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
       if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
       if (items.anOptionsParent) addSetParentToExtraActions();
-      if (items.anOptionsNotes) addReplaceNotesToExtraActions();
+      if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
     }
   });
 };
@@ -662,12 +662,12 @@ document.addEventListener('keydown', function (event) {
       break;
     case 'e':
       if (document.tabKeyIsDown) {
-        chrome.storage.sync.get({'anOptionsNotes': true}, function (items) {
-          if (items.anOptionsNotes) {
-            if (document.querySelector('#ReplaceNotesDialogView')) {
-              closeReplaceNotesDialog();
+        chrome.storage.sync.get({'anOptionsDescription': true}, function (items) {
+          if (items.anOptionsDescription) {
+            if (document.querySelector('#ReplaceDescriptionDialogView')) {
+              closeReplaceDescriptionDialog();
             } else {
-              displayReplaceNotesDialog();
+              displayReplaceDescriptionDialog();
             }
           }
         });
