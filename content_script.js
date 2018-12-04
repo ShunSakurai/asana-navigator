@@ -293,7 +293,7 @@ var displayReplaceDescriptionDialog = function () {
           </div>
         </div>
       </div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogPresetSubmit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
@@ -310,10 +310,26 @@ var displayReplaceDescriptionDialog = function () {
         <div><a class="add-row-link">+ ${locStrings['dialogLink-addRow']}</a></div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogCustomSubmit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogCustomButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
   document.body.appendChild(replaceDescriptionDialog);
+  var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
+  var replaceDescriptionDialogCustomButton = document.querySelector('#ReplaceDescriptionDialogCustomButton');
+  replaceDescriptionDialogPresetButton.focus();
+  replaceDescriptionDialog.addEventListener('keydown', function (event) {
+    if (event.key == 'Tab') {
+      document.tabKeyIsDownOnModal = true;
+      if (document.activeElement === replaceDescriptionDialogPresetButton && event.shiftKey) {
+        replaceDescriptionDialogCustomButton.focus();
+        event.preventDefault();
+      } else if (document.activeElement === replaceDescriptionDialogCustomButton && !event.shiftKey) {
+        replaceDescriptionDialogPresetButton.focus();
+        event.preventDefault();
+      }
+      event.stopPropagation();
+    }
+  });
 };
 
 var displaySetParentDrawer = function () {
@@ -649,6 +665,7 @@ var toggleSetParentSwitch = function (input) {
 };
 
 document.tabKeyIsDown = false;
+document.tabKeyIsDownOnModal = false;
 
 document.addEventListener('keydown', function (event) {
   switch (event.key){
@@ -663,13 +680,13 @@ document.addEventListener('keydown', function (event) {
       }
       break;
     case 'e':
-      if (document.tabKeyIsDown) {
+      if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
         chrome.storage.sync.get({'anOptionsDescription': true}, function (items) {
           if (items.anOptionsDescription) {
             if (document.querySelector('#ReplaceDescriptionDialogView')) {
               closeReplaceDescriptionDialog();
             } else {
-              displayReplaceDescriptionDialog();
+              if (document.querySelector('.SingleTaskPane')) displayReplaceDescriptionDialog();
             }
           }
         });
@@ -712,11 +729,15 @@ document.addEventListener('keydown', function (event) {
 });
 
 document.addEventListener('keyup', function (event) {
-  if (event.key === 'Tab') document.tabKeyIsDown = false;
+  if (event.key === 'Tab') {
+    document.tabKeyIsDown = false;
+    document.tabKeyIsDownOnModal = false;
+  }
 });
 
 window.addEventListener('blur', function () {
   document.tabKeyIsDown = false;
+  document.tabKeyIsDownOnModal = false;
 });
 
 window.addEventListener('load', function () {
