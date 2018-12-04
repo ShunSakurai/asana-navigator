@@ -210,13 +210,13 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="arrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+G)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
-    var innerHTMLMiddle = `<a id="arrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Tab+N)">&gt;</a>`;
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="arrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+G)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
+    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Tab+N)">&gt;</a>`;
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
-    document.querySelector('#arrowMiddleSubtask').addEventListener('click', function () {createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
+    document.querySelector('#ArrowMiddleSubtask').addEventListener('click', function () {createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
     });
   });
 };
@@ -244,8 +244,8 @@ var displayProjectsOnTop = function () {
     var taskAncestryAncestorProject = document.createElement('A');
     taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
     taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
+    taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
     taskAncestryAncestorProject.textContent = projectName;
-    taskAncestryAncestorProject.id = 'project' + projectGid;
     taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
 
     // Section selectors as DOM elements are loaded later, so fetching them via API
@@ -254,7 +254,7 @@ var displayProjectsOnTop = function () {
         var taskAncestryAncestorProjectSectionSelector = document.createElement('A');
         taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
         taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
-        taskAncestryAncestorProjects.insertBefore(taskAncestryAncestorProjectSectionSelector, taskAncestryAncestorProjects.querySelector('#project' + projectGid).nextSibling);
+        taskAncestryAncestorProjects.insertBefore(taskAncestryAncestorProjectSectionSelector, taskAncestryAncestorProjects.querySelector('#Project' + projectGid).nextSibling);
         taskAncestryAncestorProjectSectionSelector.addEventListener('click', function () {
           clickSectionSelector(this);
         });
@@ -274,7 +274,7 @@ var displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = `<div>
     <div class="dialog-background"></div>
-    <div id="replace_description_dialog" class="dialog-box" style="position: fixed; top: 150px;">
+    <div id="ReplaceDescriptionDialog" class="dialog-box" style="position: fixed; top: 150px;">
       <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
       <div class="content">
         <div class="loading-boundary">
@@ -293,7 +293,7 @@ var displayReplaceDescriptionDialog = function () {
           </div>
         </div>
       </div>
-      <div class="buttons"><div id="replace_description_dialog_preset_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogPresetSubmit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
@@ -310,7 +310,7 @@ var displayReplaceDescriptionDialog = function () {
         <div><a class="add-row-link">+ ${locStrings['dialogLink-addRow']}</a></div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="replace_description_dialog_replace_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogCustomSubmit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
   document.body.appendChild(replaceDescriptionDialog);
@@ -322,13 +322,13 @@ var displaySetParentDrawer = function () {
   if (!singleTaskPaneBody) return;
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
-  setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="setParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
+  setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
   `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-list'][0]}&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;${locStrings['drawerSwitch-setParent-list'][1]}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
   singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
-  document.querySelector('#setParentDrawerCloseButton').addEventListener('click', function () {
+  document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function () {
     closeSetParentDrawer();
   });
   document.querySelector('#SetParentSwitch').addEventListener('click', function () {
@@ -677,13 +677,13 @@ document.addEventListener('keydown', function (event) {
       break;
     case 'j':
       if (document.tabKeyIsDown) {
-        var arrowNextSubtask = document.querySelector('#arrowNextSubtask');
+        var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
     case 'g':
       if (document.tabKeyIsDown) {
-        var arrowPreviousSubtask = document.querySelector('#arrowPreviousSubtask');
+        var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
         if (arrowPreviousSubtask) arrowPreviousSubtask.click();
       }
       break;
@@ -692,7 +692,7 @@ document.addEventListener('keydown', function (event) {
         if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
         } else {
-          var arrowMiddleSubtask = document.querySelector('#arrowMiddleSubtask');
+          var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
           if (arrowMiddleSubtask) arrowMiddleSubtask.click();
         }
       }
