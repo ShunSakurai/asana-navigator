@@ -43,9 +43,9 @@ var addToKeyboardShortcutsList = function () {
   if (!keyboardShortcutsModal) return;
   if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
   var keyboardShortcutsModalANSection = document.createElement('DIV');
-  keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection')
+  keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection');
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
-  keyboardShortcutsModal.firstChild.children[1].lastChild.appendChild(keyboardShortcutsModalANSection);
+  keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
   var shortcutsArray = [
     [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'G', separator, 'Tab', 'J']],
@@ -282,12 +282,12 @@ var displayReplaceDescriptionDialog = function () {
             <table>
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td></tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
               </tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
               </tr>
             </table>
           </div>
@@ -300,8 +300,8 @@ var displayReplaceDescriptionDialog = function () {
             <table>
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0"></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" id="replace_description_name_input" tabindex="0"></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
                 <td><a class="delete-row-link">&nbsp;×</a></td>
               </tr>
             </table>
@@ -310,7 +310,7 @@ var displayReplaceDescriptionDialog = function () {
         <div><a class="add-row-link">+ ${locStrings['dialogLink-addRow']}</a></div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="replace_description_dialog_replace_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" disabled><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div id="replace_description_dialog_replace_submit" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
   document.body.appendChild(replaceDescriptionDialog);
@@ -360,11 +360,11 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
     `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> ${messagesBeforeAfter[1]}` +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
-  var closeButton = toastDiv.firstChild.firstChild.firstChild.firstChild.children[1];
+  var closeButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1];
   closeButton.addEventListener('click', function () {
     toastDiv.remove();
   });
-  var undoButton = toastDiv.firstChild.firstChild.firstChild.children[1];
+  var undoButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.children[1];
   undoButton.addEventListener('click', function () {
     undoButton.outerText = locStrings['toastButtton-undoing'];
     callback(function () {
@@ -432,7 +432,7 @@ var listenToClickOnKeyboardShortcutList = function () {
       var menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
       var helpButtonKeyboardShortcuts;
       for (var i = 0; i < menuItems.length; i++) {
-        if (menuItems[i].firstChild.innerText === locStrings['helpButton-keyboardShortcuts']) {
+        if (menuItems[i].firstElementChild.innerText === locStrings['helpButton-keyboardShortcuts']) {
           helpButtonKeyboardShortcuts = menuItems[i];
           break;
         }
@@ -468,8 +468,8 @@ var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
 var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': input.value, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
-    while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastChild) {
-      typeaheadSearchScrollableContents.lastChild.remove();
+    while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
+      typeaheadSearchScrollableContents.lastElementChild.remove();
     }
     if (potentialTask) response.data.unshift(potentialTask);
     if (!response.data.length) {
@@ -485,10 +485,10 @@ var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTas
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
       dropdownItem.addEventListener('mouseover', function () {
-        this.firstChild.firstChild.classList.add('TypeaheadItemStructure--highlighted');
+        this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('mouseout', function () {
-        this.firstChild.firstChild.classList.remove('TypeaheadItemStructure--highlighted');
+        this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
         var parentGid = this.children[0].dataset.taskGid;
