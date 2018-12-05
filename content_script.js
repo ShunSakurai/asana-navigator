@@ -155,7 +155,7 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
     subtaskListFiltered.map(
       subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
-      `${(subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': ''}${(subtask.name.endsWith(':'))? '<strong><u>' + subtask.name + '</u></strong>': subtask.name}</span></a>`
+      `${(subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': '&nbsp;'}${(subtask.name.endsWith(':'))? '<strong><u>' + subtask.name + '</u></strong>': '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
   document.querySelector('.SingleTaskPane').appendChild(siblingDropdown);
