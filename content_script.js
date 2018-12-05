@@ -223,8 +223,7 @@ var displayLinksToSiblingSubtasks = function () {
 
 var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (!taskProjectsProjectList || taskAncestryTaskLinks.length) {
+  if (!taskProjectsProjectList) {
     deleteProjectNamesOnTop();
     return;
   }
