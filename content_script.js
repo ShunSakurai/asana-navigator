@@ -317,16 +317,25 @@ var displayReplaceDescriptionDialog = function () {
   var replaceDescriptionDialogCustomButton = document.querySelector('#ReplaceDescriptionDialogCustomButton');
   replaceDescriptionDialogPresetButton.focus();
   replaceDescriptionDialog.addEventListener('keydown', function (event) {
-    if (event.key == 'Tab') {
-      document.tabKeyIsDownOnModal = true;
-      if (document.activeElement === replaceDescriptionDialogPresetButton && event.shiftKey) {
-        replaceDescriptionDialogCustomButton.focus();
-        event.preventDefault();
-      } else if (document.activeElement === replaceDescriptionDialogCustomButton && !event.shiftKey) {
-        replaceDescriptionDialogPresetButton.focus();
-        event.preventDefault();
-      }
-      event.stopPropagation();
+    switch (event.key){
+      case 'Tab':
+        document.tabKeyIsDownOnModal = true;
+        if (document.activeElement === replaceDescriptionDialogPresetButton && event.shiftKey) {
+          replaceDescriptionDialogCustomButton.focus();
+          event.preventDefault();
+        } else if (document.activeElement === replaceDescriptionDialogCustomButton && !event.shiftKey) {
+          replaceDescriptionDialogPresetButton.focus();
+          event.preventDefault();
+        }
+        event.stopPropagation();
+        break;
+      case 'Enter':
+        if (document.activeElement === replaceDescriptionDialogPresetButton) {
+          replaceDescriptionDialogPresetButton.click();
+        } else if (document.activeElement === replaceDescriptionDialogCustomButton) {
+          replaceDescriptionDialogCustomButton.click();
+        }
+        break;
     }
   });
 };
