@@ -413,6 +413,19 @@ var getLocaleAndSetLocalizedStrings = function () {
   }
 };
 
+var getUserReplaceTextList = function () {
+  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
+  var userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
+  var userReplaceTextList = [];
+  for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
+    const element = userTextToReplaceDialogTr[i];
+    if (!element.children[0].firstChild.value) continue;
+    userReplaceTextList.push([element.children[0].firstChild.value, element.children[1].firstChild.value]);
+  }
+  return userReplaceTextList;
+};
+
 var listenToClickOnKeyboardShortcutList = function () {
   var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
@@ -451,6 +464,14 @@ var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
         deleteSiblingSubtasksDropdown();
     }
   }
+};
+
+var loadUserReplaceTextList = function () {
+  chrome.storage.sync.get({
+    'anOptionsPairs': []
+  }, function (items) {
+    document.loadedUserReplaceTextList = items.anOptionsPairs;
+  });
 };
 
 var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTask) {
@@ -515,16 +536,9 @@ var replaceDescription = function (replaceTextList) {
 };
 
 var replaceDescriptionUserText = function () {
-  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
-  var userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
-  var replaceTextList = [];
-  for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
-    const element = userTextToReplaceDialogTr[i];
-    if (!element.children[0].firstChild.value) continue;
-    replaceTextList.push([new RegExp(element.children[0].firstChild.value, 'g'), element.children[1].firstChild.value]);
-  }
-  if (!replaceTextList.length) return;
-  replaceDescription(replaceTextList);
+  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+  if (!userReplaceTextList.length) return;
+  replaceDescription(userReplaceTextList);
 };
 
 var replaceDescriptionPreset = function () {
@@ -566,10 +580,14 @@ var returnReplaceDescriptionInnerHTML = function () {
         <div class="loading-boundary">
           <div class="form-view">
             <table id="UserTextToReplaceDialogTable">
-              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>
+              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[0] + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[1] + `"></td>
+              <td><a class="delete-row-link">&nbsp;×</a></td>
+            </tr>`).join('')}
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
                 <td><a class="delete-row-link">&nbsp;×</a></td>
               </tr>
             </table>
@@ -577,7 +595,7 @@ var returnReplaceDescriptionInnerHTML = function () {
         </div>
         <div>
           <a>+ ${locStrings['dialogLink-addRow']}</a>
-          <a class="SaveTextLink">${locStrings['snippet-save']}</a>
+          <a class="SaveTextLink" id="SaveTextLink" onclick="saveUserReplaceTextList()">${locStrings['snippet-save']}</a>
         </div>
       </div>
       <div class="footer-top"></div>
@@ -668,6 +686,21 @@ var saveOriginalParent = function () {
       setParentDrawer.setAttribute('data-original-previous-sibling-gid', originalPreviousSiblingGid);
     });
   }
+};
+
+var saveUserReplaceTextList = function () {
+  var userReplaceTextList = getUserReplaceTextList();
+  chrome.storage.sync.set({
+    'anOptionsPairs': userReplaceTextList
+  }, function () {
+    document.loadedUserReplaceTextList = userReplaceTextList;
+    var saveTextLink = document.querySelector('#SaveTextLink');
+    var savedText = '✓ ';
+    saveTextLink.textContent = savedText + saveTextLink.textContent;
+    setTimeout(function () {
+      saveTextLink.textContent = saveTextLink.textContent.replace(savedText, '');
+    }, 2000);
+  });
 };
 
 var setNewParentTask = function (taskGid, setParentOptions) {
@@ -776,6 +809,7 @@ window.addEventListener('blur', function () {
 
 window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
+  loadUserReplaceTextList();
   runAllFunctionsIfEnabled();
 });
 
