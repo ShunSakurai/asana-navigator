@@ -10,10 +10,10 @@ var saveOptions = function () {
     'anOptionsShortcuts': shortcutsEnabled,
     'anOptionsParent': parentEnabled,
     'anOptionsDescription': descriptionEnabled
-  }, function() {
+  }, function () {
     var status = document.getElementById('status');
     status.textContent = 'Options saved';
-    setTimeout(function() {
+    setTimeout(function () {
       status.textContent = '';
     }, 1000);
   });
@@ -26,7 +26,7 @@ var loadOptions = function () {
     'anOptionsShortcuts': true,
     'anOptionsParent': true,
     'anOptionsDescription': true
-  }, function(items) {
+  }, function (items) {
     document.getElementById('projects').checked = items.anOptionsProjects;
     document.getElementById('subtasks').checked = items.anOptionsSubtasks;
     document.getElementById('shortcuts').checked = items.anOptionsShortcuts;

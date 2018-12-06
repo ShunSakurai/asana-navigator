@@ -23,7 +23,7 @@ var localizationStrings = {
     'dialogButton-replaceText': 'Replace Text',
     'dialogLabel-replaceWith-list': ['Replace', 'with'],
     'dialogLink-addRow': 'Add Row',
-    'dialogMessage-customStrings': 'You can define and replace custom strings below.',
+    'dialogMessage-userStrings': 'You can define and replace custom strings below.',
     'dialogMessage-regularExpression': 'Regular expression is supported. Please escape special characters (symbols) with a backslash (&#92;) in the left column.',
     'dialogMessage-visitReference-list': ['Please visit the ', ' for more information.'], // "1pee805":[2,"Deactivation is permanent and cannot be undone. Once your account is deactivated, you can <strong>no longer</strong> log in to any Organizations or Workspaces in Asana. Please visit the <a>Asana Guide</a> for more information."]
     'dialogPlaceholder-duplicateLinks': 'Duplicate links',
@@ -83,7 +83,7 @@ var localizationStrings = {
     'dialogButton-replaceText': 'テキストを置換',
     'dialogLabel-replaceWith-list': ['置換前', '置換後'],
     'dialogLink-addRow': '行を追加',
-    'dialogMessage-customStrings': '以下でカスタムの文字列を定義して置換することができます。',
+    'dialogMessage-userStrings': '以下でカスタムの文字列を定義して置換することができます。',
     'dialogMessage-regularExpression': '正規表現がサポートされています。左列では特殊文字 (記号) をバックスラッシュ (&#92;) でエスケープしてください。',
     'dialogMessage-visitReference-list': ['詳しくは ', ' をご覧ください。'], // assuming half-width characters in between
     'dialogPlaceholder-duplicateLinks': '重複リンク',

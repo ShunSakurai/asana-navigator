@@ -10,7 +10,7 @@ var addReplaceDescriptionToExtraActions = function () {
       });
       replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
-      setTimeout(function() {
+      setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
         if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
       }, 100);
@@ -30,7 +30,7 @@ var addSetParentToExtraActions = function () {
       });
       setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>`;
 
-      setTimeout(function() {
+      setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
         if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
@@ -235,7 +235,7 @@ var displayProjectsOnTop = function () {
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
   var taskGid = findTaskGid(window.location.href);
-  Array.from(taskProjectsProjectList.children).forEach(function(li) {
+  Array.from(taskProjectsProjectList.children).forEach(function (li) {
     var projectUrl = li.children[0].href;
     var projectGid = findProjectGid(projectUrl);
     var projectName = li.children[0].children[0].textContent;
@@ -274,7 +274,7 @@ var displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
   var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
-  var replaceDescriptionDialogCustomButton = document.querySelector('#ReplaceDescriptionDialogCustomButton');
+  var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
   replaceDescriptionDialogPresetButton.focus();
 
   replaceDescriptionDialog.addEventListener('keydown', function (event) {
@@ -282,8 +282,8 @@ var displayReplaceDescriptionDialog = function () {
       case 'Enter':
         if (document.activeElement === replaceDescriptionDialogPresetButton) {
           replaceDescriptionDialogPresetButton.click();
-        } else if (document.activeElement === replaceDescriptionDialogCustomButton) {
-          replaceDescriptionDialogCustomButton.click();
+        } else if (document.activeElement === replaceDescriptionDialogUserButton) {
+          replaceDescriptionDialogUserButton.click();
         }
         break;
       case 'Escape':
@@ -292,9 +292,9 @@ var displayReplaceDescriptionDialog = function () {
       case 'Tab':
         document.tabKeyIsDownOnModal = true;
         if (document.activeElement === replaceDescriptionDialogPresetButton && event.shiftKey) {
-          replaceDescriptionDialogCustomButton.focus();
+          replaceDescriptionDialogUserButton.focus();
           event.preventDefault();
-        } else if (document.activeElement === replaceDescriptionDialogCustomButton && !event.shiftKey) {
+        } else if (document.activeElement === replaceDescriptionDialogUserButton && !event.shiftKey) {
           replaceDescriptionDialogPresetButton.focus();
           event.preventDefault();
         }
@@ -360,7 +360,7 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
     });
   });
   toastManager.appendChild(toastDiv);
-  setTimeout(function() {
+  setTimeout(function () {
     toastDiv.remove();
   }, 15000);
 };
@@ -369,7 +369,7 @@ var escapeHtml = function (text) {
   var map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
   };
-  return text.replace(/[&<>"']/g, function(m) {
+  return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 };
@@ -416,7 +416,7 @@ var getLocaleAndSetLocalizedStrings = function () {
 var listenToClickOnKeyboardShortcutList = function () {
   var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
-    setTimeout(function() {
+    setTimeout(function () {
       var menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
       var helpButtonKeyboardShortcuts;
       for (var i = 0; i < menuItems.length; i++) {
@@ -426,7 +426,7 @@ var listenToClickOnKeyboardShortcutList = function () {
         }
       }
       helpButtonKeyboardShortcuts.addEventListener('click', function () {
-        setTimeout(function() {
+        setTimeout(function () {
           addToKeyboardShortcutsList();
         }, 100);
       });
@@ -514,12 +514,12 @@ var replaceDescription = function (replaceTextList) {
   });
 };
 
-var replaceDescriptionCustomText = function () {
-  var customTextToReplaceDialogTable = document.querySelector('#CustomTextToReplaceDialogTable');
-  var customTextToReplaceDialogTr = customTextToReplaceDialogTable.firstElementChild.children;
+var replaceDescriptionUserText = function () {
+  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+  var userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
   var replaceTextList = [];
-  for (var i = 1; i < customTextToReplaceDialogTr.length; i++) {
-    const element = customTextToReplaceDialogTr[i];
+  for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
+    const element = userTextToReplaceDialogTr[i];
     if (!element.children[0].firstChild.value) continue;
     replaceTextList.push([new RegExp(element.children[0].firstChild.value, 'g'), element.children[1].firstChild.value]);
   }
@@ -561,11 +561,11 @@ var returnReplaceDescriptionInnerHTML = function () {
       </div>
       <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionPreset()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
-      <div class="content"><p>${locStrings['dialogMessage-customStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</p></div>
+      <div class="content"><p>${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</p></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
-            <table id="CustomTextToReplaceDialogTable">
+            <table id="UserTextToReplaceDialogTable">
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>
               <tr class="name-row">
                 <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
@@ -581,7 +581,7 @@ var returnReplaceDescriptionInnerHTML = function () {
         </div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogCustomButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionCustomText()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogUserButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionUserText()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
 };
@@ -621,7 +621,7 @@ var runAllFunctionsIfEnabled = function (retry) {
           if (document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retrySubtasks);
         }, 100);
       }
-      setTimeout(function() {
+      setTimeout(function () {
         if (items.anOptionsParent) addSetParentToExtraActions();
         if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       }, 500);
@@ -679,12 +679,12 @@ var setNewParentTask = function (taskGid, setParentOptions) {
     displaySuccessToast(response.data, locStrings['toastContent-setParent-list'], function (callback) {
       callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
         callback();
-        setTimeout(function() {
+        setTimeout(function () {
           runFunctionsThatCreateElementsIfEnabled();
         }, 100);
       });
     });
-    setTimeout(function() {
+    setTimeout(function () {
       runFunctionsThatCreateElementsIfEnabled();
     }, 100);
   });
@@ -780,7 +780,7 @@ window.addEventListener('load', function () {
 });
 
 chrome.runtime.onMessage.addListener(
-  function(message, sender, sendResponse) {
+  function (message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       runAllFunctionsIfEnabled(true); // We can only receive "loading" status, not "complete"
     }
