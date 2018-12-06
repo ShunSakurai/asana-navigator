@@ -52,7 +52,7 @@
 - [ ] Use tool tips with black background
 - [ ] Only update the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description
-- [ ] Replace text in the task description
+- [x] Replace text in the task description
 - [x] Support other languages
 - [ ] Implement donation page
 

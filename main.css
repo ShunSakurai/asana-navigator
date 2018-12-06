@@ -1,5 +1,10 @@
+.SaveTextLink {
+    float: right;
+    margin-right: 20px;
+}
+
 .NoBorderBottom {
-  border-bottom: none !important;
+    border-bottom: none !important;
 }
 
 .SetParentDrawer-typeaheadInput {
@@ -19,8 +24,8 @@
 
 /* TODO: Size needs to be responsive */
 .SiblingSubtasksDropdownContainer {
-  max-height: 525px;
-  position: fixed;
-  right: 40px;
-  top: 225px;
+    max-height: 525px;
+    position: fixed;
+    right: 40px;
+    top: 225px;
 }
