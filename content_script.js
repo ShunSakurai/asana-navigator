@@ -25,7 +25,7 @@ var addRowToUserReplaceTextList = function () {
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
-    <td><a class="delete-row-link">&nbsp;×</a></td>`;
+    <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>`;
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
@@ -193,6 +193,12 @@ var deleteSiblingSubtasksDropdown = function () {
   if (siblingDropdown) siblingDropdown.remove();
   document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
+
+var deleteUserReplaceTextRow = function (button) {
+  var trToDelete = button.parentNode.parentNode;
+  trToDelete.remove();
+};
+
 
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
@@ -595,7 +601,7 @@ var returnReplaceDescriptionInnerHTML = function () {
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[0] + `"></td>
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[1] + `"></td>
-              <td><a class="delete-row-link">&nbsp;×</a></td>
+              <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>
             </tr>`).join('')}
             </table>
           </div>
