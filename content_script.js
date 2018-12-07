@@ -18,6 +18,17 @@ var addReplaceDescriptionToExtraActions = function () {
   }
 };
 
+var addRowToUserReplaceTextList = function () {
+  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
+  var newUserTextTr = document.createElement('tr');
+  newUserTextTr.setAttribute('class', 'name-row');
+  newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+    <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+    <td><a class="delete-row-link">&nbsp;×</a></td>`;
+  userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
+};
+
 var addSetParentToExtraActions = function () {
   var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
@@ -273,6 +284,7 @@ var displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
+  addRowToUserReplaceTextList();
   var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
   var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
   replaceDescriptionDialogPresetButton.focus();
@@ -554,7 +566,7 @@ var replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9
 var returnReplaceDescriptionInnerHTML = function () {
   return `<div>
     <div class="dialog-background"></div>
-    <div id="ReplaceDescriptionDialog" class="dialog-box" style="position: fixed; top: 150px;">
+    <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog">
       <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
       <div class="content">
         <div class="loading-boundary">
@@ -575,8 +587,8 @@ var returnReplaceDescriptionInnerHTML = function () {
       </div>
       <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionPreset()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
-      <div class="content"><p>${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</p></div>
-      <div class="content">
+      <div class="content scrollable scrollable--vertical" style="max-height: 400px;">
+        <div>${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</div>
         <div class="loading-boundary">
           <div class="form-view">
             <table id="UserTextToReplaceDialogTable">
@@ -585,16 +597,11 @@ var returnReplaceDescriptionInnerHTML = function () {
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[1] + `"></td>
               <td><a class="delete-row-link">&nbsp;×</a></td>
             </tr>`).join('')}
-              <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
-                <td><a class="delete-row-link">&nbsp;×</a></td>
-              </tr>
             </table>
           </div>
         </div>
         <div>
-          <a>+ ${locStrings['dialogLink-addRow']}</a>
+          <a onclick="addRowToUserReplaceTextList()">+ ${locStrings['dialogLink-addRow']}</a>
           <a class="SaveTextLink" id="SaveTextLink" onclick="saveUserReplaceTextList()">${locStrings['snippet-save']}</a>
         </div>
       </div>
