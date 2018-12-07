@@ -1,5 +1,24 @@
+.FloatCenterDialog {
+    position: fixed;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) !important;
+}
+
 .NoBorderBottom {
-  border-bottom: none !important;
+    border-bottom: none !important;
+}
+
+.ReplaceUserTextSection {
+    max-height: 400px;
+}
+
+.ReplaceUserTextSectionDescription {
+    margin-bottom: 10px;
+}
+
+.SaveTextLink {
+    float: right;
+    margin-right: 20px;
 }
 
 .SetParentDrawer-typeaheadInput {
@@ -19,8 +38,8 @@
 
 /* TODO: Size needs to be responsive */
 .SiblingSubtasksDropdownContainer {
-  max-height: 525px;
-  position: fixed;
-  right: 40px;
-  top: 225px;
+    max-height: 525px;
+    position: fixed;
+    right: 40px;
+    top: 225px;
 }

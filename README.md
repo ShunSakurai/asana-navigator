@@ -1,6 +1,6 @@
 # Asana Navigator
 
-[Google Chrome extension](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) to enhance navigation for [Asana](https://asana.com/) tasks
+Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) to enhance navigation for [Asana](https://asana.com/) tasks
 
 ## Feature list as well as to-do list
 
@@ -52,7 +52,7 @@
 - [ ] Use tool tips with black background
 - [ ] Only update the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description
-- [ ] Replace text in the task description
+- [x] Replace text in the task description
 - [x] Support other languages
 - [ ] Implement donation page
 
@@ -87,7 +87,7 @@ Please feel free to post feature requests, bug reports, and questions through th
 
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible
-- JP: Insert space between half-width character and full-width character, don't insert space between Katakana compounds, and use half-width symbols
+- JP: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use half-width symbols
 - ES, FR, PT: Compared to EN where menu items often use capital letters such as "Add to **P**roject (Tab+P)", these languages tend to use lower letters such as "Ajouter à un **p**rojet (Tab+P)"
 
 ## License

@@ -10,12 +10,23 @@ var addReplaceDescriptionToExtraActions = function () {
       });
       replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
-      setTimeout(function() {
+      setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
         if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
       }, 100);
     });
   }
+};
+
+var addRowToUserReplaceTextList = function () {
+  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
+  var newUserTextTr = document.createElement('tr');
+  newUserTextTr.setAttribute('class', 'name-row');
+  newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+    <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+    <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>`;
+  userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
 var addSetParentToExtraActions = function () {
@@ -30,7 +41,7 @@ var addSetParentToExtraActions = function () {
       });
       setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>`;
 
-      setTimeout(function() {
+      setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-convertToProject') || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
         if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
@@ -183,6 +194,12 @@ var deleteSiblingSubtasksDropdown = function () {
   document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
+var deleteUserReplaceTextRow = function (button) {
+  var trToDelete = button.parentNode.parentNode;
+  trToDelete.remove();
+};
+
+
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) {
@@ -235,7 +252,7 @@ var displayProjectsOnTop = function () {
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
   var taskGid = findTaskGid(window.location.href);
-  Array.from(taskProjectsProjectList.children).forEach(function(li) {
+  Array.from(taskProjectsProjectList.children).forEach(function (li) {
     var projectUrl = li.children[0].href;
     var projectGid = findProjectGid(projectUrl);
     var projectName = li.children[0].children[0].textContent;
@@ -271,70 +288,35 @@ var displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
   replaceDescriptionDialog.setAttribute('class', 'tab-ring');
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
-  replaceDescriptionDialog.innerHTML = `<div>
-    <div class="dialog-background"></div>
-    <div id="ReplaceDescriptionDialog" class="dialog-box" style="position: fixed; top: 150px;">
-      <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
-      <div class="content">
-        <div class="loading-boundary">
-          <div class="form-view">
-            <table>
-              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td></tr>
-              <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
-              </tr>
-              <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" onclick="replaceDescriptionPreset()"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
-      <div class="content">
-        <div class="loading-boundary">
-          <div class="form-view">
-            <table>
-              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>
-              <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0"></td>
-                <td><a class="delete-row-link">&nbsp;×</a></td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div><a class="add-row-link">+ ${locStrings['dialogLink-addRow']}</a></div>
-      </div>
-      <div class="footer-top"></div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogCustomButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
-    </div>
-  </div>`;
+  replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
+  addRowToUserReplaceTextList();
   var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
-  var replaceDescriptionDialogCustomButton = document.querySelector('#ReplaceDescriptionDialogCustomButton');
+  var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
   replaceDescriptionDialogPresetButton.focus();
+
   replaceDescriptionDialog.addEventListener('keydown', function (event) {
     switch (event.key){
+      case 'Enter':
+        if (document.activeElement === replaceDescriptionDialogPresetButton) {
+          replaceDescriptionDialogPresetButton.click();
+        } else if (document.activeElement === replaceDescriptionDialogUserButton) {
+          replaceDescriptionDialogUserButton.click();
+        }
+        break;
+      case 'Escape':
+        event.preventDefault();
+        break;
       case 'Tab':
         document.tabKeyIsDownOnModal = true;
         if (document.activeElement === replaceDescriptionDialogPresetButton && event.shiftKey) {
-          replaceDescriptionDialogCustomButton.focus();
+          replaceDescriptionDialogUserButton.focus();
           event.preventDefault();
-        } else if (document.activeElement === replaceDescriptionDialogCustomButton && !event.shiftKey) {
+        } else if (document.activeElement === replaceDescriptionDialogUserButton && !event.shiftKey) {
           replaceDescriptionDialogPresetButton.focus();
           event.preventDefault();
         }
         event.stopPropagation();
-        break;
-      case 'Enter':
-        if (document.activeElement === replaceDescriptionDialogPresetButton) {
-          replaceDescriptionDialogPresetButton.click();
-        } else if (document.activeElement === replaceDescriptionDialogCustomButton) {
-          replaceDescriptionDialogCustomButton.click();
-        }
         break;
     }
   });
@@ -396,7 +378,7 @@ var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
     });
   });
   toastManager.appendChild(toastDiv);
-  setTimeout(function() {
+  setTimeout(function () {
     toastDiv.remove();
   }, 15000);
 };
@@ -405,7 +387,7 @@ var escapeHtml = function (text) {
   var map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
   };
-  return text.replace(/[&<>"']/g, function(m) {
+  return text.replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 };
@@ -449,10 +431,23 @@ var getLocaleAndSetLocalizedStrings = function () {
   }
 };
 
+var getUserReplaceTextList = function () {
+  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
+  var userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
+  var userReplaceTextList = [];
+  for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
+    const element = userTextToReplaceDialogTr[i];
+    if (!element.children[0].firstChild.value) continue;
+    userReplaceTextList.push([element.children[0].firstChild.value, element.children[1].firstChild.value]);
+  }
+  return userReplaceTextList;
+};
+
 var listenToClickOnKeyboardShortcutList = function () {
   var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
-    setTimeout(function() {
+    setTimeout(function () {
       var menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
       var helpButtonKeyboardShortcuts;
       for (var i = 0; i < menuItems.length; i++) {
@@ -462,7 +457,7 @@ var listenToClickOnKeyboardShortcutList = function () {
         }
       }
       helpButtonKeyboardShortcuts.addEventListener('click', function () {
-        setTimeout(function() {
+        setTimeout(function () {
           addToKeyboardShortcutsList();
         }, 100);
       });
@@ -487,6 +482,14 @@ var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
         deleteSiblingSubtasksDropdown();
     }
   }
+};
+
+var loadUserReplaceTextList = function () {
+  chrome.storage.sync.get({
+    'anOptionsPairs': []
+  }, function (items) {
+    document.loadedUserReplaceTextList = items.anOptionsPairs;
+  });
 };
 
 var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTask) {
@@ -555,10 +558,64 @@ var replaceDescriptionPreset = function () {
   replaceDescription(replaceTextList);
 };
 
+var replaceDescriptionUserText = function () {
+  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+  if (!userReplaceTextList.length) return;
+  replaceDescription(userReplaceTextList);
+};
+
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
 var replaceTextListEntity = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Alpha;', 'Α'], ['&alpha;', 'α'], ['&and;', '∧'], ['&ang;', '∠'], ['&apos;', '\''], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&Beta;', 'Β'], ['&beta;', 'β'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&cap;', '∩'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&Chi;', 'Χ'], ['&chi;', 'χ'], ['&circ;', 'ˆ'], ['&clubs;', '♣'], ['&cong;', '≅'], ['&copy;', '©'], ['&crarr;', '↵'], ['&cup;', '∪'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&dArr;', '⇓'], ['&darr;', '↓'], ['&deg;', '°'], ['&Delta;', 'Δ'], ['&delta;', 'δ'], ['&diams;', '♦'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&empty;', '∅'], ['&emsp;', ' '], ['&ensp;', ' '], ['&Epsilon;', 'Ε'], ['&epsilon;', 'ε'], ['&equiv;', '≡'], ['&Eta;', 'Η'], ['&eta;', 'η'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&exist;', '∃'], ['&fnof;', 'ƒ'], ['&forall;', '∀'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&Gamma;', 'Γ'], ['&gamma;', 'γ'], ['&ge;', '≥'], ['&hArr;', '⇔'], ['&harr;', '↔'], ['&hearts;', '♥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&infin;', '∞'], ['&int;', '∫'], ['&Iota;', 'Ι'], ['&iota;', 'ι'], ['&iquest;', '¿'], ['&isin;', '∈'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&Kappa;', 'Κ'], ['&kappa;', 'κ'], ['&Lambda;', 'Λ'], ['&lambda;', 'λ'], ['&laquo;', '«'], ['&lArr;', '⇐'], ['&larr;', '←'], ['&lceil;', '⌈'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lfloor;', '⌊'], ['&lowast;', '∗'], ['&loz;', '◊'], ['&lrm;', '‎'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&minus;', '−'], ['&Mu;', 'Μ'], ['&mu;', 'μ'], ['&nabla;', '∇'], ['&ndash;', '–'], ['&ne;', '≠'], ['&ni;', '∋'], ['&not;', '¬'], ['&notin;', '∉'], ['&nsub;', '⊄'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Nu;', 'Ν'], ['&nu;', 'ν'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&oline;', '‾'], ['&Omega;', 'Ω'], ['&omega;', 'ω'], ['&Omicron;', 'Ο'], ['&omicron;', 'ο'], ['&oplus;', '⊕'], ['&or;', '∨'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&otimes;', '⊗'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&part;', '∂'], ['&permil;', '‰'], ['&perp;', '⊥'], ['&Phi;', 'Φ'], ['&phi;', 'φ'], ['&Pi;', 'Π'], ['&pi;', 'π'], ['&piv;', 'ϖ'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&prod;', '∏'], ['&prop;', '∝'], ['&Psi;', 'Ψ'], ['&psi;', 'ψ'], ['&radic;', '√'], ['&raquo;', '»'], ['&rArr;', '⇒'], ['&rarr;', '→'], ['&rceil;', '⌉'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rfloor;', '⌋'], ['&Rho;', 'Ρ'], ['&rho;', 'ρ'], ['&rlm;', '‏'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sdot;', '⋅'], ['&sect;', '§'], ['&Sigma;', 'Σ'], ['&sigma;', 'σ'], ['&sigmaf;', 'ς'], ['&sim;', '∼'], ['&spades;', '♠'], ['&sub;', '⊂'], ['&sube;', '⊆'], ['&sum;', '∑'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&sup;', '⊃'], ['&supe;', '⊇'], ['&szlig;', 'ß'], ['&Tau;', 'Τ'], ['&tau;', 'τ'], ['&there4;', '∴'], ['&Theta;', 'Θ'], ['&theta;', 'θ'], ['&thetasym;', 'ϑ'], ['&thinsp;', ' '], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&uArr;', '⇑'], ['&uarr;', '↑'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&upsih;', 'ϒ'], ['&Upsilon;', 'Υ'], ['&upsilon;', 'υ'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Xi;', 'Ξ'], ['&xi;', 'ξ'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ'], ['&Zeta;', 'Ζ'], ['&zeta;', 'ζ'], ['&zwj;', '‍'], ['&zwnj;', '‌']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
 
 var replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#$'@]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
+
+var returnReplaceDescriptionInnerHTML = function () {
+  return `<div>
+    <div class="dialog-background"></div>
+    <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog">
+      <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
+      <div class="content">
+        <div class="loading-boundary">
+          <div class="form-view">
+            <table>
+              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td></tr>
+              <tr class="name-row">
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
+              </tr>
+              <tr class="name-row">
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionPreset()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="divider"></div>
+      <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
+        <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</div>
+        <div class="loading-boundary">
+          <div class="form-view">
+            <table id="UserTextToReplaceDialogTable">
+              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[0] + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[1] + `"></td>
+              <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>
+            </tr>`).join('')}
+            </table>
+          </div>
+        </div>
+        <div>
+          <a onclick="addRowToUserReplaceTextList()">+ ${locStrings['dialogLink-addRow']}</a>
+          <a class="SaveTextLink" id="SaveTextLink" onclick="saveUserReplaceTextList()">${locStrings['snippet-save']}</a>
+        </div>
+      </div>
+      <div class="footer-top"></div>
+      <div class="buttons"><div id="ReplaceDescriptionDialogUserButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionUserText()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+    </div>
+  </div>`;
+};
 
 var returnTypeAheadInnerHTML = function (task) {
   var parentName = (task.parent)? task.parent.name: '';
@@ -595,7 +652,7 @@ var runAllFunctionsIfEnabled = function (retry) {
           if (document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retrySubtasks);
         }, 100);
       }
-      setTimeout(function() {
+      setTimeout(function () {
         if (items.anOptionsParent) addSetParentToExtraActions();
         if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       }, 500);
@@ -644,6 +701,21 @@ var saveOriginalParent = function () {
   }
 };
 
+var saveUserReplaceTextList = function () {
+  var userReplaceTextList = getUserReplaceTextList();
+  chrome.storage.sync.set({
+    'anOptionsPairs': userReplaceTextList
+  }, function () {
+    document.loadedUserReplaceTextList = userReplaceTextList;
+    var saveTextLink = document.querySelector('#SaveTextLink');
+    var savedText = '✓ ';
+    saveTextLink.textContent = savedText + saveTextLink.textContent;
+    setTimeout(function () {
+      saveTextLink.textContent = saveTextLink.textContent.replace(savedText, '');
+    }, 2000);
+  });
+};
+
 var setNewParentTask = function (taskGid, setParentOptions) {
   var setParentDrawer = document.querySelector('.SetParentDrawer');
   var originalParentGid = setParentDrawer.dataset.originalParentGid;
@@ -653,12 +725,12 @@ var setNewParentTask = function (taskGid, setParentOptions) {
     displaySuccessToast(response.data, locStrings['toastContent-setParent-list'], function (callback) {
       callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
         callback();
-        setTimeout(function() {
+        setTimeout(function () {
           runFunctionsThatCreateElementsIfEnabled();
         }, 100);
       });
     });
-    setTimeout(function() {
+    setTimeout(function () {
       runFunctionsThatCreateElementsIfEnabled();
     }, 100);
   });
@@ -750,11 +822,12 @@ window.addEventListener('blur', function () {
 
 window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
+  loadUserReplaceTextList();
   runAllFunctionsIfEnabled();
 });
 
 chrome.runtime.onMessage.addListener(
-  function(message, sender, sendResponse) {
+  function (message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated') {
       runAllFunctionsIfEnabled(true); // We can only receive "loading" status, not "complete"
     }
