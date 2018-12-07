@@ -4,13 +4,21 @@
     transform: translateX(-50%) translateY(-50%) !important;
 }
 
+.NoBorderBottom {
+    border-bottom: none !important;
+}
+
+.ReplaceUserTextSection {
+    max-height: 400px;
+}
+
+.ReplaceUserTextSectionDescription {
+    margin-bottom: 10px;
+}
+
 .SaveTextLink {
     float: right;
     margin-right: 20px;
-}
-
-.NoBorderBottom {
-    border-bottom: none !important;
 }
 
 .SetParentDrawer-typeaheadInput {

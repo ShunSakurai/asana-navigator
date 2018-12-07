@@ -13,12 +13,5 @@ chrome.runtime.onInstalled.addListener(
     if (details.reason === 'update') {
       chrome.tabs.create({url: 'update.html'});
     }
-    // Backward compatibility - keep until when all active version is 1.5.7 and later:
-    chrome.storage.sync.get({}, function (items) {
-      if (items.hasOwnProperty('anOptionsNotes')) {
-        chrome.storage.sync.set({'anOptionsDescription': items.anOptionsNotes});
-        chrome.storage.sync.remove('anOptionsNotes');
-      }
-    });
   }
 );

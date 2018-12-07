@@ -91,7 +91,7 @@ var localizationStrings = {
     'dialogPlaceholder-HTMLSymbols': 'HTML記号',
     'dialogPlaceholder-singleString': '単一のリンク',
     'drawerLabel-setParent': 'このタスクを他のタスクのサブタスクにしましょう。',
-    'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける',
+    'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける', // translating differently
     'drawerSwitch-setParent-list': ['挿入場所: 上部', '下部'],
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
@@ -105,7 +105,7 @@ var localizationStrings = {
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-list': ['', 'の説明を置換しました。'],
     'toastContent-setParent-list': ['サブタスクにしました:', ''],
-    'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした',
+    'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
   'pt': {
     'arrowTitle-subtasksDropdown': 'Subtarefas',

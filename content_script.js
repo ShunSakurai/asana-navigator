@@ -553,15 +553,15 @@ var replaceDescription = function (replaceTextList) {
   });
 };
 
+var replaceDescriptionPreset = function () {
+  var replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
+  replaceDescription(replaceTextList);
+};
+
 var replaceDescriptionUserText = function () {
   var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
   if (!userReplaceTextList.length) return;
   replaceDescription(userReplaceTextList);
-};
-
-var replaceDescriptionPreset = function () {
-  var replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
-  replaceDescription(replaceTextList);
 };
 
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
@@ -593,8 +593,8 @@ var returnReplaceDescriptionInnerHTML = function () {
       </div>
       <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionPreset()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
-      <div class="content scrollable scrollable--vertical" style="max-height: 400px;">
-        <div>${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</div>
+      <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
+        <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</div>
         <div class="loading-boundary">
           <div class="form-view">
             <table id="UserTextToReplaceDialogTable">
