@@ -161,15 +161,17 @@ var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
 };
 
 var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
+  if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
   var siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
-  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
+  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
     subtaskListFiltered.map(
       subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
       `${(subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': '&nbsp;'}${(subtask.name.endsWith(':'))? '<strong><u>' + subtask.name + '</u></strong>': '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
-  document.querySelector('.SingleTaskPane').appendChild(siblingDropdown);
+  var singleTaskPane = document.querySelector('.SingleTaskPane');
+  singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 

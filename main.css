@@ -36,10 +36,13 @@
     border-color: #7ac8ee !important;
 }
 
-/* TODO: Size needs to be responsive */
 .SiblingSubtasksDropdownContainer {
-    max-height: 525px;
-    position: fixed;
-    right: 40px;
-    top: 225px;
+    max-height: 550px;
+}
+
+.SiblingSubtasksDropdownLayer {
+    float: right;
+    position: relative !important;
+    right: 20px;
+    top: 120px;
 }
