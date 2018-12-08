@@ -538,12 +538,12 @@ var replaceDescription = function (replaceTextList) {
   if (isNaN(taskGid)) return; // gid spec might change
   callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function (response) {
     var htmlNotesOriginal = response.data.html_notes;
-    var htmlNotes = htmlNotesOriginal;
+    var htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
     for (var i = 0; i < replaceTextList.length; i ++) {
       var pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0], pair[1]);
     }
-    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotes}, function (response) {
+    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function (response) {
       closeSingleTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
       displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-list'], function (callback) {
@@ -561,7 +561,7 @@ var replaceDescriptionPreset = function () {
 };
 
 var replaceDescriptionUserText = function () {
-  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), a[1]]);
   if (!userReplaceTextList.length) return;
   replaceDescription(userReplaceTextList);
 };
@@ -601,8 +601,8 @@ var returnReplaceDescriptionInnerHTML = function () {
           <div class="form-view">
             <table id="UserTextToReplaceDialogTable">
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
-              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[0] + `"></td>
-              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + a[1] + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[1]) + `"></td>
               <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>
             </tr>`).join('')}
             </table>
