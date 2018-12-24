@@ -25,7 +25,8 @@ var addRowToUserReplaceTextList = function () {
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
-    <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>`;
+    <td><a class="delete-row-link">&nbsp;×</a></td>`;
+  newUserTextTr.lastElementChild.addEventListener('click', function (event) {deleteUserReplaceTextRow(event.target);});
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
@@ -201,7 +202,6 @@ var deleteUserReplaceTextRow = function (button) {
   trToDelete.remove();
 };
 
-
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) {
@@ -292,9 +292,15 @@ var displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
+  document.querySelector('#CloseReplaceDescriptionDialogButton').addEventListener('click', closeReplaceDescriptionDialog);
+  document.querySelectorAll('.delete-row-link').forEach(link => link.addEventListener('click', function (event) {deleteUserReplaceTextRow(event.target);}));
+  document.querySelector('#AddRowToUserReplaceTextListLink').addEventListener('click', addRowToUserReplaceTextList);
+  document.querySelector('#SaveUserReplaceTextListLink').addEventListener('click', saveUserReplaceTextList);
   addRowToUserReplaceTextList();
   var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
+  replaceDescriptionDialogPresetButton.addEventListener('click', replaceDescriptionPreset);
   var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+  replaceDescriptionDialogUserButton.addEventListener('click', replaceDescriptionUserText);
   replaceDescriptionDialogPresetButton.focus();
 
   replaceDescriptionDialog.addEventListener('keydown', function (event) {
@@ -575,7 +581,7 @@ var returnReplaceDescriptionInnerHTML = function () {
   return `<div>
     <div class="dialog-background"></div>
     <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog">
-      <div><div class="dialogView2-closeX borderless-button" onclick="closeReplaceDescriptionDialog()"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
+      <div><div class="dialogView2-closeX borderless-button" id="CloseReplaceDescriptionDialogButton"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription'].replace('...', '')}</div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
@@ -593,7 +599,7 @@ var returnReplaceDescriptionInnerHTML = function () {
           </div>
         </div>
       </div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogPresetButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionPreset()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="buttons"><div class="buttonView new-button new-primary-button buttonView--primary buttonView--large" id="ReplaceDescriptionDialogPresetButton" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
       <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
         <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" tabindex="-1" target="_blank">MDN</a>')}</div>
@@ -603,18 +609,18 @@ var returnReplaceDescriptionInnerHTML = function () {
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[1]) + `"></td>
-              <td><a class="delete-row-link" onclick="deleteUserReplaceTextRow(this)">&nbsp;×</a></td>
+              <td><a class="delete-row-link">&nbsp;×</a></td>
             </tr>`).join('')}
             </table>
           </div>
         </div>
         <div>
-          <a onclick="addRowToUserReplaceTextList()">+ ${locStrings['dialogLink-addRow']}</a>
-          <a class="SaveTextLink" id="SaveTextLink" onclick="saveUserReplaceTextList()">${locStrings['snippet-save']}</a>
+          <a id="AddRowToUserReplaceTextListLink">+ ${locStrings['dialogLink-addRow']}</a>
+          <a class="SaveTextLink" id="SaveUserReplaceTextListLink">${locStrings['snippet-save']}</a>
         </div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div id="ReplaceDescriptionDialogUserButton" class="buttonView new-button new-primary-button buttonView--primary buttonView--large" onclick="replaceDescriptionUserText()" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" id="ReplaceDescriptionDialogUserButton"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
 };
@@ -709,7 +715,7 @@ var saveUserReplaceTextList = function () {
     'anOptionsPairs': userReplaceTextList
   }, function () {
     document.loadedUserReplaceTextList = userReplaceTextList;
-    var saveTextLink = document.querySelector('#SaveTextLink');
+    var saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
     var savedText = '✓ ';
     saveTextLink.textContent = savedText + saveTextLink.textContent;
     setTimeout(function () {
