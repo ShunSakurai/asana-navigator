@@ -162,13 +162,15 @@ var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
 };
 
 var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
+  var completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
+  var incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
   var siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
     subtaskListFiltered.map(
       subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
-      `${(subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': '&nbsp;'}${(subtask.name.endsWith(':'))? '<strong><u>' + subtask.name + '</u></strong>': '&nbsp;' + subtask.name}</span></a>`
+      `${(subtask.name.endsWith(':'))? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
   var singleTaskPane = document.querySelector('.SingleTaskPane');
@@ -212,7 +214,7 @@ var displayLinksToSiblingSubtasks = function () {
   var taskGid = findTaskGid(window.location.href);
   var containerGid = findProjectGid(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,name'}, {}, function (response) {
     var subtaskList = response.data;
     var subtaskListFiltered = subtaskList.filter(function (subtask) {
       return !subtask.name.endsWith(':') || subtask.gid === taskGid;

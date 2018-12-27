@@ -46,3 +46,16 @@
     right: 20px;
     top: 120px;
 }
+
+.SiblingSubtasksIcon {
+    height: 12px;
+    width: 12px;
+}
+
+.SiblingSubtasksItem-completedIcon {
+    fill: #b2ebe1;
+}
+
+.SiblingSubtasksItem-incompletedIcon {
+    fill: #b7bfc6;
+}
