@@ -12,7 +12,7 @@
       "run_at": "document_idle"
     }
   ],
-  "description" : "Display projects on top, go to next/previous subtasks, convert to a subtask of another task, replace text in the description, etc.",
+  "description" : "Display projects on top, go to previous/next subtasks, convert to a subtask of another task, replace text in the description, etc.",
   "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
   "icons": {
     "128": "images/an128.png",

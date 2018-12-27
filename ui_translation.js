@@ -36,7 +36,7 @@ var localizationStrings = {
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace Text in Description...',
     'menuButton-setParent': 'Convert to a Subtask...',
-    'shortcutDescription-siblingSubtasks': 'Jump to next/previous sibling subtask',
+    'shortcutDescription-siblingSubtasks': 'Jump to previous/next sibling subtask',
     'shortcutDescription-subtasksDropdown': 'Display sibling subtasks',
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"
@@ -96,7 +96,7 @@ var localizationStrings = {
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
     'menuButton-setParent': 'サブタスクに変換...',
-    'shortcutDescription-siblingSubtasks': '次/前のサブタスクに移動',
+    'shortcutDescription-siblingSubtasks': '前/次のサブタスクに移動',
     'shortcutDescription-subtasksDropdown': '前後のサブタスクを表示',
     'snippet-example': '例: ',
     'snippet-save': '保存',

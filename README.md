@@ -18,7 +18,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
-- [x] Display arrows to go to next/previous sibling subtasks
+- [x] Display arrows to go to previous/next sibling subtasks
 
 #### Setting new parent tasks:
 - [x] Set new parent task from the toolbar
