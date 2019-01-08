@@ -111,7 +111,7 @@ var clickSectionSelector = function (a) {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   var floatingSelectLabel;
   for (var i = 0; i < taskProjectsProjectList.children.length; i++) {
-    if (findProjectGid(taskProjectsProjectList.children[i].children[0].href) === taskProjectsProjectGid) {
+    if (findProjectGid(taskProjectsProjectList.children[i].firstElementChild.href) === taskProjectsProjectGid) {
       floatingSelectLabel = taskProjectsProjectList.children[i].children[1];
       break;
     }
@@ -257,15 +257,20 @@ var displayProjectsOnTop = function () {
 
   var taskGid = findTaskGid(window.location.href);
   Array.from(taskProjectsProjectList.children).forEach(function (li) {
-    var projectUrl = li.children[0].href;
+    var a = li.firstElementChild;
+    var projectUrl = a.href;
     var projectGid = findProjectGid(projectUrl);
-    var projectName = li.children[0].children[0].textContent;
+    var projectName = a.firstElementChild.textContent;
 
     var taskAncestryAncestorProject = document.createElement('A');
     taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
     taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
     taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
     taskAncestryAncestorProject.textContent = projectName;
+    taskAncestryAncestorProject.addEventListener('click', function (event) {
+      a.click();
+      event.preventDefault();
+    });
     taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
 
     // Section selectors as DOM elements are loaded later, so fetching them via API
@@ -448,8 +453,8 @@ var getUserReplaceTextList = function () {
   var userReplaceTextList = [];
   for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
     const element = userTextToReplaceDialogTr[i];
-    if (!element.children[0].firstChild.value) continue;
-    userReplaceTextList.push([element.children[0].firstChild.value, element.children[1].firstChild.value]);
+    if (!element.firstElementChild.firstElementChild.value) continue;
+    userReplaceTextList.push([element.firstElementChild.firstElementChild.value, element.children[1].firstElementChild.value]);
   }
   return userReplaceTextList;
 };
@@ -528,7 +533,7 @@ var populateFromTypeahead = function (taskGid, workspaceGid, input, potentialTas
         this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        var parentGid = this.children[0].dataset.taskGid;
+        var parentGid = this.firstElementChild.dataset.taskGid;
         var setParentOptions = {'parent': parentGid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentOptions.insert_before = null;
