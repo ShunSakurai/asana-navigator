@@ -574,7 +574,7 @@ var replaceDescriptionPreset = function () {
 };
 
 var replaceDescriptionUserText = function () {
-  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), a[1]]);
+  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), escapeHtml(a[1])]);
   if (!userReplaceTextList.length) return;
   replaceDescription(userReplaceTextList);
 };
