@@ -61,8 +61,8 @@ var addToKeyboardShortcutsList = function () {
   keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
   var shortcutsArray = [
-    [locStrings['shortcutDescription-siblingSubtasks'], ['Shift', 'Tab', '↑', separator, 'Shift', 'Tab', '↓']],
-    [locStrings['shortcutDescription-subtasksDropdown'], ['Shift', 'Tab', '→']],
+    [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
+    [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
     [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'O']],
   ];
@@ -232,9 +232,9 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Shift+Tab+↑)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
-    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Shift+Tab+→)">&gt;</a>`;
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Shift+Tab+↓)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
+    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
@@ -443,6 +443,18 @@ var getLocaleAndSetLocalizedStrings = function () {
       locStrings[key] = localizationStrings[locale][key];
     } else {
       locStrings[key] = localizationStrings.en[key];
+    }
+  }
+};
+
+var getPlatformAndSetPlatStrings = function () {
+  var platform = 'win';
+  if (window.navigator.platform.indexOf('Mac') != -1) platform = 'mac';
+  for (var key in platformStrings.win) {
+    if (platformStrings[platform].hasOwnProperty(key)) {
+      platStrings[key] = platformStrings[platform][key];
+    } else {
+      platStrings[key] = platformStrings.win[key];
     }
   }
 };
@@ -838,6 +850,7 @@ window.addEventListener('blur', function () {
 
 window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
+  getPlatformAndSetPlatStrings();
   loadUserReplaceTextList();
   runAllFunctionsIfEnabled();
 });
