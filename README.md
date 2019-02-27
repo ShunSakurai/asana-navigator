@@ -29,13 +29,13 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 ### Later:
 
 #### Keyboard shortcuts:
-- [x] Implement keyboard shortcuts to go to sibling subtasks (Tab+J/K)
-- [x] Implement keyboard shortcut to set new parent task (Tab+R)
+- [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
+- [x] Implement keyboard shortcut to set new parent task (Tab+O)
 - [x] Display the new key combinations in Keyboard Shortcuts list
-- [x] Change Tab+K to Tab+G as it now conflicts with liking/hearting
+
 
 #### Going to sibling subtasks:
-- [x] Display drop-down list to go to sibling subtasks
+- [x] Display drop-down list to go to sibling subtasks (Shift+Tab+→)
 
 #### Setting new parent tasks:
 - [x] Search for task ID when the input is an integer
@@ -51,8 +51,8 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [ ] Search in the current open page, e.g. "search in this project"
 - [ ] Use tool tips with black background
 - [ ] Only update the right pane when navigating subtasks
-- [x] Remove duplicate links and replace HTML entities in the task description
-- [x] Replace text in the task description
+- [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
+- [x] Replace text in the task description (Tab+E)
 - [x] Support other languages
 - [ ] Implement donation page
 

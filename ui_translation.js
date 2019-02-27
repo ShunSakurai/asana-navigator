@@ -36,7 +36,7 @@ var localizationStrings = {
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace Text in Description...',
     'menuButton-setParent': 'Convert to a Subtask...',
-    'shortcutDescription-siblingSubtasks': 'Jump to previous/next sibling subtask',
+    'shortcutDescription-siblingSubtasks': 'Jump to previous/next subtask',
     'shortcutDescription-subtasksDropdown': 'Display sibling subtasks',
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"

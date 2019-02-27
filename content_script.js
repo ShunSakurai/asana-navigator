@@ -40,7 +40,7 @@ var addSetParentToExtraActions = function () {
         displaySetParentDrawer();
         closeSingleTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+R</span></div></span>`;
+      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+O</span></div></span>`;
 
       setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-moveTaskMenuItem').parentNode || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
@@ -55,15 +55,16 @@ var addToKeyboardShortcutsList = function () {
   if (!keyboardShortcutsModal) return;
   if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
   var keyboardShortcutsModalANSection = document.createElement('DIV');
+  keyboardShortcutsModalANSection.setAttribute('class', 'KeyboardShortcutsModal-section');
   keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection');
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
   keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
   var shortcutsArray = [
-    [locStrings['shortcutDescription-siblingSubtasks'], ['Tab', 'G', separator, 'Tab', 'J']],
-    [locStrings['shortcutDescription-subtasksDropdown'], ['Tab', 'N']],
+    [locStrings['shortcutDescription-siblingSubtasks'], ['Shift', 'Tab', '↑', separator, 'Shift', 'Tab', '↓']],
+    [locStrings['shortcutDescription-subtasksDropdown'], ['Shift', 'Tab', '→']],
     [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
-    [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'R']],
+    [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'O']],
   ];
   for (var i = 0; i < shortcutsArray.length; i++) {
     var [description, keyList] = shortcutsArray[i];
@@ -231,9 +232,9 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Tab+G)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
-    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Tab+N)">&gt;</a>`;
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Tab+J)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
+    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (Shift+Tab+↑)&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
+    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (Shift+Tab+→)">&gt;</a>`;
+    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (Shift+Tab+↓)&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
     siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     singleTaskPaneTitleRow.appendChild(siblingButtons);
@@ -774,6 +775,28 @@ document.addEventListener('keydown', function (event) {
         });
       }
       break;
+      case 'ArrowDown':
+      if (document.tabKeyIsDown && event.shiftKey) {
+        var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+        if (arrowNextSubtask) arrowNextSubtask.click();
+      }
+      break;
+      case 'ArrowRight':
+      if (document.tabKeyIsDown && event.shiftKey) {
+        if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
+          deleteSiblingSubtasksDropdown();
+        } else {
+          var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+          if (arrowMiddleSubtask) arrowMiddleSubtask.click();
+        }
+      }
+      break;
+      case 'ArrowUp':
+        if (document.tabKeyIsDown && event.shiftKey) {
+          var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+          if (arrowPreviousSubtask) arrowPreviousSubtask.click();
+        }
+        break;
     case 'e':
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
         chrome.storage.sync.get({'anOptionsDescription': true}, function (items) {
@@ -787,29 +810,7 @@ document.addEventListener('keydown', function (event) {
         });
       }
       break;
-    case 'j':
-      if (document.tabKeyIsDown) {
-        var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
-        if (arrowNextSubtask) arrowNextSubtask.click();
-      }
-      break;
-    case 'g':
-      if (document.tabKeyIsDown) {
-        var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
-        if (arrowPreviousSubtask) arrowPreviousSubtask.click();
-      }
-      break;
-    case 'n':
-      if (document.tabKeyIsDown) {
-        if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
-          deleteSiblingSubtasksDropdown();
-        } else {
-          var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
-          if (arrowMiddleSubtask) arrowMiddleSubtask.click();
-        }
-      }
-      break;
-    case 'r':
+    case 'o':
       if (document.tabKeyIsDown) {
         if (document.querySelector('.SetParentDrawer')) {
           closeSetParentDrawer();
