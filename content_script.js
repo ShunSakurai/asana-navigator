@@ -174,11 +174,12 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
     subtaskListFiltered.map(
       subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
-      `${(subtask.name.endsWith(':'))? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong>&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
+      `${(subtask.name.endsWith(':'))? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
   var singleTaskPane = document.querySelector('.SingleTaskPane');
   singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
+  document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
