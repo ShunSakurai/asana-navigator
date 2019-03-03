@@ -54,7 +54,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
 - [x] Replace text in the task description (Tab+E)
 - [x] Support other languages
-- [ ] Implement donation page
+- [x] Implement donation button
 
 ## Usage
 
