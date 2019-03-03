@@ -37,7 +37,7 @@ var localizationStrings = {
     'menuButton-replaceDescription': 'Replace Text in Description...',
     'menuButton-setParent': 'Convert to a Subtask...',
     'shortcutDescription-siblingSubtasks': 'Jump to previous/next subtask',
-    'shortcutDescription-subtasksDropdown': 'Display sibling subtasks',
+    'shortcutDescription-subtasksDropdown': 'Show sibling subtasks',
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"
     'snippet-spacing': ' ',

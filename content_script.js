@@ -60,11 +60,15 @@ var addToKeyboardShortcutsList = function () {
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
   keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
   var separator = 'separator';
+  var toTitleCase = function (string) {
+    // Should consider if language is German
+    return string[0] + string.slice(1).toLowerCase();
+  };
   var shortcutsArray = [
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
-    [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
-    [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'O']],
+    [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
+    [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'O']],
   ];
   for (var i = 0; i < shortcutsArray.length; i++) {
     var [description, keyList] = shortcutsArray[i];
@@ -591,7 +595,14 @@ var replaceDescriptionPreset = function () {
 
 var replaceDescriptionUserText = function () {
   var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), escapeHtml(a[1])]);
-  if (!userReplaceTextList.length) return;
+  if (!userReplaceTextList.length) {
+    var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+    replaceDescriptionDialogUserButton.classList.add('is-disabled');
+    setTimeout(function () {
+      replaceDescriptionDialogUserButton.classList.remove('is-disabled');
+    }, 2000);
+    return;
+  }
   replaceDescription(userReplaceTextList);
 };
 

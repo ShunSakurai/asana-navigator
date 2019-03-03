@@ -14,11 +14,11 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 ### MVP:
 
 #### Putting projects on top:
-- [x] Display projects on top
+- [x] Show projects on top
 - [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
-- [x] Display arrows to go to previous/next sibling subtasks
+- [x] Show arrows to go to previous/next sibling subtasks
 
 #### Setting new parent tasks:
 - [x] Set new parent task from the toolbar
@@ -31,15 +31,15 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
 - [x] Implement keyboard shortcut to set new parent task (Tab+O)
-- [x] Display the new key combinations in Keyboard Shortcuts list
+- [x] Show the new key combinations in Keyboard Shortcuts list
 
 
 #### Going to sibling subtasks:
-- [x] Display drop-down list to go to sibling subtasks (Shift+Tab+→)
+- [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
 
 #### Setting new parent tasks:
 - [x] Search for task ID when the input is an integer
-- [x] Display information such as projects and completed/incomplete
+- [x] Show information such as projects and completed/incomplete
 
 #### More seamless UI:
 - [x] Display undo toast on bottom left

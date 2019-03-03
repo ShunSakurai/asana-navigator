@@ -4,29 +4,30 @@
   <meta charset="utf-8"/>
   <title>Asana Navigator Options</title>
 </head>
-<body style="font-family: Sans-serif;">
-<h4>Display items</h4>
+<body style="font-family: Sans-serif; font-size: 100%;">
+<h1>Settings</h1>
+<h2>Show items</h2>
 <div>
-  <input type="checkbox" id="projects"> Display projects on top
+  <input type="checkbox" id="projects"> Show projects (+ section selector if any) on top
 </div>
 <div>
-  <input type="checkbox" id="subtasks"> Display links to sibling subtasks (Shift+Tab+↑/→/↓)
+  <input type="checkbox" id="subtasks"> Show links to sibling subtasks (Shift+Tab+↑/→/↓)
 </div>
 <div>
-  <input type="checkbox" id="shortcuts"> Display Asana Navigator's keyboard shortcuts in the list (Cmd/Ctrl+/)
+  <input type="checkbox" id="shortcuts"> Show Asana Navigator's keyboard shortcuts in the list (Cmd/Ctrl+/)
 </div>
-<h4>Additional actions</h4>
+<h2>Additional actions</h2>
 <div>
-  <input type="checkbox" id="parent"> Convert to subtask (Tab+O)
+  <input type="checkbox" id="description"> Replace text in task description (Tab+E)
 </div>
 <div>
-  <input type="checkbox" id="description"> Replace text (Tab+E)
+  <input type="checkbox" id="parent"> Convert to subtask (set new parent task) (Tab+O)
 </div>
 <br/>
 <div>
-  <button id="save">Save</button>
+  <button id="save">Save settings</button>
+  <span id="status"></span>
 </div>
-<div id="status"></div>
 <script src="options.js" type="application/javascript"></script>
 </body>
 </html>
