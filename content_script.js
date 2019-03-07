@@ -147,7 +147,7 @@ var closeSingleTaskPaneExtraActionsMenu = function () {
 
 var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
   var singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
-  var taskName = (singleTaskTitleInput)? singleTaskTitleInput.childNodes[1].textContent: '';
+  var taskName = (singleTaskTitleInput)? singleTaskTitleInput.children[1].textContent: '';
   var queryValue = input.value || taskName;
   var setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
   if (!setParentDropdownContainer) {
@@ -534,12 +534,6 @@ var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potenti
       typeaheadSearchScrollableContents.lastElementChild.remove();
     }
     if (potentialTask) response.data.unshift(potentialTask);
-    if (response.data.length <= 1) {
-      var dropdownItemHintText = document.createElement('DIV');
-      dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
-      dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
-      typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
-    }
     for (var i = 0; i < response.data.length; i++) {
       if (response.data[i].gid === taskGid) continue;
       if (response.data[i].name.endsWith(':')) continue;
@@ -562,6 +556,12 @@ var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potenti
         }
         setNewParentTask(taskGid, setParentOptions);
       });
+    }
+    if (!typeaheadSearchScrollableContents.children.length) {
+      var dropdownItemHintText = document.createElement('DIV');
+      dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
+      dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
+      typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
     }
   });
 };
