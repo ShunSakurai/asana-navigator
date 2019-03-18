@@ -43,7 +43,8 @@ var addSetParentToExtraActions = function () {
       setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+O</span></div></span>`;
 
       setTimeout(function () {
-        var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-moveTaskMenuItem').parentNode || document.querySelector('.SingleTaskPaneExtraActionsButton-print');
+        var advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
+        var nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
         if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
       }, 100);
     });
