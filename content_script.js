@@ -354,7 +354,7 @@ var displaySetParentDrawer = function () {
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
-  `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-list'][0]}&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;${locStrings['drawerSwitch-setParent-list'][1]}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
+  `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
   singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
@@ -382,12 +382,12 @@ var displaySetParentDrawer = function () {
   saveOriginalParent();
 };
 
-var displaySuccessToast = function (task, messagesBeforeAfter, callback) {
+var displaySuccessToast = function (task, messageVarTask, callback) {
   var toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
   var toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
-    `${messagesBeforeAfter[0]} <a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> ${messagesBeforeAfter[1]}` +
+  messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
   var closeButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1];
@@ -580,7 +580,7 @@ var replaceDescription = function (replaceTextList) {
     callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function (response) {
       closeSingleTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
-      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-list'], function (callback) {
+      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function (callback) {
         callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
           callback();
         });
@@ -621,7 +621,7 @@ var returnReplaceDescriptionInnerHTML = function () {
         <div class="loading-boundary">
           <div class="form-view">
             <table>
-              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td></tr>
+              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td></tr>
               <tr class="name-row">
                 <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
                 <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
@@ -637,11 +637,11 @@ var returnReplaceDescriptionInnerHTML = function () {
       <div class="buttons"><div class="buttonView new-button new-primary-button buttonView--primary buttonView--large" id="ReplaceDescriptionDialogPresetButton" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
       <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
-        <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-list'].join('<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
+        <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-var-link'].replace('{link}', '<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
         <div class="loading-boundary">
           <div class="form-view">
             <table id="UserTextToReplaceDialogTable">
-              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-list'].join('</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
+              <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[1]) + `"></td>
               <td><a class="delete-row-link">&nbsp;×</a></td>
@@ -765,7 +765,7 @@ var setNewParentTask = function (taskGid, setParentOptions) {
   var originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
   callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, setParentOptions, function (response) {
     closeSetParentDrawer();
-    displaySuccessToast(response.data, locStrings['toastContent-setParent-list'], function (callback) {
+    displaySuccessToast(response.data, locStrings['toastContent-setParent-var-task'], function (callback) {
       callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
         callback();
         setTimeout(function () {

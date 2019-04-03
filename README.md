@@ -50,11 +50,13 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 ### Maybe later:
 - [ ] Search in the current open page, e.g. "search in this project"
 - [ ] Use tool tips with black background
-- [ ] Only update the right pane when navigating subtasks
+- [ ] Update only the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
 - [x] Replace text in the task description (Tab+E)
 - [x] Support other languages
 - [x] Implement donation button
+- [ ] Convert multiple tasks to subtasks
+- [ ] Implement pop-up inbox to seamlessly go back to where the user has left off
 
 ## Usage
 
