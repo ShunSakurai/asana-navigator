@@ -40,7 +40,7 @@ var addSetParentToExtraActions = function () {
         displaySetParentDrawer();
         closeSingleTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+O</span></div></span>`;
+      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
         var advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
@@ -69,7 +69,7 @@ var addToKeyboardShortcutsList = function () {
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
-    [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'O']],
+    [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'G']],
   ];
   for (var i = 0; i < shortcutsArray.length; i++) {
     var [description, keyList] = shortcutsArray[i];
@@ -837,7 +837,7 @@ document.addEventListener('keydown', function (event) {
         });
       }
       break;
-    case 'o':
+    case 'g':
       if (document.tabKeyIsDown) {
         if (document.querySelector('.SetParentDrawer')) {
           closeSetParentDrawer();

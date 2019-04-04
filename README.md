@@ -30,7 +30,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
-- [x] Implement keyboard shortcut to set new parent task (Tab+O)
+- [x] Implement keyboard shortcut to set new parent task (Tab+G)
 - [x] Show the new key combinations in Keyboard Shortcuts list
 
 
@@ -56,7 +56,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Support other languages
 - [x] Implement donation button
 - [ ] Convert multiple tasks to subtasks
-- [ ] Implement pop-up inbox to seamlessly go back to where the user has left off
+- [ ] Move back from inbox to where the user has left off
 
 ## Usage
 
