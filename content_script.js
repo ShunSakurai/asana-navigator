@@ -216,10 +216,7 @@ var deleteUserReplaceTextRow = function (button) {
 
 var displayLinksToSiblingSubtasks = function () {
   var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (!taskAncestryTaskLinks.length) {
-    deleteSiblingButtons();
-    return;
-  }
+  if (!taskAncestryTaskLinks.length) return;
   var parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   var taskGid = findTaskGid(window.location.href);
   var containerGid = findProjectGid(window.location.href) || '0';
@@ -254,10 +251,7 @@ var displayLinksToSiblingSubtasks = function () {
 
 var displayProjectsOnTop = function () {
   var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  if (!taskProjectsProjectList) {
-    deleteProjectNamesOnTop();
-    return;
-  }
+  if (!taskProjectsProjectList) return;
   var taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
   var taskAncestryAncestorProjects = document.createElement('DIV');
@@ -674,7 +668,7 @@ var returnTypeAheadInnerHTML = function (task) {
   '</div></div></div>';
 };
 
-var runAllFunctionsIfEnabled = function (retry) {
+var runOptionalFunctionsOnLoad = function () {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
@@ -682,40 +676,27 @@ var runAllFunctionsIfEnabled = function (retry) {
     'anOptionsParent': true,
     'anOptionsDescription': true
   }, function (items) {
-    if (retry) { // on "loading"
-      if (items.anOptionsProjects) {
-        var retryProjects = setInterval(function () {
-          displayProjectsOnTop();
-          if (document.querySelector('#TaskAncestryProjectNamesOnTop') || document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retryProjects);
-        }, 100);
-      }
-      if (items.anOptionsSubtasks) {
-        var retrySubtasks = setInterval(function () {
-          displayLinksToSiblingSubtasks();
-          if (document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink').length) clearInterval(retrySubtasks);
-        }, 100);
-      }
-      setTimeout(function () {
-        if (items.anOptionsParent) addSetParentToExtraActions();
-        if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
-      }, 500);
-    } else { // on "load"
-      if (items.anOptionsProjects) displayProjectsOnTop();
-      if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-      if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
-      if (items.anOptionsParent) addSetParentToExtraActions();
-      if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
-    }
+    if (items.anOptionsProjects) displayProjectsOnTop();
+    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+    if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
+    if (items.anOptionsParent) addSetParentToExtraActions();
+    if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
   });
 };
 
-var runFunctionsThatCreateElementsIfEnabled = function () {
+var runOptionalFunctionsAfterDelay = function (delay) {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
-    'anOptionsSubtasks': true
+    'anOptionsSubtasks': true,
+    'anOptionsParent': true,
+    'anOptionsDescription': true
   }, function (items) {
-    if (items.anOptionsProjects) displayProjectsOnTop();
-    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+    setTimeout(function () {
+      if (items.anOptionsProjects) displayProjectsOnTop();
+      if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+      if (items.anOptionsParent) addSetParentToExtraActions();
+      if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
+    }, delay)
   });
 };
 
@@ -768,14 +749,10 @@ var setNewParentTask = function (taskGid, setParentOptions) {
     displaySuccessToast(response.data, locStrings['toastContent-setParent-var-task'], function (callback) {
       callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
         callback();
-        setTimeout(function () {
-          runFunctionsThatCreateElementsIfEnabled();
-        }, 100);
+        runOptionalFunctionsAfterDelay(100);
       });
     });
-    setTimeout(function () {
-      runFunctionsThatCreateElementsIfEnabled();
-    }, 100);
+    runOptionalFunctionsAfterDelay(100);
   });
 };
 
@@ -867,12 +844,12 @@ window.addEventListener('load', function () {
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
   loadUserReplaceTextList();
-  runAllFunctionsIfEnabled();
+  runOptionalFunctionsOnLoad();
 });
 
 chrome.runtime.onMessage.addListener(
   function (message, sender, sendResponse) {
-    if (message.name && message.name === 'asanaNavigatorOnUpdated') {
-      runAllFunctionsIfEnabled(true); // We can only receive "loading" status, not "complete"
+    if (message.name && message.name === 'asanaNavigatorOnUpdated' && message.status === 'complete') {
+      runOptionalFunctionsAfterDelay(400);
     }
 });
