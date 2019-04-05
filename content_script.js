@@ -185,6 +185,9 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
   var singleTaskPane = document.querySelector('.SingleTaskPane');
   singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
+  siblingDropdown.addEventListener('click', function (event) {
+    openPageWithoutRefresh(event.target.href);
+  });
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
@@ -238,14 +241,40 @@ var displayLinksToSiblingSubtasks = function () {
     deleteSiblingButtons();
     var siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var innerHTMLPrevious = (indexPrevious || indexPrevious === 0)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})&#13;${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`: '';
-    var innerHTMLMiddle = `<a id="ArrowMiddleSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
-    var innerHTMLNext = (indexNext)? `<a href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" class="NoBorderBottom TaskAncestry-ancestorLink" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})&#13;${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`: '';
-    siblingButtons.innerHTML = [innerHTMLPrevious, innerHTMLMiddle, innerHTMLNext].join('<br>');
     var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-    singleTaskPaneTitleRow.appendChild(siblingButtons);
-    document.querySelector('#ArrowMiddleSubtask').addEventListener('click', function () {createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
+    if (singleTaskPaneTitleRow) singleTaskPaneTitleRow.appendChild(siblingButtons);
+
+    if (indexPrevious || indexPrevious === 0) {
+      var divArrowPreviousSubtask = document.createElement('DIV');
+      divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
+      siblingButtons.appendChild(divArrowPreviousSubtask);
+      var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+      if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function (event) {
+        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}`);
+        event.preventDefault();
+      });
+    } else {
+      siblingButtons.appendChild(document.createElement('BR'));
+    }
+    var divArrowMiddleSubtask = document.createElement('DIV');
+    divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
+    siblingButtons.appendChild(divArrowMiddleSubtask);
+    var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+    if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function (event) {
+      createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
     });
+    if (indexNext) {
+      var divArrowNextSubtask = document.createElement('DIV');
+      divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
+      siblingButtons.appendChild(divArrowNextSubtask);
+      var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+      if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function (event) {
+        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}`);
+        event.preventDefault();
+      });
+    } else {
+      siblingButtons.appendChild(document.createElement('BR'));
+    }
   });
 };
 
@@ -522,6 +551,14 @@ var loadUserReplaceTextList = function () {
   });
 };
 
+var openPageWithoutRefresh = function (newUrl) {
+  window.history.pushState({}, '', newUrl);
+  window.history.back();
+  setTimeout(function () {
+    window.history.forward();
+  }, 100);
+};
+
 var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
@@ -696,7 +733,7 @@ var runOptionalFunctionsAfterDelay = function (delay) {
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
       if (items.anOptionsParent) addSetParentToExtraActions();
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
-    }, delay)
+    }, delay);
   });
 };
 
