@@ -59,3 +59,8 @@
 .SiblingSubtasksItem-incompletedIcon {
     fill: #b7bfc6;
 }
+
+.SmallTextButtons {
+    font-size: 10px;
+    margin: -1px 0 -1px 0;
+}

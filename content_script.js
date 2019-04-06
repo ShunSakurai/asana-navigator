@@ -246,6 +246,7 @@ var displayLinksToSiblingSubtasks = function () {
 
     if (indexPrevious || indexPrevious === 0) {
       var divArrowPreviousSubtask = document.createElement('DIV');
+      divArrowPreviousSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
       siblingButtons.appendChild(divArrowPreviousSubtask);
       var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
@@ -257,6 +258,7 @@ var displayLinksToSiblingSubtasks = function () {
       siblingButtons.appendChild(document.createElement('BR'));
     }
     var divArrowMiddleSubtask = document.createElement('DIV');
+    divArrowMiddleSubtask.setAttribute('class', 'SmallTextButtons');
     divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
     siblingButtons.appendChild(divArrowMiddleSubtask);
     var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
@@ -265,6 +267,7 @@ var displayLinksToSiblingSubtasks = function () {
     });
     if (indexNext) {
       var divArrowNextSubtask = document.createElement('DIV');
+      divArrowNextSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
       siblingButtons.appendChild(divArrowNextSubtask);
       var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
