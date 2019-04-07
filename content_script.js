@@ -12,7 +12,9 @@ var addReplaceDescriptionToExtraActions = function () {
 
       setTimeout(function () {
         var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
-        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
+        if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
+          nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
+        }
       }, 100);
     });
   }
@@ -45,7 +47,9 @@ var addSetParentToExtraActions = function () {
       setTimeout(function () {
         var advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
         var nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
-        if (nextExtraActionButton) nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
+        if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-setParent')) {
+          nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
+        }
       }, 100);
     });
   }
@@ -186,7 +190,11 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
   singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
   siblingDropdown.addEventListener('click', function (event) {
-    openPageWithoutRefresh(event.target.href);
+    if (event.target.href) {
+      openPageWithoutRefresh(event.target.href);
+    } else {
+      openPageWithoutRefresh(event.target.parentNode.href);
+    }
   });
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
