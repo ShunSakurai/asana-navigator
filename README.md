@@ -56,7 +56,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Support other languages
 - [x] Implement donation button
 - [ ] Convert multiple tasks to subtasks
-- [ ] Move back from inbox to where the user has left off
+- [x] Move back from inbox to where the user has left off (Tab+J)
 
 ## Usage
 

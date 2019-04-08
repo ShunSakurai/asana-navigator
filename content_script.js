@@ -23,7 +23,7 @@ var addReplaceDescriptionToExtraActions = function () {
 var addRowToUserReplaceTextList = function () {
   var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
   if (!userTextToReplaceDialogTable) return;
-  var newUserTextTr = document.createElement('tr');
+  var newUserTextTr = document.createElement('TR');
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
@@ -70,6 +70,7 @@ var addToKeyboardShortcutsList = function () {
     return string[0] + string.slice(1).toLowerCase();
   };
   var shortcutsArray = [
+    [locStrings['shortcutDescription-backLink'], ['Tab', 'J']],
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
@@ -147,6 +148,24 @@ var closeSingleTaskPaneExtraActionsMenu = function () {
   var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton.classList.contains('CircularButton--active') || singleTaskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     singleTaskPaneExtraActionsButton.click();
+  }
+};
+
+var createBackFromInboxButton = function () {
+  var inboxNavigationBar = document.querySelector('.InboxNavigationBar');
+  if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
+    var backLinkFromInbox = document.createElement('DIV');
+    backLinkFromInbox.setAttribute('class', 'InboxNavigationBar-backLink');
+    backLinkFromInbox.innerHTML = '<a class="InboxButton-backLink disabled">&times;</a>';
+    inboxNavigationBar.appendChild(backLinkFromInbox);
+    if (document.anPreviousUrl) {
+      backLinkFromInbox.innerHTML = `<a class="InboxButton-backLink" href="${document.anPreviousUrl}" title="${locStrings['buttonTitle-backLink']} (Tab+J)">&times;</a>`;
+      backLinkFromInbox.addEventListener('click', function (event) {
+        openPageWithoutRefresh(document.anPreviousUrl);
+        event.preventDefault();
+        document.anPreviousUrl = undefined;
+      });
+    }
   }
 };
 
@@ -514,6 +533,20 @@ var getUserReplaceTextList = function () {
   return userReplaceTextList;
 };
 
+var listenToClickOnInboxSavePrevious = function () {
+  setTimeout(function () {
+    var sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+    if (sidebarInboxLink) {
+      sidebarInboxLink.addEventListener('click', function () {
+        document.anPreviousUrl = window.location.href;
+        setTimeout(function () {
+          createBackFromInboxButton();
+        }, 100);
+      });
+    }
+  }, 500);
+};
+
 var listenToClickOnKeyboardShortcutList = function () {
   var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
@@ -734,12 +767,14 @@ var runOptionalFunctionsOnLoad = function () {
 
 var runOptionalFunctionsAfterDelay = function (delay) {
   chrome.storage.sync.get({
+    'anOptionsInbox': true,
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
     'anOptionsParent': true,
     'anOptionsDescription': true
   }, function (items) {
     setTimeout(function () {
+      if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
       if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
       if (items.anOptionsParent) addSetParentToExtraActions();
@@ -862,15 +897,24 @@ document.addEventListener('keydown', function (event) {
         });
       }
       break;
+    case 'i':
+      if (!document.tabKeyIsDown) break;
+      var sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+      sidebarInboxLink.click();
+      break;
+    case 'j':
+      if (!document.tabKeyIsDown) break;
+      var backLinkFromInbox = document.querySelector('.InboxButton-backLink');
+      if (backLinkFromInbox) backLinkFromInbox.click();
+      break;
     case 'g':
-      if (document.tabKeyIsDown) {
-        if (document.querySelector('.SetParentDrawer')) {
-          closeSetParentDrawer();
-        } else {
-          chrome.storage.sync.get({'anOptionsParent': true}, function (items) {
-            if (items.anOptionsParent) displaySetParentDrawer();
-          });
-        }
+      if (!document.tabKeyIsDown) break;
+      if (document.querySelector('.SetParentDrawer')) {
+        closeSetParentDrawer();
+      } else {
+        chrome.storage.sync.get({'anOptionsParent': true}, function (items) {
+          if (items.anOptionsParent) displaySetParentDrawer();
+        });
       }
       break;
   }
@@ -888,13 +932,16 @@ window.addEventListener('blur', function () {
   document.tabKeyIsDownOnModal = false;
 });
 
+// First load or page reload
 window.addEventListener('load', function () {
+  createBackFromInboxButton();
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
   loadUserReplaceTextList();
   runOptionalFunctionsOnLoad();
 });
 
+// After jumping from other resources on Asana
 chrome.runtime.onMessage.addListener(
   function (message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated' && message.status === 'complete') {

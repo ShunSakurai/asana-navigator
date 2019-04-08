@@ -4,6 +4,14 @@
     transform: translateX(-50%) translateY(-50%) !important;
 }
 
+.InboxButton-backLink {
+    color: #848f99;
+}
+
+.InboxButton-backLink.disabled {
+    cursor: not-allowed;
+}
+
 .NoBorderBottom {
     border-bottom: none !important;
 }

@@ -19,6 +19,7 @@ var localizationStrings = {
     'arrowTitle-nextSubtask': 'Next subtask',
     'arrowTitle-previousSubtask': 'Previous subtask',
     'arrowTitle-subtasksDropdown': 'Subtasks', // u2c2cf
+    'buttonTitle-backLink': 'Go back to what you were doing',
     'dialogButton-usePreset': 'Use Preset Cleanup',
     'dialogButton-replaceText': 'Replace Text',
     'dialogLabel-replaceWith-var-text': 'Replace{text}with',
@@ -36,6 +37,7 @@ var localizationStrings = {
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace Text in Description...',
     'menuButton-setParent': 'Convert to a Subtask...',
+    'shortcutDescription-backLink': 'Go back from Inbox',
     'shortcutDescription-siblingSubtasks': 'Jump to previous/next subtask',
     'shortcutDescription-subtasksDropdown': 'Show sibling subtasks',
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
@@ -79,6 +81,7 @@ var localizationStrings = {
     'arrowTitle-nextSubtask': '次のサブタスク',
     'arrowTitle-previousSubtask': '前のサブタスク',
     'arrowTitle-subtasksDropdown': '前後のサブタスク', // translating differently
+    'buttonTitle-backLink': '前の作業に戻る',
     'dialogButton-usePreset': '事前設定済みクリーンアップ',
     'dialogButton-replaceText': 'テキストを置換',
     'dialogLabel-replaceWith-var-text': '置換前{text}置換後',
@@ -96,6 +99,7 @@ var localizationStrings = {
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
     'menuButton-setParent': 'サブタスクに変換...',
+    'shortcutDescription-backLink': '受信トレイから戻る',
     'shortcutDescription-siblingSubtasks': '前/次のサブタスクに移動',
     'shortcutDescription-subtasksDropdown': '前後のサブタスクを表示',
     'snippet-example': '例: ',

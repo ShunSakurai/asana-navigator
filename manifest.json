@@ -12,7 +12,7 @@
       "run_at": "document_idle"
     }
   ],
-  "description" : "Show projects on top, go to previous/next subtasks, replace text in task description, convert to a subtask of another task, etc.",
+  "description" : "Go back from inbox, show projects on top, go to sibling subtasks, replace text in description, convert to a subtask of another task.",
   "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
   "icons": {
     "128": "images/an128.png",
@@ -29,5 +29,5 @@
     "activeTab", "storage"
   ],
   "short_name": "AsaNavigator",
-  "version": "1.9.2"
+  "version": "1.10.0"
 }

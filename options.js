@@ -1,10 +1,12 @@
 var saveOptions = function () {
+  var inboxEnabled = document.getElementById('inbox').checked;
   var projectsEnabled = document.getElementById('projects').checked;
   var subtasksEnabled = document.getElementById('subtasks').checked;
   var shortcutsEnabled = document.getElementById('shortcuts').checked;
   var parentEnabled = document.getElementById('parent').checked;
   var descriptionEnabled = document.getElementById('description').checked;
   chrome.storage.sync.set({
+    'anOptionsInbox': inboxEnabled,
     'anOptionsProjects': projectsEnabled,
     'anOptionsSubtasks': subtasksEnabled,
     'anOptionsShortcuts': shortcutsEnabled,
@@ -21,12 +23,14 @@ var saveOptions = function () {
 
 var loadOptions = function () {
   chrome.storage.sync.get({
+    'anOptionsInbox': true,
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
     'anOptionsShortcuts': true,
     'anOptionsParent': true,
     'anOptionsDescription': true
   }, function (items) {
+    document.getElementById('inbox').checked = items.anOptionsInbox;
     document.getElementById('projects').checked = items.anOptionsProjects;
     document.getElementById('subtasks').checked = items.anOptionsSubtasks;
     document.getElementById('shortcuts').checked = items.anOptionsShortcuts;
