@@ -85,7 +85,7 @@ I try my best to maintain the quality and safety of this extension, but please u
 ## Feedback and contribution
 
 I'd love to hear from users and developers.
-Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or my [Asana project](https://app.asana.com/0/777908652160115/777908652160115). I'd also welcome pull requests and help with translating the UI.
+Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or [Asana Community Forum](https://forum.asana.com/t/34586). I'd also welcome pull requests and help with translating the UI.
 
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible

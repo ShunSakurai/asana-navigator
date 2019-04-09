@@ -6,7 +6,7 @@ var addReplaceDescriptionToExtraActions = function () {
       replaceDescriptionButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
       replaceDescriptionButton.addEventListener('click', function () {
         displayReplaceDescriptionDialog();
-        closeSingleTaskPaneExtraActionsMenu();
+        closeTaskPaneExtraActionsMenu();
       });
       replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
@@ -33,21 +33,21 @@ var addRowToUserReplaceTextList = function () {
 };
 
 var addSetParentToExtraActions = function () {
-  var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
-  if (singleTaskPaneExtraActionsButton) {
-    singleTaskPaneExtraActionsButton.addEventListener('click', function () {
+  var [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
+  if (taskPaneExtraActionsButton) {
+    taskPaneExtraActionsButton.addEventListener('click', function () {
       var setParentButton = document.createElement('A');
-      setParentButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-setParent SingleTaskPaneExtraActionsButton-menuItem');
+      setParentButton.setAttribute('class', `menuItem-button menuItem--small ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
-        closeSingleTaskPaneExtraActionsMenu();
+        closeTaskPaneExtraActionsMenu();
       });
       setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
         var advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
         var nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
-        if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-setParent')) {
+        if (nextExtraActionButton && !document.querySelector(`.${taskPaneTypeString}TaskPaneExtraActionsButton-setParent`)) {
           nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
         }
       }, 100);
@@ -144,10 +144,10 @@ var closeSetParentDrawer = function () {
   document.removeEventListener('click', listenToClickToCloseSetParentDropdown);
 };
 
-var closeSingleTaskPaneExtraActionsMenu = function () {
-  var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
-  if (singleTaskPaneExtraActionsButton.classList.contains('CircularButton--active') || singleTaskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
-    singleTaskPaneExtraActionsButton.click();
+var closeTaskPaneExtraActionsMenu = function () {
+  var [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
+  if (taskPaneExtraActionsButton.classList.contains('CircularButton--active') || taskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
+    taskPaneExtraActionsButton.click();
   }
 };
 
@@ -402,15 +402,15 @@ var displayReplaceDescriptionDialog = function () {
 
 var displaySetParentDrawer = function () {
   if (document.querySelector('.SetParentDrawer')) return;
-  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  if (!singleTaskPaneBody) return;
+  var [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body');
+  if (!taskPaneBody) return;
   var setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
   `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
-  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector('.SingleTaskPaneToolbar');
-  singleTaskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
+  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
+  taskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
   document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function () {
     closeSetParentDrawer();
@@ -518,6 +518,14 @@ var getPlatformAndSetPlatStrings = function () {
       platStrings[key] = platformStrings.win[key];
     }
   }
+};
+
+var getTaskPaneTypeAndElement = function (subsequentClassName) {
+  var singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
+  if (singleTaskPaneElement) return ['Single', singleTaskPaneElement];
+  var multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
+  if (multiTaskPaneElement) return ['Multi', multiTaskPaneElement];
+  return ['', undefined];
 };
 
 var getUserReplaceTextList = function () {
@@ -653,7 +661,7 @@ var replaceDescription = function (replaceTextList) {
       htmlNotes = htmlNotes.replace(pair[0], pair[1]);
     }
     callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function (response) {
-      closeSingleTaskPaneExtraActionsMenu();
+      closeTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
       displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function (callback) {
         callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
