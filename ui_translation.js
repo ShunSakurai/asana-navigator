@@ -37,6 +37,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace Text in Description...',
     'menuButton-setParent': 'Convert to a Subtask...',
+    'menuButton-setParent-multi': 'Convert to Subtasks...',
     'shortcutDescription-backLink': 'Go back from Inbox',
     'shortcutDescription-siblingSubtasks': 'Jump to previous/next subtask',
     'shortcutDescription-subtasksDropdown': 'Show sibling subtasks',
@@ -46,7 +47,7 @@ const localizationStrings = {
     'toastButtton-undo': 'Undo', // 14vtr68
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-descriptionReplaced-var-task': 'Description replaced: {task}',
-    'toastContent-setParent-var-task': 'Made a subtask: {task}',
+    'toastContent-setParent-var-task': 'Set a new parent task: {task}',
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
   'es': {
@@ -57,6 +58,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Atajos del teclado',
     'menuButton-replaceDescription': 'Replace text in description...',
     'menuButton-setParent': 'Convert to a subtask...',
+    'menuButton-setParent-multi': 'Convert to subtasks...',
     'snippet-example': 'ej. ',
     'snippet-save': 'Guardar',
     'toastButtton-undo': 'Deshacer',
@@ -71,6 +73,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Raccourcis clavier',
     'menuButton-replaceDescription': 'Replace text in description...',
     'menuButton-setParent': 'Convert to a subtask...',
+    'menuButton-setParent-multi': 'Convert to subtasks...',
     'snippet-example': 'ex. ',
     'snippet-save': 'Enregistrer',
     'toastButtton-undo': 'Annuler',
@@ -99,6 +102,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
     'menuButton-setParent': 'サブタスクに変換...',
+    'menuButton-setParent-multi': 'サブタスクに変換...',
     'shortcutDescription-backLink': '受信トレイから戻る',
     'shortcutDescription-siblingSubtasks': '前/次のサブタスクに移動',
     'shortcutDescription-subtasksDropdown': '前後のサブタスクを表示',
@@ -108,7 +112,7 @@ const localizationStrings = {
     'toastButtton-undo': '元に戻す',
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-var-task': '{task} の説明を置換しました。',
-    'toastContent-setParent-var-task': 'サブタスクにしました: {task}',
+    'toastContent-setParent-var-task': '新しい親タスクを設定しました: {task}',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
   'pt': {
@@ -119,6 +123,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Atalhos do teclado',
     'menuButton-replaceDescription': 'Replace text in description...',
     'menuButton-setParent': 'Convert to a subtask...',
+    'menuButton-setParent-multi': 'Convert to subtasks...',
     'snippet-example': 'ex. ',
     'snippet-save': 'Salvar',
     'toastButtton-undo': 'Desfazer',

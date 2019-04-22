@@ -55,7 +55,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Replace text in the task description (Tab+E)
 - [x] Support other languages
 - [x] Implement donation button
-- [ ] Convert multiple tasks to subtasks
+- [x] Convert multiple tasks to subtasks
 - [x] Move back from inbox to where the user has left off (Tab+J)
 
 ## Usage

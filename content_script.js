@@ -42,7 +42,7 @@ const addSetParentToExtraActions = function () {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
+      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${(taskPaneTypeString === 'Single')? locStrings['menuButton-setParent']: locStrings['menuButton-setParent-multi']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
         const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
@@ -169,7 +169,7 @@ const createBackFromInboxButton = function () {
   }
 };
 
-const createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
+const createSetParentDropdownContainer = function (input, taskGidList, workspaceGid) {
   const singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
   const taskName = (singleTaskTitleInput)? singleTaskTitleInput.children[1].textContent: '';
   const queryValue = input.value || taskName;
@@ -185,10 +185,10 @@ const createSetParentDropdownContainer = function (input, taskGid, workspaceGid)
   if (potentialTaskGid) {
     callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
       potentialTask = response.data;
-      populateFromTypeahead(taskGid, workspaceGid, queryValue, potentialTask);
+      populateFromTypeahead(taskGidList, workspaceGid, queryValue, potentialTask);
     });
   } else {
-    populateFromTypeahead(taskGid, workspaceGid, queryValue, potentialTask);
+    populateFromTypeahead(taskGidList, workspaceGid, queryValue, potentialTask);
   }
 };
 
@@ -425,7 +425,13 @@ const displaySetParentDrawer = function () {
       const that = this;
       callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
         const workspaceGid = response.data.workspace.gid;
-          createSetParentDropdownContainer(that, taskGid, workspaceGid);
+        if (taskPaneTypeString === 'Single') {
+          createSetParentDropdownContainer(that, [taskGid], workspaceGid);
+        } else {
+          const taskRowHighlighted = Array.from(document.querySelectorAll('.TaskRow--highlighted'));
+          const taskGidList = taskRowHighlighted.map(divTaskRow => /_(\d+)/.exec(divTaskRow.children[1].children[1].children[1].id)[1]);
+          createSetParentDropdownContainer(that, taskGidList, workspaceGid);
+        }
       });
     });
   });
@@ -610,7 +616,7 @@ const openPageWithoutRefresh = function (newUrl) {
   }, 100);
 };
 
-const populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potentialTask) {
+const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
     const typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
@@ -618,7 +624,7 @@ const populateFromTypeahead = function (taskGid, workspaceGid, queryValue, poten
     }
     if (potentialTask) response.data.unshift(potentialTask);
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].gid === taskGid) continue;
+      if (taskGidList.includes(response.data[i].gid)) continue;
       if (response.data[i].name.endsWith(':')) continue;
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
@@ -630,14 +636,14 @@ const populateFromTypeahead = function (taskGid, workspaceGid, queryValue, poten
         this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        const parentGid = this.firstElementChild.dataset.taskGid;
-        const setParentOptions = {'parent': parentGid};
+        const setParentOptions = {'parent': response.data[i].gid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentOptions.insert_before = null;
+          taskGidList.reverse();
         } else {
           setParentOptions.insert_after = null;
         }
-        setNewParentTask(taskGid, setParentOptions);
+        setNewParentTask(taskGidList, setParentOptions, response.data[i]);
       });
     }
     if (!typeaheadSearchScrollableContents.children.length) {
@@ -749,7 +755,7 @@ const returnTypeAheadInnerHTML = function (task) {
   escapeHtml(task.name) + `${(parentName)? '&#13;‹ ' + escapeHtml(parentName): ''}` + `${(projectNameList)? '&#13;(' + escapeHtml(projectNameList) + ')': ''}` +
   '"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">' +
   `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
-  `</div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span><span>${escapeHtml(task.name)}</span></span>` +
+  `</div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${escapeHtml(task.name)}</span>` +
   `${(parentName)? '<span class="TaskTypeaheadItem-parentTask">' + escapeHtml(parentName) + '</span>': ''}`+
   '</div>' +
   `${(projectNameList)? '<div class="TypeaheadItemStructure-subtitle">' + escapeHtml(projectNameList) + '</div>': ''}`+
@@ -830,20 +836,26 @@ const saveUserReplaceTextList = function () {
   });
 };
 
-const setNewParentTask = function (taskGid, setParentOptions) {
+const setNewParentTask = function (taskGidList, setParentOptions, parentTask) {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
   const originalParentGid = setParentDrawer.dataset.originalParentGid;
   const originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
-  callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, setParentOptions, function (response) {
-    closeSetParentDrawer();
-    displaySuccessToast(response.data, locStrings['toastContent-setParent-var-task'], function (callback) {
-      callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
-        callback();
+  for (let i = 0; i < taskGidList.length; i++) {
+    callAsanaApi('POST', `tasks/${taskGidList[i]}/setParent`, {}, setParentOptions, function (response) {
+      closeSetParentDrawer();
+      if (i === taskGidList.length - 1) {
+        displaySuccessToast(parentTask, locStrings['toastContent-setParent-var-task'], function (callback) {
+          for (let i = 0; i < taskGidList.length; i++) {
+            callAsanaApi('POST', `tasks/${taskGidList[i]}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
+              callback();
+              runOptionalFunctionsAfterDelay(100);
+            });
+          }
+        });
         runOptionalFunctionsAfterDelay(100);
-      });
+      }
     });
-    runOptionalFunctionsAfterDelay(100);
-  });
+  }
 };
 
 const toggleSetParentSwitch = function (input) {
