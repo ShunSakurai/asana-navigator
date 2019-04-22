@@ -1,10 +1,10 @@
-var saveOptions = function () {
-  var inboxEnabled = document.getElementById('inbox').checked;
-  var projectsEnabled = document.getElementById('projects').checked;
-  var subtasksEnabled = document.getElementById('subtasks').checked;
-  var shortcutsEnabled = document.getElementById('shortcuts').checked;
-  var parentEnabled = document.getElementById('parent').checked;
-  var descriptionEnabled = document.getElementById('description').checked;
+const saveOptions = function () {
+  let inboxEnabled = document.getElementById('inbox').checked;
+  let projectsEnabled = document.getElementById('projects').checked;
+  let subtasksEnabled = document.getElementById('subtasks').checked;
+  let shortcutsEnabled = document.getElementById('shortcuts').checked;
+  let parentEnabled = document.getElementById('parent').checked;
+  let descriptionEnabled = document.getElementById('description').checked;
   chrome.storage.sync.set({
     'anOptionsInbox': inboxEnabled,
     'anOptionsProjects': projectsEnabled,
@@ -13,7 +13,7 @@ var saveOptions = function () {
     'anOptionsParent': parentEnabled,
     'anOptionsDescription': descriptionEnabled
   }, function () {
-    var status = document.getElementById('status');
+    let status = document.getElementById('status');
     status.textContent = 'Options saved';
     setTimeout(function () {
       status.textContent = '';
@@ -21,7 +21,7 @@ var saveOptions = function () {
   });
 };
 
-var loadOptions = function () {
+const loadOptions = function () {
   chrome.storage.sync.get({
     'anOptionsInbox': true,
     'anOptionsProjects': true,

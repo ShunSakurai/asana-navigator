@@ -1,8 +1,8 @@
-var addReplaceDescriptionToExtraActions = function () {
-  var singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+const addReplaceDescriptionToExtraActions = function () {
+  const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
     singleTaskPaneExtraActionsButton.addEventListener('click', function () {
-      var replaceDescriptionButton = document.createElement('A');
+      const replaceDescriptionButton = document.createElement('A');
       replaceDescriptionButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
       replaceDescriptionButton.addEventListener('click', function () {
         displayReplaceDescriptionDialog();
@@ -11,7 +11,7 @@ var addReplaceDescriptionToExtraActions = function () {
       replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
       setTimeout(function () {
-        var nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
+        const nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
         if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
           nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
         }
@@ -20,10 +20,10 @@ var addReplaceDescriptionToExtraActions = function () {
   }
 };
 
-var addRowToUserReplaceTextList = function () {
-  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+const addRowToUserReplaceTextList = function () {
+  const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
   if (!userTextToReplaceDialogTable) return;
-  var newUserTextTr = document.createElement('TR');
+  const newUserTextTr = document.createElement('TR');
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
@@ -32,11 +32,11 @@ var addRowToUserReplaceTextList = function () {
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
-var addSetParentToExtraActions = function () {
-  var [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
+const addSetParentToExtraActions = function () {
+  const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton) {
     taskPaneExtraActionsButton.addEventListener('click', function () {
-      var setParentButton = document.createElement('A');
+      const setParentButton = document.createElement('A');
       setParentButton.setAttribute('class', `menuItem-button menuItem--small ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
@@ -45,8 +45,8 @@ var addSetParentToExtraActions = function () {
       setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
-        var advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
-        var nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
+        const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
+        const nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
         if (nextExtraActionButton && !document.querySelector(`.${taskPaneTypeString}TaskPaneExtraActionsButton-setParent`)) {
           nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
         }
@@ -55,30 +55,30 @@ var addSetParentToExtraActions = function () {
   }
 };
 
-var addToKeyboardShortcutsList = function () {
-  var keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
+const addToKeyboardShortcutsList = function () {
+  const keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
   if (!keyboardShortcutsModal) return;
   if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
-  var keyboardShortcutsModalANSection = document.createElement('DIV');
+  const keyboardShortcutsModalANSection = document.createElement('DIV');
   keyboardShortcutsModalANSection.setAttribute('class', 'KeyboardShortcutsModal-section');
   keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection');
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
   keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
-  var separator = 'separator';
-  var toTitleCase = function (string) {
+  const separator = 'separator';
+  const toTitleCase = function (string) {
     // Should consider if language is German
     return string[0] + string.slice(1).toLowerCase();
   };
-  var shortcutsArray = [
+  const shortcutsArray = [
     [locStrings['shortcutDescription-backLink'], ['Tab', 'J']],
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
     [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'G']],
   ];
-  for (var i = 0; i < shortcutsArray.length; i++) {
-    var [description, keyList] = shortcutsArray[i];
-    var keyboardShortcutsModalRow = document.createElement('DIV');
+  for (let i = 0; i < shortcutsArray.length; i++) {
+    const [description, keyList] = shortcutsArray[i];
+    const keyboardShortcutsModalRow = document.createElement('DIV');
     keyboardShortcutsModalRow.setAttribute('class', 'KeyboardShortcutsModal-row');
     keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys">` +
     keyList.map(a => (a === separator)? '/': '<span class="KeyboardShortcutsModal-key">' + a + '</span>').join('') + '</span>';
@@ -86,24 +86,24 @@ var addToKeyboardShortcutsList = function () {
   }
 };
 
-var callAsanaApi = function (request, path, options, data, callback) {
-  var xhr = new XMLHttpRequest();
+const callAsanaApi = function (request, path, options, data, callback) {
+  const xhr = new XMLHttpRequest();
   xhr.addEventListener('load', function () {
     callback(JSON.parse(this.response));
   });
-  var manifest = chrome.runtime.getManifest();
-  var client_name = ['chrome-extension', manifest.version, manifest.name].join(':'); // Be polite to Asana API
-  var requestData;
+  const manifest = chrome.runtime.getManifest();
+  const client_name = ['chrome-extension', manifest.version, manifest.name].join(':'); // Be polite to Asana API
+  let requestData;
   if (request === 'POST' || request === 'PUT') {
     requestData = JSON.stringify({'data': data});
     options.client_name = client_name;
   } else {
     options.opt_client_name = client_name;
   }
-  var requestUrl = 'https://app.asana.com/api/1.1/' + path;
+  let requestUrl = 'https://app.asana.com/api/1.1/' + path;
   if (Object.keys(options).length) {
-    var parameters = '';
-    for (var key in options) {
+    let parameters = '';
+    for (let key in options) {
       if (options.hasOwnProperty(key)) {
         parameters += [key, '=', options[key], '&'].join('');
       }
@@ -117,11 +117,11 @@ var callAsanaApi = function (request, path, options, data, callback) {
   xhr.send(requestData);
 };
 
-var clickSectionSelector = function (a) {
-  var taskProjectsProjectGid = findProjectGid(a.previousSibling.href);
-  var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  var floatingSelectLabel;
-  for (var i = 0; i < taskProjectsProjectList.children.length; i++) {
+const clickSectionSelector = function (a) {
+  const taskProjectsProjectGid = findProjectGid(a.previousSibling.href);
+  const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+  let floatingSelectLabel;
+  for (let i = 0; i < taskProjectsProjectList.children.length; i++) {
     if (findProjectGid(taskProjectsProjectList.children[i].firstElementChild.href) === taskProjectsProjectGid) {
       floatingSelectLabel = taskProjectsProjectList.children[i].children[1];
       break;
@@ -133,28 +133,28 @@ var clickSectionSelector = function (a) {
   }, 100);
 };
 
-var closeReplaceDescriptionDialog = function () {
-  var replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
+const closeReplaceDescriptionDialog = function () {
+  const replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
   if (replaceDescriptionDialogView) replaceDescriptionDialogView.remove();
 };
 
-var closeSetParentDrawer = function () {
-  var setParentDrawer = document.querySelector('.SetParentDrawer');
+const closeSetParentDrawer = function () {
+  const setParentDrawer = document.querySelector('.SetParentDrawer');
   if (setParentDrawer) setParentDrawer.remove();
   document.removeEventListener('click', listenToClickToCloseSetParentDropdown);
 };
 
-var closeTaskPaneExtraActionsMenu = function () {
-  var [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
+const closeTaskPaneExtraActionsMenu = function () {
+  const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton.classList.contains('CircularButton--active') || taskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     taskPaneExtraActionsButton.click();
   }
 };
 
-var createBackFromInboxButton = function () {
-  var inboxNavigationBar = document.querySelector('.InboxNavigationBar');
+const createBackFromInboxButton = function () {
+  const inboxNavigationBar = document.querySelector('.InboxNavigationBar');
   if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
-    var backLinkFromInbox = document.createElement('DIV');
+    const backLinkFromInbox = document.createElement('DIV');
     backLinkFromInbox.setAttribute('class', 'InboxNavigationBar-backLink');
     backLinkFromInbox.innerHTML = '<a class="InboxButton-backLink disabled">&times;</a>';
     inboxNavigationBar.appendChild(backLinkFromInbox);
@@ -169,20 +169,19 @@ var createBackFromInboxButton = function () {
   }
 };
 
-var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
-  var singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
-  var taskName = (singleTaskTitleInput)? singleTaskTitleInput.children[1].textContent: '';
-  var queryValue = input.value || taskName;
-  var setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
-  if (!setParentDropdownContainer) {
-    setParentDropdownContainer = document.createElement('DIV');
+const createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
+  const singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
+  const taskName = (singleTaskTitleInput)? singleTaskTitleInput.children[1].textContent: '';
+  const queryValue = input.value || taskName;
+  if (!document.querySelector('#SetParentDropdownContainer')) {
+    const setParentDropdownContainer = document.createElement('DIV');
     setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
     setParentDropdownContainer.setAttribute('id', 'SetParentDropdownContainer');
     input.parentNode.appendChild(setParentDropdownContainer);
   }
-  var potentialTask;
-  var potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
-  var potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
+  let potentialTask;
+  const potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
+  const potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
   if (potentialTaskGid) {
     callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
       potentialTask = response.data;
@@ -193,11 +192,11 @@ var createSetParentDropdownContainer = function (input, taskGid, workspaceGid) {
   }
 };
 
-var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
-  var completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
-  var incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
+const createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
+  const completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
+  const incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
-  var siblingDropdown = document.createElement('DIV');
+  const siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
     subtaskListFiltered.map(
@@ -205,7 +204,7 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
       `${(subtask.name.endsWith(':'))? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
-  var singleTaskPane = document.querySelector('.SingleTaskPane');
+  const singleTaskPane = document.querySelector('.SingleTaskPane');
   singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
   siblingDropdown.addEventListener('click', function (event) {
@@ -218,65 +217,65 @@ var createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, cont
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
-var deleteProjectNamesOnTop = function () {
-  var projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
+const deleteProjectNamesOnTop = function () {
+  const projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
   if (projectNamesOnTop) projectNamesOnTop.remove();
 };
 
-var deleteSetParentTypeaheadDropdown = function () {
-  var setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
+const deleteSetParentTypeaheadDropdown = function () {
+  const setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
   if (setParentDropdownContainer) setParentDropdownContainer.remove();
 };
 
-var deleteSiblingButtons = function () {
-  var SiblingButtons = document.querySelector('#SiblingButtons');
+const deleteSiblingButtons = function () {
+  const SiblingButtons = document.querySelector('#SiblingButtons');
   if (SiblingButtons) SiblingButtons.remove();
 };
 
-var deleteSiblingSubtasksDropdown = function () {
-  var siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+const deleteSiblingSubtasksDropdown = function () {
+  const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) siblingDropdown.remove();
   document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
-var deleteUserReplaceTextRow = function (button) {
-  var trToDelete = button.parentNode.parentNode;
+const deleteUserReplaceTextRow = function (button) {
+  const trToDelete = button.parentNode.parentNode;
   trToDelete.remove();
 };
 
-var displayLinksToSiblingSubtasks = function () {
-  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+const displayLinksToSiblingSubtasks = function () {
+  const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) return;
-  var parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
-  var taskGid = findTaskGid(window.location.href);
-  var containerGid = findProjectGid(window.location.href) || '0';
+  const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+  const taskGid = findTaskGid(window.location.href);
+  const containerGid = findProjectGid(window.location.href) || '0';
 
   callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,name'}, {}, function (response) {
-    var subtaskList = response.data;
-    var subtaskListFiltered = subtaskList.filter(function (subtask) {
+    const subtaskList = response.data;
+    const subtaskListFiltered = subtaskList.filter(function (subtask) {
       return !subtask.name.endsWith(':') || subtask.gid === taskGid;
     });
-    var indexCurrent;
-    for (var i = 0; i < subtaskListFiltered.length; i++) {
+    let indexCurrent;
+    for (let i = 0; i < subtaskListFiltered.length; i++) {
       if (subtaskListFiltered[i].gid === taskGid) {
         indexCurrent = i;
         break;
       }
     }
-    var indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
-    var indexNext = (indexCurrent < subtaskListFiltered.length - 1)? indexCurrent + 1: null;
+    const indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
+    const indexNext = (indexCurrent < subtaskListFiltered.length - 1)? indexCurrent + 1: null;
     deleteSiblingButtons();
-    var siblingButtons = document.createElement('SPAN');
+    const siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+    const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
     if (singleTaskPaneTitleRow) singleTaskPaneTitleRow.appendChild(siblingButtons);
 
     if (indexPrevious || indexPrevious === 0) {
-      var divArrowPreviousSubtask = document.createElement('DIV');
+      const divArrowPreviousSubtask = document.createElement('DIV');
       divArrowPreviousSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
       siblingButtons.appendChild(divArrowPreviousSubtask);
-      var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+      const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
       if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function (event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}`);
         event.preventDefault();
@@ -284,20 +283,20 @@ var displayLinksToSiblingSubtasks = function () {
     } else {
       siblingButtons.appendChild(document.createElement('BR'));
     }
-    var divArrowMiddleSubtask = document.createElement('DIV');
+    const divArrowMiddleSubtask = document.createElement('DIV');
     divArrowMiddleSubtask.setAttribute('class', 'SmallTextButtons');
     divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
     siblingButtons.appendChild(divArrowMiddleSubtask);
-    var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+    const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
     if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function (event) {
       createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
     });
     if (indexNext) {
-      var divArrowNextSubtask = document.createElement('DIV');
+      const divArrowNextSubtask = document.createElement('DIV');
       divArrowNextSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
       siblingButtons.appendChild(divArrowNextSubtask);
-      var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+      const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
       if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function (event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}`);
         event.preventDefault();
@@ -308,24 +307,24 @@ var displayLinksToSiblingSubtasks = function () {
   });
 };
 
-var displayProjectsOnTop = function () {
-  var taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+const displayProjectsOnTop = function () {
+  const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   if (!taskProjectsProjectList) return;
-  var taskAncestry = document.createElement('DIV');
+  const taskAncestry = document.createElement('DIV');
   taskAncestry.setAttribute('class', 'TaskAncestry');
-  var taskAncestryAncestorProjects = document.createElement('DIV');
+  const taskAncestryAncestorProjects = document.createElement('DIV');
   taskAncestryAncestorProjects.setAttribute('class', 'TaskAncestry-ancestorProjects');
   taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNamesOnTop');
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
-  var taskGid = findTaskGid(window.location.href);
+  const taskGid = findTaskGid(window.location.href);
   Array.from(taskProjectsProjectList.children).forEach(function (li) {
-    var a = li.firstElementChild;
-    var projectUrl = a.href;
-    var projectGid = findProjectGid(projectUrl);
-    var projectName = a.firstElementChild.textContent;
+    const a = li.firstElementChild;
+    const projectUrl = a.href;
+    const projectGid = findProjectGid(projectUrl);
+    const projectName = a.firstElementChild.textContent;
 
-    var taskAncestryAncestorProject = document.createElement('A');
+    const taskAncestryAncestorProject = document.createElement('A');
     taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
     taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
     taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
@@ -339,7 +338,7 @@ var displayProjectsOnTop = function () {
     // Section selectors as DOM elements are loaded later, so fetching them via API
     callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function (response) {
       if (response.data.length) {
-        var taskAncestryAncestorProjectSectionSelector = document.createElement('A');
+        const taskAncestryAncestorProjectSectionSelector = document.createElement('A');
         taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
         taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
         taskAncestryAncestorProjects.insertBefore(taskAncestryAncestorProjectSectionSelector, taskAncestryAncestorProjects.querySelector('#Project' + projectGid).nextSibling);
@@ -350,13 +349,13 @@ var displayProjectsOnTop = function () {
     });
   });
   deleteProjectNamesOnTop();
-  var singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  var singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+  const singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
+  const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
   if (singleTaskPaneBody) singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
-var displayReplaceDescriptionDialog = function () {
-  var replaceDescriptionDialog = document.createElement('DIV');
+const displayReplaceDescriptionDialog = function () {
+  const replaceDescriptionDialog = document.createElement('DIV');
   replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
   replaceDescriptionDialog.setAttribute('class', 'tab-ring');
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
@@ -367,9 +366,9 @@ var displayReplaceDescriptionDialog = function () {
   document.querySelector('#AddRowToUserReplaceTextListLink').addEventListener('click', addRowToUserReplaceTextList);
   document.querySelector('#SaveUserReplaceTextListLink').addEventListener('click', saveUserReplaceTextList);
   addRowToUserReplaceTextList();
-  var replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
+  const replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
   replaceDescriptionDialogPresetButton.addEventListener('click', replaceDescriptionPreset);
-  var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+  const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
   replaceDescriptionDialogUserButton.addEventListener('click', replaceDescriptionUserText);
   replaceDescriptionDialogPresetButton.focus();
 
@@ -400,16 +399,16 @@ var displayReplaceDescriptionDialog = function () {
   });
 };
 
-var displaySetParentDrawer = function () {
+const displaySetParentDrawer = function () {
   if (document.querySelector('.SetParentDrawer')) return;
-  var [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body');
+  const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body');
   if (!taskPaneBody) return;
-  var setParentDrawer = document.createElement('DIV');
+  const setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
   `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
-  var singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
+  const singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
   taskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
   document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function () {
@@ -419,13 +418,13 @@ var displaySetParentDrawer = function () {
     toggleSetParentSwitch(this);
   });
 
-  var setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
-  var taskGid = findTaskGid(window.location.href);
+  const setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
+  const taskGid = findTaskGid(window.location.href);
   ['click', 'focus', 'input'].forEach(function (e) {
     setParentDrawerTypeaheadInput.addEventListener(e, function (event) {
-      var that = this;
+      const that = this;
       callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
-        var workspaceGid = response.data.workspace.gid;
+        const workspaceGid = response.data.workspace.gid;
           createSetParentDropdownContainer(that, taskGid, workspaceGid);
       });
     });
@@ -435,19 +434,19 @@ var displaySetParentDrawer = function () {
   saveOriginalParent();
 };
 
-var displaySuccessToast = function (task, messageVarTask, callback) {
-  var toastManager = document.querySelector('.ToastManager');
+const displaySuccessToast = function (task, messageVarTask, callback) {
+  const toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
-  var toastDiv = document.createElement('DIV');
+  const toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
   messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
-  var closeButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1];
+  const closeButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1];
   closeButton.addEventListener('click', function () {
     toastDiv.remove();
   });
-  var undoButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.children[1];
+  const undoButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.children[1];
   undoButton.addEventListener('click', function () {
     undoButton.outerText = locStrings['toastButtton-undoing'];
     callback(function () {
@@ -460,8 +459,8 @@ var displaySuccessToast = function (task, messageVarTask, callback) {
   }, 15000);
 };
 
-var escapeHtml = function (text) {
-  var map = {
+const escapeHtml = function (text) {
+  const map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
   };
   return text.replace(/[&<>"']/g, function (m) {
@@ -469,37 +468,37 @@ var escapeHtml = function (text) {
   });
 };
 
-var findProjectGid = function (url) { // gid spec might change
-  var projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
-  var findProjectGidMatch = projectGidRegexPattern.exec(url);
+const findProjectGid = function (url) { // gid spec might change
+  const projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
+  const findProjectGidMatch = projectGidRegexPattern.exec(url);
   if (findProjectGidMatch) return findProjectGidMatch[1];
 };
 
-var findTaskGid = function (url) { // gid spec might change
-  var taskGidRegexPatterns = [
+const findTaskGid = function (url) { // gid spec might change
+  const taskGidRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
     /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+\/?f?/,
     /https:\/\/app\.asana\.com\/0\/search\/\d+\/(\d+)\/?f?/
   ];
-  for (var i = 0; i < taskGidRegexPatterns.length; i++) {
-    var pattern = taskGidRegexPatterns[i];
+  for (let i = 0; i < taskGidRegexPatterns.length; i++) {
+    const pattern = taskGidRegexPatterns[i];
     if (pattern.exec(url)) {
       return pattern.exec(url)[1];
     }
   }
 };
 
-var getLocaleAndSetLocalizedStrings = function () {
-  var locale = 'en';
-  var scriptArray = Array.from(document.scripts);
-  for (var i = 0; i < scriptArray.length; i++) {
-    var match = /cloudfront\.net\/compressed\/build\/bundles\/[0-9a-f]+\/translations\/([a-z]{2})\.bundle\.js/.exec(scriptArray[i].src);
+const getLocaleAndSetLocalizedStrings = function () {
+  let locale = 'en';
+  const scriptArray = Array.from(document.scripts);
+  for (let i = 0; i < scriptArray.length; i++) {
+    const match = /cloudfront\.net\/compressed\/build\/bundles\/[0-9a-f]+\/translations\/([a-z]{2})\.bundle\.js/.exec(scriptArray[i].src);
     if (match) {
       if (localizationStrings.hasOwnProperty(match[1])) locale = match[1];
       break;
     }
   }
-  for (var key in localizationStrings.en) {
+  for (let key in localizationStrings.en) {
     if (localizationStrings[locale].hasOwnProperty(key)) {
       locStrings[key] = localizationStrings[locale][key];
     } else {
@@ -508,10 +507,10 @@ var getLocaleAndSetLocalizedStrings = function () {
   }
 };
 
-var getPlatformAndSetPlatStrings = function () {
-  var platform = 'win';
+const getPlatformAndSetPlatStrings = function () {
+  let platform = 'win';
   if (window.navigator.platform.indexOf('Mac') != -1) platform = 'mac';
-  for (var key in platformStrings.win) {
+  for (let key in platformStrings.win) {
     if (platformStrings[platform].hasOwnProperty(key)) {
       platStrings[key] = platformStrings[platform][key];
     } else {
@@ -520,20 +519,20 @@ var getPlatformAndSetPlatStrings = function () {
   }
 };
 
-var getTaskPaneTypeAndElement = function (subsequentClassName) {
-  var singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
+const getTaskPaneTypeAndElement = function (subsequentClassName) {
+  const singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
   if (singleTaskPaneElement) return ['Single', singleTaskPaneElement];
-  var multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
+  const multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
   if (multiTaskPaneElement) return ['Multi', multiTaskPaneElement];
   return ['', undefined];
 };
 
-var getUserReplaceTextList = function () {
-  var userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
+const getUserReplaceTextList = function () {
+  const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
   if (!userTextToReplaceDialogTable) return;
-  var userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
-  var userReplaceTextList = [];
-  for (var i = 1; i < userTextToReplaceDialogTr.length; i++) {
+  const userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
+  const userReplaceTextList = [];
+  for (let i = 1; i < userTextToReplaceDialogTr.length; i++) {
     const element = userTextToReplaceDialogTr[i];
     if (!element.firstElementChild.firstElementChild.value) continue;
     userReplaceTextList.push([element.firstElementChild.firstElementChild.value, element.children[1].firstElementChild.value]);
@@ -541,9 +540,9 @@ var getUserReplaceTextList = function () {
   return userReplaceTextList;
 };
 
-var listenToClickOnInboxSavePrevious = function () {
+const listenToClickOnInboxSavePrevious = function () {
   setTimeout(function () {
-    var sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+    const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
     if (sidebarInboxLink) {
       sidebarInboxLink.addEventListener('click', function () {
         document.anPreviousUrl = window.location.href;
@@ -555,13 +554,13 @@ var listenToClickOnInboxSavePrevious = function () {
   }, 500);
 };
 
-var listenToClickOnKeyboardShortcutList = function () {
-  var topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
+const listenToClickOnKeyboardShortcutList = function () {
+  const topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
     setTimeout(function () {
-      var menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
-      var helpButtonKeyboardShortcuts;
-      for (var i = 0; i < menuItems.length; i++) {
+      const menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
+      let helpButtonKeyboardShortcuts;
+      for (let i = 0; i < menuItems.length; i++) {
         if (menuItems[i].firstElementChild.innerText === locStrings['helpButton-keyboardShortcuts']) {
           helpButtonKeyboardShortcuts = menuItems[i];
           break;
@@ -576,8 +575,8 @@ var listenToClickOnKeyboardShortcutList = function () {
   });
 };
 
-var listenToClickToCloseSetParentDropdown = function (event) {
-  var setParentDrawer = document.querySelector('.SetParentDrawer');
+const listenToClickToCloseSetParentDropdown = function (event) {
+  const setParentDrawer = document.querySelector('.SetParentDrawer');
   if (setParentDrawer) {
     if (!setParentDrawer.contains(event.target)) {
       deleteSetParentTypeaheadDropdown();
@@ -585,9 +584,9 @@ var listenToClickToCloseSetParentDropdown = function (event) {
   }
 };
 
-var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
-  var siblingButtons = document.querySelector('#SiblingButtons');
-  var siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+const listenToClickToCloseSiblingSubtasksDropdown = function (event) {
+  const siblingButtons = document.querySelector('#SiblingButtons');
+  const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) {
     if (!siblingButtons.contains(event.target) && !siblingDropdown.contains(event.target)) {
         deleteSiblingSubtasksDropdown();
@@ -595,7 +594,7 @@ var listenToClickToCloseSiblingSubtasksDropdown = function (event) {
   }
 };
 
-var loadUserReplaceTextList = function () {
+const loadUserReplaceTextList = function () {
   chrome.storage.sync.get({
     'anOptionsPairs': []
   }, function (items) {
@@ -603,7 +602,7 @@ var loadUserReplaceTextList = function () {
   });
 };
 
-var openPageWithoutRefresh = function (newUrl) {
+const openPageWithoutRefresh = function (newUrl) {
   window.history.pushState({}, '', newUrl);
   window.history.back();
   setTimeout(function () {
@@ -611,17 +610,17 @@ var openPageWithoutRefresh = function (newUrl) {
   }, 100);
 };
 
-var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potentialTask) {
+const populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
-    var typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
+    const typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
       typeaheadSearchScrollableContents.lastElementChild.remove();
     }
     if (potentialTask) response.data.unshift(potentialTask);
-    for (var i = 0; i < response.data.length; i++) {
+    for (let i = 0; i < response.data.length; i++) {
       if (response.data[i].gid === taskGid) continue;
       if (response.data[i].name.endsWith(':')) continue;
-      var dropdownItem = document.createElement('DIV');
+      const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
       dropdownItem.addEventListener('mouseover', function () {
@@ -631,8 +630,8 @@ var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potenti
         this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        var parentGid = this.firstElementChild.dataset.taskGid;
-        var setParentOptions = {'parent': parentGid};
+        const parentGid = this.firstElementChild.dataset.taskGid;
+        const setParentOptions = {'parent': parentGid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentOptions.insert_before = null;
         } else {
@@ -642,7 +641,7 @@ var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potenti
       });
     }
     if (!typeaheadSearchScrollableContents.children.length) {
-      var dropdownItemHintText = document.createElement('DIV');
+      const dropdownItemHintText = document.createElement('DIV');
       dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
       dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
       typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
@@ -650,14 +649,14 @@ var populateFromTypeahead = function (taskGid, workspaceGid, queryValue, potenti
   });
 };
 
-var replaceDescription = function (replaceTextList) {
-  var taskGid = findTaskGid(window.location.href);
+const replaceDescription = function (replaceTextList) {
+  const taskGid = findTaskGid(window.location.href);
   if (isNaN(taskGid)) return; // gid spec might change
   callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function (response) {
-    var htmlNotesOriginal = response.data.html_notes;
-    var htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
-    for (var i = 0; i < replaceTextList.length; i ++) {
-      var pair = replaceTextList[i];
+    const htmlNotesOriginal = response.data.html_notes;
+    let htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
+    for (let i = 0; i < replaceTextList.length; i ++) {
+      const pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0], pair[1]);
     }
     callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function (response) {
@@ -672,15 +671,15 @@ var replaceDescription = function (replaceTextList) {
   });
 };
 
-var replaceDescriptionPreset = function () {
-  var replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
+const replaceDescriptionPreset = function () {
+  const replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
   replaceDescription(replaceTextList);
 };
 
-var replaceDescriptionUserText = function () {
-  var userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), escapeHtml(a[1])]);
+const replaceDescriptionUserText = function () {
+  const userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), escapeHtml(a[1])]);
   if (!userReplaceTextList.length) {
-    var replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+    const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
     replaceDescriptionDialogUserButton.classList.add('is-disabled');
     setTimeout(function () {
       replaceDescriptionDialogUserButton.classList.remove('is-disabled');
@@ -691,11 +690,11 @@ var replaceDescriptionUserText = function () {
 };
 
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
-var replaceTextListEntity = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Alpha;', 'Α'], ['&alpha;', 'α'], ['&and;', '∧'], ['&ang;', '∠'], ['&apos;', '\''], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&Beta;', 'Β'], ['&beta;', 'β'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&cap;', '∩'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&Chi;', 'Χ'], ['&chi;', 'χ'], ['&circ;', 'ˆ'], ['&clubs;', '♣'], ['&cong;', '≅'], ['&copy;', '©'], ['&crarr;', '↵'], ['&cup;', '∪'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&dArr;', '⇓'], ['&darr;', '↓'], ['&deg;', '°'], ['&Delta;', 'Δ'], ['&delta;', 'δ'], ['&diams;', '♦'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&empty;', '∅'], ['&emsp;', ' '], ['&ensp;', ' '], ['&Epsilon;', 'Ε'], ['&epsilon;', 'ε'], ['&equiv;', '≡'], ['&Eta;', 'Η'], ['&eta;', 'η'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&exist;', '∃'], ['&fnof;', 'ƒ'], ['&forall;', '∀'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&Gamma;', 'Γ'], ['&gamma;', 'γ'], ['&ge;', '≥'], ['&hArr;', '⇔'], ['&harr;', '↔'], ['&hearts;', '♥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&infin;', '∞'], ['&int;', '∫'], ['&Iota;', 'Ι'], ['&iota;', 'ι'], ['&iquest;', '¿'], ['&isin;', '∈'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&Kappa;', 'Κ'], ['&kappa;', 'κ'], ['&Lambda;', 'Λ'], ['&lambda;', 'λ'], ['&laquo;', '«'], ['&lArr;', '⇐'], ['&larr;', '←'], ['&lceil;', '⌈'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lfloor;', '⌊'], ['&lowast;', '∗'], ['&loz;', '◊'], ['&lrm;', '‎'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&minus;', '−'], ['&Mu;', 'Μ'], ['&mu;', 'μ'], ['&nabla;', '∇'], ['&ndash;', '–'], ['&ne;', '≠'], ['&ni;', '∋'], ['&not;', '¬'], ['&notin;', '∉'], ['&nsub;', '⊄'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Nu;', 'Ν'], ['&nu;', 'ν'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&oline;', '‾'], ['&Omega;', 'Ω'], ['&omega;', 'ω'], ['&Omicron;', 'Ο'], ['&omicron;', 'ο'], ['&oplus;', '⊕'], ['&or;', '∨'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&otimes;', '⊗'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&part;', '∂'], ['&permil;', '‰'], ['&perp;', '⊥'], ['&Phi;', 'Φ'], ['&phi;', 'φ'], ['&Pi;', 'Π'], ['&pi;', 'π'], ['&piv;', 'ϖ'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&prod;', '∏'], ['&prop;', '∝'], ['&Psi;', 'Ψ'], ['&psi;', 'ψ'], ['&radic;', '√'], ['&raquo;', '»'], ['&rArr;', '⇒'], ['&rarr;', '→'], ['&rceil;', '⌉'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rfloor;', '⌋'], ['&Rho;', 'Ρ'], ['&rho;', 'ρ'], ['&rlm;', '‏'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sdot;', '⋅'], ['&sect;', '§'], ['&Sigma;', 'Σ'], ['&sigma;', 'σ'], ['&sigmaf;', 'ς'], ['&sim;', '∼'], ['&spades;', '♠'], ['&sub;', '⊂'], ['&sube;', '⊆'], ['&sum;', '∑'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&sup;', '⊃'], ['&supe;', '⊇'], ['&szlig;', 'ß'], ['&Tau;', 'Τ'], ['&tau;', 'τ'], ['&there4;', '∴'], ['&Theta;', 'Θ'], ['&theta;', 'θ'], ['&thetasym;', 'ϑ'], ['&thinsp;', ' '], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&uArr;', '⇑'], ['&uarr;', '↑'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&upsih;', 'ϒ'], ['&Upsilon;', 'Υ'], ['&upsilon;', 'υ'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Xi;', 'Ξ'], ['&xi;', 'ξ'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ'], ['&Zeta;', 'Ζ'], ['&zeta;', 'ζ'], ['&zwj;', '‍'], ['&zwnj;', '‌']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
+const replaceTextListEntity = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Alpha;', 'Α'], ['&alpha;', 'α'], ['&and;', '∧'], ['&ang;', '∠'], ['&apos;', '\''], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&Beta;', 'Β'], ['&beta;', 'β'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&cap;', '∩'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&Chi;', 'Χ'], ['&chi;', 'χ'], ['&circ;', 'ˆ'], ['&clubs;', '♣'], ['&cong;', '≅'], ['&copy;', '©'], ['&crarr;', '↵'], ['&cup;', '∪'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&dArr;', '⇓'], ['&darr;', '↓'], ['&deg;', '°'], ['&Delta;', 'Δ'], ['&delta;', 'δ'], ['&diams;', '♦'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&empty;', '∅'], ['&emsp;', ' '], ['&ensp;', ' '], ['&Epsilon;', 'Ε'], ['&epsilon;', 'ε'], ['&equiv;', '≡'], ['&Eta;', 'Η'], ['&eta;', 'η'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&exist;', '∃'], ['&fnof;', 'ƒ'], ['&forall;', '∀'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&Gamma;', 'Γ'], ['&gamma;', 'γ'], ['&ge;', '≥'], ['&hArr;', '⇔'], ['&harr;', '↔'], ['&hearts;', '♥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&infin;', '∞'], ['&int;', '∫'], ['&Iota;', 'Ι'], ['&iota;', 'ι'], ['&iquest;', '¿'], ['&isin;', '∈'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&Kappa;', 'Κ'], ['&kappa;', 'κ'], ['&Lambda;', 'Λ'], ['&lambda;', 'λ'], ['&laquo;', '«'], ['&lArr;', '⇐'], ['&larr;', '←'], ['&lceil;', '⌈'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lfloor;', '⌊'], ['&lowast;', '∗'], ['&loz;', '◊'], ['&lrm;', '‎'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&minus;', '−'], ['&Mu;', 'Μ'], ['&mu;', 'μ'], ['&nabla;', '∇'], ['&ndash;', '–'], ['&ne;', '≠'], ['&ni;', '∋'], ['&not;', '¬'], ['&notin;', '∉'], ['&nsub;', '⊄'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Nu;', 'Ν'], ['&nu;', 'ν'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&oline;', '‾'], ['&Omega;', 'Ω'], ['&omega;', 'ω'], ['&Omicron;', 'Ο'], ['&omicron;', 'ο'], ['&oplus;', '⊕'], ['&or;', '∨'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&otimes;', '⊗'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&part;', '∂'], ['&permil;', '‰'], ['&perp;', '⊥'], ['&Phi;', 'Φ'], ['&phi;', 'φ'], ['&Pi;', 'Π'], ['&pi;', 'π'], ['&piv;', 'ϖ'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&prod;', '∏'], ['&prop;', '∝'], ['&Psi;', 'Ψ'], ['&psi;', 'ψ'], ['&radic;', '√'], ['&raquo;', '»'], ['&rArr;', '⇒'], ['&rarr;', '→'], ['&rceil;', '⌉'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rfloor;', '⌋'], ['&Rho;', 'Ρ'], ['&rho;', 'ρ'], ['&rlm;', '‏'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sdot;', '⋅'], ['&sect;', '§'], ['&Sigma;', 'Σ'], ['&sigma;', 'σ'], ['&sigmaf;', 'ς'], ['&sim;', '∼'], ['&spades;', '♠'], ['&sub;', '⊂'], ['&sube;', '⊆'], ['&sum;', '∑'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&sup;', '⊃'], ['&supe;', '⊇'], ['&szlig;', 'ß'], ['&Tau;', 'Τ'], ['&tau;', 'τ'], ['&there4;', '∴'], ['&Theta;', 'Θ'], ['&theta;', 'θ'], ['&thetasym;', 'ϑ'], ['&thinsp;', ' '], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&uArr;', '⇑'], ['&uarr;', '↑'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&upsih;', 'ϒ'], ['&Upsilon;', 'Υ'], ['&upsilon;', 'υ'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Xi;', 'Ξ'], ['&xi;', 'ξ'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ'], ['&Zeta;', 'Ζ'], ['&zeta;', 'ζ'], ['&zwj;', '‍'], ['&zwnj;', '‌']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
 
-var replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#$'@]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
+const replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#$'@]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
 
-var returnReplaceDescriptionInnerHTML = function () {
+const returnReplaceDescriptionInnerHTML = function () {
   return `<div>
     <div class="dialog-background"></div>
     <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog">
@@ -743,9 +742,9 @@ var returnReplaceDescriptionInnerHTML = function () {
   </div>`;
 };
 
-var returnTypeAheadInnerHTML = function (task) {
-  var parentName = (task.parent)? task.parent.name: '';
-  var projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
+const returnTypeAheadInnerHTML = function (task) {
+  const parentName = (task.parent)? task.parent.name: '';
+  const projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
   return `<div role="option" data-task-gid="${task.gid}" title="` +
   escapeHtml(task.name) + `${(parentName)? '&#13;‹ ' + escapeHtml(parentName): ''}` + `${(projectNameList)? '&#13;(' + escapeHtml(projectNameList) + ')': ''}` +
   '"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">' +
@@ -757,7 +756,7 @@ var returnTypeAheadInnerHTML = function (task) {
   '</div></div></div>';
 };
 
-var runOptionalFunctionsOnLoad = function () {
+const runOptionalFunctionsOnLoad = function () {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
@@ -773,7 +772,7 @@ var runOptionalFunctionsOnLoad = function () {
   });
 };
 
-var runOptionalFunctionsAfterDelay = function (delay) {
+const runOptionalFunctionsAfterDelay = function (delay) {
   chrome.storage.sync.get({
     'anOptionsInbox': true,
     'anOptionsProjects': true,
@@ -791,39 +790,39 @@ var runOptionalFunctionsAfterDelay = function (delay) {
   });
 };
 
-var saveOriginalParent = function () {
-  var taskGid = findTaskGid(window.location.href);
-  var setParentDrawer = document.querySelector('.SetParentDrawer');
-  var taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+const saveOriginalParent = function () {
+  const taskGid = findTaskGid(window.location.href);
+  const setParentDrawer = document.querySelector('.SetParentDrawer');
+  const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) {
     setParentDrawer.setAttribute('data-original-parent-gid', null);
     setParentDrawer.setAttribute('data-original-previous-sibling-gid', null);
   } else {
-    var originalParentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
+    const originalParentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
     callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
-      var subtaskList = response.data;
-      var indexCurrent;
-      for (var i = 0; i < subtaskList.length; i++) {
+      const subtaskList = response.data;
+      let indexCurrent;
+      for (let i = 0; i < subtaskList.length; i++) {
         if (subtaskList[i].gid === taskGid) {
           indexCurrent = i;
           break;
         }
       }
-      var originalPreviousSiblingGid = (indexCurrent > 0)? subtaskList[indexCurrent - 1].gid: null;
+      const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskList[indexCurrent - 1].gid: null;
       setParentDrawer.setAttribute('data-original-parent-gid', originalParentGid);
       setParentDrawer.setAttribute('data-original-previous-sibling-gid', originalPreviousSiblingGid);
     });
   }
 };
 
-var saveUserReplaceTextList = function () {
-  var userReplaceTextList = getUserReplaceTextList();
+const saveUserReplaceTextList = function () {
+  const userReplaceTextList = getUserReplaceTextList();
   chrome.storage.sync.set({
     'anOptionsPairs': userReplaceTextList
   }, function () {
     document.loadedUserReplaceTextList = userReplaceTextList;
-    var saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
-    var savedText = '✓ ';
+    const saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
+    const savedText = '✓ ';
     saveTextLink.textContent = savedText + saveTextLink.textContent;
     setTimeout(function () {
       saveTextLink.textContent = saveTextLink.textContent.replace(savedText, '');
@@ -831,10 +830,10 @@ var saveUserReplaceTextList = function () {
   });
 };
 
-var setNewParentTask = function (taskGid, setParentOptions) {
-  var setParentDrawer = document.querySelector('.SetParentDrawer');
-  var originalParentGid = setParentDrawer.dataset.originalParentGid;
-  var originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
+const setNewParentTask = function (taskGid, setParentOptions) {
+  const setParentDrawer = document.querySelector('.SetParentDrawer');
+  const originalParentGid = setParentDrawer.dataset.originalParentGid;
+  const originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
   callAsanaApi('POST', `tasks/${taskGid}/setParent`, {}, setParentOptions, function (response) {
     closeSetParentDrawer();
     displaySuccessToast(response.data, locStrings['toastContent-setParent-var-task'], function (callback) {
@@ -847,7 +846,7 @@ var setNewParentTask = function (taskGid, setParentOptions) {
   });
 };
 
-var toggleSetParentSwitch = function (input) {
+const toggleSetParentSwitch = function (input) {
   if (input.classList.contains('checked')) {
     input.classList.remove('checked');
   } else {
@@ -872,7 +871,7 @@ document.addEventListener('keydown', function (event) {
       break;
       case 'ArrowDown':
       if (document.tabKeyIsDown && event.shiftKey) {
-        var arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+        const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
         if (arrowNextSubtask) arrowNextSubtask.click();
       }
       break;
@@ -881,14 +880,14 @@ document.addEventListener('keydown', function (event) {
         if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
         } else {
-          var arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+          const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
           if (arrowMiddleSubtask) arrowMiddleSubtask.click();
         }
       }
       break;
       case 'ArrowUp':
         if (document.tabKeyIsDown && event.shiftKey) {
-          var arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+          const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
           if (arrowPreviousSubtask) arrowPreviousSubtask.click();
         }
         break;
@@ -905,16 +904,18 @@ document.addEventListener('keydown', function (event) {
         });
       }
       break;
-    case 'i':
+    case 'i': {
       if (!document.tabKeyIsDown) break;
-      var sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+      const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
       sidebarInboxLink.click();
       break;
-    case 'j':
+    }
+    case 'j': {
       if (!document.tabKeyIsDown) break;
-      var backLinkFromInbox = document.querySelector('.InboxButton-backLink');
+      const backLinkFromInbox = document.querySelector('.InboxButton-backLink');
       if (backLinkFromInbox) backLinkFromInbox.click();
       break;
+    }
     case 'g':
       if (!document.tabKeyIsDown) break;
       if (document.querySelector('.SetParentDrawer')) {

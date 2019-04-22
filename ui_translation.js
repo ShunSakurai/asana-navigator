@@ -1,7 +1,7 @@
 // Unlocalized UI elements fall back on English
 // The UI strings shouldn't include HTML special characters to prevent XSS vulnerability
 
-var localizationStrings = {
+const localizationStrings = {
   'de': {
     'arrowTitle-subtasksDropdown': 'Unteraufgaben',
     'dialogMessage-visitReference-var-link': 'Bitte verwenden Sie das {link}, um mehr zu erfahren.',
@@ -127,4 +127,4 @@ var localizationStrings = {
   }
 };
 
-var locStrings = {};
+const locStrings = {};

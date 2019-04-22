@@ -1,4 +1,4 @@
-var platformStrings = {
+const platformStrings = {
   'mac': {
     'shift': '⇧',
     'sep': ''
@@ -9,4 +9,4 @@ var platformStrings = {
   }
 };
 
-var platStrings = {};
+const platStrings = {};
