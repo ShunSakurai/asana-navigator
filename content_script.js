@@ -617,7 +617,7 @@ const openPageWithoutRefresh = function (newUrl) {
 };
 
 const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name'}, {}, function (response) {
+  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name,subtasks'}, {}, function (response) {
     const typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
       typeaheadSearchScrollableContents.lastElementChild.remove();
@@ -625,6 +625,8 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
     if (potentialTask) response.data.unshift(potentialTask);
     for (let i = 0; i < response.data.length; i++) {
       if (taskGidList.includes(response.data[i].gid)) continue;
+      if (response.data[i].parent && taskGidList.includes(response.data[i].parent.gid)) continue;
+      if (response.data[i].subtasks && response.data[i].subtasks.map(subtask => subtask.gid).filter(subtaskGid => taskGidList.includes(subtaskGid)).length) continue;
       if (response.data[i].name.endsWith(':')) continue;
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);

@@ -1,10 +1,10 @@
 const saveOptions = function () {
-  let inboxEnabled = document.getElementById('inbox').checked;
-  let projectsEnabled = document.getElementById('projects').checked;
-  let subtasksEnabled = document.getElementById('subtasks').checked;
-  let shortcutsEnabled = document.getElementById('shortcuts').checked;
-  let parentEnabled = document.getElementById('parent').checked;
-  let descriptionEnabled = document.getElementById('description').checked;
+  const inboxEnabled = document.getElementById('inbox').checked;
+  const projectsEnabled = document.getElementById('projects').checked;
+  const subtasksEnabled = document.getElementById('subtasks').checked;
+  const shortcutsEnabled = document.getElementById('shortcuts').checked;
+  const parentEnabled = document.getElementById('parent').checked;
+  const descriptionEnabled = document.getElementById('description').checked;
   chrome.storage.sync.set({
     'anOptionsInbox': inboxEnabled,
     'anOptionsProjects': projectsEnabled,
@@ -13,7 +13,7 @@ const saveOptions = function () {
     'anOptionsParent': parentEnabled,
     'anOptionsDescription': descriptionEnabled
   }, function () {
-    let status = document.getElementById('status');
+    const status = document.getElementById('status');
     status.textContent = 'Options saved';
     setTimeout(function () {
       status.textContent = '';
