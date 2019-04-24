@@ -192,16 +192,16 @@ const createSetParentDropdownContainer = function (input, taskGidList, workspace
   }
 };
 
-const createSiblingSubtasksDropdown = function (subtaskListFiltered, taskGid, containerGid) {
+const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerGid) {
   const completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
   const incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
   const siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
-    subtaskListFiltered.map(
-      subtask => `<a class="menuItem-button menuItem--small" ${(subtask.name.endsWith(':'))? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
-      `${(subtask.name.endsWith(':'))? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
+    subtaskList.map(
+      subtask => `<a class="menuItem-button menuItem--small" ${(subtask.is_rendered_as_separator)? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
+      `${(subtask.is_rendered_as_separator)? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
   const singleTaskPane = document.querySelector('.SingleTaskPane');
@@ -250,10 +250,10 @@ const displayLinksToSiblingSubtasks = function () {
   const taskGid = findTaskGid(window.location.href);
   const containerGid = findProjectGid(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,name'}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,is_rendered_as_separator,name'}, {}, function (response) {
     const subtaskList = response.data;
     const subtaskListFiltered = subtaskList.filter(function (subtask) {
-      return !subtask.name.endsWith(':') || subtask.gid === taskGid;
+      return !subtask.is_rendered_as_separator || subtask.gid === taskGid;
     });
     let indexCurrent;
     for (let i = 0; i < subtaskListFiltered.length; i++) {
@@ -617,7 +617,7 @@ const openPageWithoutRefresh = function (newUrl) {
 };
 
 const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,name,parent.name,projects.name,subtasks'}, {}, function (response) {
+  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function (response) {
     const typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
     while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
       typeaheadSearchScrollableContents.lastElementChild.remove();
@@ -627,7 +627,7 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
       if (taskGidList.includes(response.data[i].gid)) continue;
       if (response.data[i].parent && taskGidList.includes(response.data[i].parent.gid)) continue;
       if (response.data[i].subtasks && response.data[i].subtasks.map(subtask => subtask.gid).filter(subtaskGid => taskGidList.includes(subtaskGid)).length) continue;
-      if (response.data[i].name.endsWith(':')) continue;
+      if (response.data[i].is_rendered_as_separator) continue;
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       typeaheadSearchScrollableContents.appendChild(dropdownItem);
