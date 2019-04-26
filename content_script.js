@@ -74,6 +74,7 @@ const addToKeyboardShortcutsList = function () {
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
+    [locStrings['menuButton-convertSection'], ['Tab', ':']],
     [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'G']],
   ];
   for (let i = 0; i < shortcutsArray.length; i++) {
@@ -148,6 +149,46 @@ const closeTaskPaneExtraActionsMenu = function () {
   const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton.classList.contains('CircularButton--active') || taskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     taskPaneExtraActionsButton.click();
+  }
+};
+
+// Supports only list view of a project (not my task, tag, assignee, etc.)
+const convertTaskAndSection = function () {
+  const focusedItemRow = document.querySelector('.ItemRow--focused');
+  if (!focusedItemRow) return;
+  const isSection = focusedItemRow.classList.contains('SectionRow');
+  const isSubtask = focusedItemRow.classList.contains('SubtaskTaskRow') || focusedItemRow.classList.contains('SectionRow--subtask');
+  const taskTextarea = (isSection? focusedItemRow: focusedItemRow.children[1]).children[1].children[1];
+  const focusedTaskGid = /_(\d+)/.exec(taskTextarea.id)[1];
+  const focusedTaskName = taskTextarea.textContent;
+  const confirmed = window.confirm('Asana Navigator: ' + (
+    isSection?
+    [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']]:
+    [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
+  ).join(locStrings['snippet-spacing']));
+  if (!confirmed) return;
+  if (isSubtask) {
+    const taskGid = findTaskGid(window.location.href);
+    callAsanaApi('POST', `tasks/${taskGid}/subtasks`, {'name': focusedTaskName.replace(/:+$/, '') + (isSection? '': ':')}, {}, function (response) {
+      callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function (response) {
+        callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+        });
+      });
+    });
+  } else {
+    const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+    const projectGidList = Array.from(taskProjectsProjectList.children).map(li => findProjectGid(li.firstElementChild.href));
+    const currentProjectGid = findProjectGid(window.location.href);
+    callAsanaApi('POST', (isSection? 'tasks': `projects/${currentProjectGid}/sections`), {'name': focusedTaskName.replace(/:+$/, '') + (isSection? '': ':'), 'projects': (isSection? currentProjectGid: undefined)}, {}, function (response) {
+      for (let i = 0; i < projectGidList.length; i++) {
+        callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
+          if (i === projectGidList.length - 1) {
+            callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+            });
+          }
+        });
+      }
+    });
   }
 };
 
@@ -769,14 +810,14 @@ const runOptionalFunctionsOnLoad = function () {
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
     'anOptionsShortcuts': true,
-    'anOptionsParent': true,
-    'anOptionsDescription': true
+    'anOptionsDescription': true,
+    'anOptionsParent': true
   }, function (items) {
     if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
-    if (items.anOptionsParent) addSetParentToExtraActions();
     if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
+    if (items.anOptionsParent) addSetParentToExtraActions();
   });
 };
 
@@ -785,15 +826,15 @@ const runOptionalFunctionsAfterDelay = function (delay) {
     'anOptionsInbox': true,
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
-    'anOptionsParent': true,
-    'anOptionsDescription': true
+    'anOptionsDescription': true,
+    'anOptionsParent': true
   }, function (items) {
     setTimeout(function () {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
       if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-      if (items.anOptionsParent) addSetParentToExtraActions();
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
+      if (items.anOptionsParent) addSetParentToExtraActions();
     }, delay);
   });
 };
@@ -939,6 +980,12 @@ document.addEventListener('keydown', function (event) {
           if (items.anOptionsParent) displaySetParentDrawer();
         });
       }
+      break;
+    case ':':
+      if (!document.tabKeyIsDown) break;
+      chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
+        if (items.anOptionsSection) convertTaskAndSection();
+      });
       break;
   }
 });

@@ -57,6 +57,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Implement donation button
 - [x] Convert multiple tasks to subtasks
 - [x] Move back from inbox to where the user has left off (Tab+J)
+- [x] Convert task to section (Tab+:)
 
 ## Usage
 
@@ -89,7 +90,7 @@ Please feel free to post feature requests, bug reports, and questions through th
 
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible
-- JP: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use half-width symbols
+- JP: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use full-width characters for "?" and "!" in UI translation, use half-width characters for other symbols and occasions
 - ES, FR, PT: Compared to EN where menu items often use capital letters such as "Add to **P**roject (Tab+P)", these languages tend to use lower letters such as "Ajouter à un **p**rojet (Tab+P)"
 
 ## License
