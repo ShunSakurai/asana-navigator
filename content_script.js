@@ -42,7 +42,7 @@ const addSetParentToExtraActions = function () {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${(taskPaneTypeString === 'Single')? locStrings['menuButton-setParent']: locStrings['menuButton-setParent-multi']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
+      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
         const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
@@ -74,7 +74,7 @@ const addToKeyboardShortcutsList = function () {
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
-    [locStrings['menuButton-convertSection'], ['Tab', ':']],
+    [locStrings['shortcutDescription-convertSection'], ['Tab', ':']],
     [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'G']],
   ];
   for (let i = 0; i < shortcutsArray.length; i++) {
@@ -167,9 +167,11 @@ const convertTaskAndSection = function () {
     [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
   ).join(locStrings['snippet-spacing']));
   if (!confirmed) return;
+
+  const workspaceGid = document.anWorkspaceGid;
   if (isSubtask) {
     const taskGid = findTaskGid(window.location.href);
-    callAsanaApi('POST', `tasks/${taskGid}/subtasks`, {'name': focusedTaskName.replace(/:+$/, '') + (isSection? '': ':')}, {}, function (response) {
+    callAsanaApi('POST', (workspaceGid? 'tasks': `tasks/${taskGid}/subtasks`), {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
       callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function (response) {
         callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
         });
@@ -179,7 +181,8 @@ const convertTaskAndSection = function () {
     const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
     const projectGidList = Array.from(taskProjectsProjectList.children).map(li => findProjectGid(li.firstElementChild.href));
     const currentProjectGid = findProjectGid(window.location.href);
-    callAsanaApi('POST', (isSection? 'tasks': `projects/${currentProjectGid}/sections`), {'name': focusedTaskName.replace(/:+$/, '') + (isSection? '': ':'), 'projects': (isSection? currentProjectGid: undefined)}, {}, function (response) {
+    const dataContainer = workspaceGid? {'workspace': workspaceGid}: {'projects': (isSection? currentProjectGid: undefined)};
+    callAsanaApi('POST', (isSection? 'tasks': `projects/${currentProjectGid}/sections`), {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), ...dataContainer}, {}, function (response) {
       for (let i = 0; i < projectGidList.length; i++) {
         callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
           if (i === projectGidList.length - 1) {
@@ -983,6 +986,9 @@ document.addEventListener('keydown', function (event) {
       break;
     case ':':
       if (!document.tabKeyIsDown) break;
+      callAsanaApi('GET', `tasks/${findTaskGid(window.location.href)}`, {}, {}, function (response) {
+        document.anWorkspaceGid = response.data.workspace.gid;
+      });
       chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
         if (items.anOptionsSection) convertTaskAndSection();
       });
