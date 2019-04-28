@@ -152,7 +152,7 @@ const closeTaskPaneExtraActionsMenu = function () {
   }
 };
 
-// Supports only list view of a project (not my task, tag, assignee, etc.)
+// Supports only list view of a project (not my task view, tag view, etc.)
 const convertTaskAndSection = function () {
   const focusedItemRow = document.querySelector('.ItemRow--focused');
   if (!focusedItemRow) return;
@@ -161,38 +161,44 @@ const convertTaskAndSection = function () {
   const taskTextarea = (isSection? focusedItemRow: focusedItemRow.children[1]).children[1].children[1];
   const focusedTaskGid = /_(\d+)/.exec(taskTextarea.id)[1];
   const focusedTaskName = taskTextarea.textContent;
-  const confirmed = window.confirm('Asana Navigator: ' + (
-    isSection?
-    [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']]:
-    [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
-  ).join(locStrings['snippet-spacing']));
-  if (!confirmed) return;
 
-  const workspaceGid = document.anWorkspaceGid;
-  if (isSubtask) {
-    const taskGid = findTaskGid(window.location.href);
-    callAsanaApi('POST', (workspaceGid? 'tasks': `tasks/${taskGid}/subtasks`), {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
-      callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function (response) {
-        callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'subtasks,workspace'}, {}, function (response) {
+    if (response.data.subtasks.length) {
+      const returning = window.confirm(locStrings['confirmMessage-abortConvertBySubtasks']);
+      return;
+    }
+    const workspaceGid = response.data.workspace.gid;
+    const confirmed = window.confirm('Asana Navigator: ' + (
+      isSection?
+      [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']]:
+      [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
+    ).join(locStrings['snippet-spacing']));
+    if (!confirmed) return;
+
+    if (isSubtask) {
+      const taskGid = findTaskGid(window.location.href);
+      callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
+        callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function (response) {
+          callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+          });
         });
       });
-    });
-  } else {
-    const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-    const projectGidList = Array.from(taskProjectsProjectList.children).map(li => findProjectGid(li.firstElementChild.href));
-    const currentProjectGid = findProjectGid(window.location.href);
-    const dataContainer = workspaceGid? {'workspace': workspaceGid}: {'projects': (isSection? currentProjectGid: undefined)};
-    callAsanaApi('POST', (isSection? 'tasks': `projects/${currentProjectGid}/sections`), {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), ...dataContainer}, {}, function (response) {
-      for (let i = 0; i < projectGidList.length; i++) {
-        callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
-          if (i === projectGidList.length - 1) {
-            callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
-            });
-          }
-        });
-      }
-    });
-  }
+    } else {
+      const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
+      const projectGidList = Array.from(taskProjectsProjectList.children).map(li => findProjectGid(li.firstElementChild.href));
+      const currentProjectGid = findProjectGid(window.location.href);
+      callAsanaApi('POST', (isSection? 'tasks': `projects/${currentProjectGid}/sections`), {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
+        for (let i = 0; i < projectGidList.length; i++) {
+          callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
+            if (i === projectGidList.length - 1) {
+              callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+              });
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 const createBackFromInboxButton = function () {
@@ -986,9 +992,6 @@ document.addEventListener('keydown', function (event) {
       break;
     case ':':
       if (!document.tabKeyIsDown) break;
-      callAsanaApi('GET', `tasks/${findTaskGid(window.location.href)}`, {}, {}, function (response) {
-        document.anWorkspaceGid = response.data.workspace.gid;
-      });
       chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
         if (items.anOptionsSection) convertTaskAndSection();
       });

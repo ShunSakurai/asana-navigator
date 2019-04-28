@@ -21,6 +21,7 @@ const localizationStrings = {
     'arrowTitle-previousSubtask': 'Previous subtask',
     'arrowTitle-subtasksDropdown': 'Subtasks', // u2c2cf
     'buttonTitle-backLink': 'Go back to what you were doing',
+    'confirmMessage-abortConvertBySubtasks': 'A task containing one or more subtasks cannot be converted to a section.',
     'confirmMessage-convertToSection': 'Create a section with the same name and delete the original task.',
     'confirmMessage-convertToTask': 'Create a task with the same name and delete the original section.',
     'confirmMessage-deleteInformation': 'All task related information (assignee, due date, description, custom fields, comments, etc.) will be deleted.',
@@ -91,6 +92,7 @@ const localizationStrings = {
     'arrowTitle-previousSubtask': '前のサブタスク',
     'arrowTitle-subtasksDropdown': '前後のサブタスク', // translating differently
     'buttonTitle-backLink': '前の作業に戻る',
+    'confirmMessage-abortConvertBySubtasks': 'サブタスクを持つタスクをセクションに変換することはできません。',
     'confirmMessage-convertToSection': '同名のセクションを作成して元のタスクを削除します。',
     'confirmMessage-convertToTask': '同名のタスクを作成して元のセクションを削除します。',
     'confirmMessage-deleteInformation': '担当者、期日、説明、カスタムフィールド、コメントなど、このタスクに関係する情報はすべて削除されます。',
