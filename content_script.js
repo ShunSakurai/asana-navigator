@@ -152,7 +152,7 @@ const closeTaskPaneExtraActionsMenu = function () {
   }
 };
 
-// Works only where Tab+N is supported (project view and my task view)
+// Works only where Tab+N is supported (project view, my task view, and subtask list)
 // section_migration_status is considered to be "not_migrated" at the moment
 const convertTaskAndSection = function () {
   const focusedItemRow = document.querySelector('.ItemRow--focused');
@@ -530,11 +530,17 @@ const displaySuccessToast = function (task, messageVarTask, callback) {
   messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
-  const closeButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1];
+  const toastNotificationContent = toastDiv.firstElementChild.firstElementChild.firstElementChild;
+  const toastALink = toastNotificationContent.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
+  toastALink.addEventListener('click', function (event) {
+    openPageWithoutRefresh(`https://app.asana.com/0/0/${task.gid}`);
+    event.preventDefault();
+  });
+  const closeButton = toastNotificationContent.firstElementChild.children[1];
   closeButton.addEventListener('click', function () {
     toastDiv.remove();
   });
-  const undoButton = toastDiv.firstElementChild.firstElementChild.firstElementChild.children[1];
+  const undoButton = toastNotificationContent.children[1];
   undoButton.addEventListener('click', function () {
     undoButton.outerText = locStrings['toastButtton-undoing'];
     callback(function () {
@@ -712,7 +718,7 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
       if (response.data[i].is_rendered_as_separator) continue;
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
-      typeaheadSearchScrollableContents.appendChild(dropdownItem);
+      if (typeaheadSearchScrollableContents) typeaheadSearchScrollableContents.appendChild(dropdownItem);
       dropdownItem.addEventListener('mouseover', function () {
         this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');
       });
@@ -730,7 +736,7 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
         setNewParentTask(taskGidList, setParentOptions, response.data[i]);
       });
     }
-    if (!typeaheadSearchScrollableContents.children.length) {
+    if (!typeaheadSearchScrollableContents || !typeaheadSearchScrollableContents.children.length) {
       const dropdownItemHintText = document.createElement('DIV');
       dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
       dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];

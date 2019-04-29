@@ -17,8 +17,8 @@ chrome.runtime.onInstalled.addListener(
       });
     }
     // Use only when an important update is made
-    // if (details.reason === 'update') {
-    //    chrome.tabs.create({url: 'update.html'});
-    //  }
+    if (details.reason === 'update') {
+       chrome.tabs.create({url: 'update.html'});
+     }
   }
 );
