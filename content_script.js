@@ -726,17 +726,17 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
         this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
       });
       dropdownItem.addEventListener('click', function () {
-        const setParentOptions = {'parent': response.data[i].gid};
+        const setParentData = {'parent': response.data[i].gid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
-          setParentOptions.insert_before = null;
-          taskGidList.reverse();
+          setParentData.insert_before = null;
         } else {
-          setParentOptions.insert_after = null;
+          setParentData.insert_after = null;
+          taskGidList.reverse();
         }
-        setNewParentTask(taskGidList, setParentOptions, response.data[i]);
+        setNewParentTask(taskGidList, setParentData, response.data[i]);
       });
     }
-    if (!typeaheadSearchScrollableContents || !typeaheadSearchScrollableContents.children.length) {
+    if (typeaheadSearchScrollableContents && !typeaheadSearchScrollableContents.children.length) {
       const dropdownItemHintText = document.createElement('DIV');
       dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
       dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
@@ -926,15 +926,18 @@ const saveUserReplaceTextList = function () {
   });
 };
 
-const setNewParentTask = function (taskGidList, setParentOptions, parentTask) {
+const setNewParentTask = function (taskGidList, setParentData, parentTask) {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
   const originalParentGid = setParentDrawer.dataset.originalParentGid;
   const originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
-  for (let i = 0; i < taskGidList.length; i++) {
-    callAsanaApi('POST', `tasks/${taskGidList[i]}/setParent`, {}, setParentOptions, function (response) {
-      closeSetParentDrawer();
-      if (i === taskGidList.length - 1) {
+
+  let counter = 0;
+  const recursiveSetNewParent = function (path, options, data) {
+    callAsanaApi('POST', path, options, data, function (response) {
+      counter += 1;
+      if (counter === taskGidList.length) {
         displaySuccessToast(parentTask, locStrings['toastContent-setParent-var-task'], function (callback) {
+          // Following requests need to be fixed as well
           for (let i = 0; i < taskGidList.length; i++) {
             callAsanaApi('POST', `tasks/${taskGidList[i]}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
               callback();
@@ -943,9 +946,14 @@ const setNewParentTask = function (taskGidList, setParentOptions, parentTask) {
           }
         });
         runOptionalFunctionsAfterDelay(100);
+      } else {
+        path = `tasks/${taskGidList[counter]}/setParent`;
+        recursiveSetNewParent(path, options, data);
       }
     });
-  }
+  };
+  recursiveSetNewParent(`tasks/${taskGidList[counter]}/setParent`, {}, setParentData);
+  closeSetParentDrawer();
 };
 
 const toggleSetParentSwitch = function (input) {

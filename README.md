@@ -57,7 +57,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Implement donation button
 - [x] Convert multiple tasks to subtasks
 - [x] Move back from inbox to where the user has left off (Tab+J)
-- [x] Convert task to section and vice versa (Tab+:)
+- [x] [Convert task to section and vice versa (Tab+:)](https://www.youtube.com/watch?v=4V_4FtMLZZk)
 
 ## Usage
 
