@@ -502,27 +502,28 @@ const displaySetParentDrawer = function () {
 
   const setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
   const taskGid = findTaskGid(window.location.href);
-  ['click', 'focus', 'input'].forEach(function (e) {
-    setParentDrawerTypeaheadInput.addEventListener(e, function (event) {
-      const that = this;
-      callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
-        const workspaceGid = response.data.workspace.gid;
-        if (taskPaneTypeString === 'Single') {
-          createSetParentDropdownContainer(that, [taskGid], workspaceGid);
-        } else {
-          const taskRowHighlighted = Array.from(document.querySelectorAll('.TaskRow--highlighted'));
-          const taskGidList = taskRowHighlighted.map(divTaskRow => /_(\d+)/.exec(divTaskRow.children[1].children[1].children[1].id)[1]);
-          createSetParentDropdownContainer(that, taskGidList, workspaceGid);
-        }
+  callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
+    let taskGidList;
+    const workspaceGid = response.data.workspace.gid;
+    if (taskPaneTypeString === 'Single') {
+      taskGidList = [taskGid];
+    } else {
+      const taskRowHighlightedOrFocused = Array.from(document.querySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
+      taskGidList = taskRowHighlightedOrFocused.map(divTaskRow => /_(\d+)/.exec(divTaskRow.children[1].children[1].children[1].id)[1]);
+    }
+    ['click', 'focus', 'input'].forEach(function (e) {
+      setParentDrawerTypeaheadInput.addEventListener(e, function (event) {
+        const that = this;
+        createSetParentDropdownContainer(that, taskGidList, workspaceGid);
       });
     });
+    setParentDrawerTypeaheadInput.focus();
+    saveOriginalParents(taskGidList);
   });
   document.addEventListener('click', listenToClickToCloseSetParentDropdown);
-  setParentDrawerTypeaheadInput.focus();
-  saveOriginalParent();
 };
 
-const displaySuccessToast = function (task, messageVarTask, callback) {
+const displaySuccessToast = function (task, messageVarTask, functionToRunCallbackAtLast) {
   const toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
   const toastDiv = document.createElement('DIV');
@@ -543,7 +544,7 @@ const displaySuccessToast = function (task, messageVarTask, callback) {
   const undoButton = toastNotificationContent.children[1];
   undoButton.addEventListener('click', function () {
     undoButton.outerText = locStrings['toastButtton-undoing'];
-    callback(function () {
+    functionToRunCallbackAtLast(function () {
       toastDiv.remove();
     });
   });
@@ -886,28 +887,36 @@ const runOptionalFunctionsAfterDelay = function (delay) {
   });
 };
 
-const saveOriginalParent = function () {
-  const taskGid = findTaskGid(window.location.href);
-  const setParentDrawer = document.querySelector('.SetParentDrawer');
+const saveOriginalParents = function (taskGidList) {
+  document.anOriginalParents = {};
   const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
-  if (!taskAncestryTaskLinks.length) {
-    setParentDrawer.setAttribute('data-original-parent-gid', null);
-    setParentDrawer.setAttribute('data-original-previous-sibling-gid', null);
-  } else {
+  const taskGid = findTaskGid(window.location.href);
+  if (taskGidList.length >= 2) {
+    for (let i = 0; i < taskGidList.length; i++) {
+      callAsanaApi('GET', `tasks/${taskGidList[i]}`, {}, {'opt_fields': 'parent'}, function (response) {
+        if (!response.data.parent) {
+          document.anOriginalParents[i] = [null, null];
+        } else {
+          const originalParentGid = response.data.parent.gid;
+          callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
+            const subtaskGidList = response.data.map(subtask => subtask.gid);
+            const indexCurrent = subtaskGidList.indexOf(taskGidList[i]);
+            const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskGidList[indexCurrent - 1]: null;
+            document.anOriginalParents[i] = [originalParentGid, originalPreviousSiblingGid];
+          });
+        }
+      });
+    }
+  } else if (taskAncestryTaskLinks.length) {
     const originalParentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
     callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
-      const subtaskList = response.data;
-      let indexCurrent;
-      for (let i = 0; i < subtaskList.length; i++) {
-        if (subtaskList[i].gid === taskGid) {
-          indexCurrent = i;
-          break;
-        }
-      }
-      const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskList[indexCurrent - 1].gid: null;
-      setParentDrawer.setAttribute('data-original-parent-gid', originalParentGid);
-      setParentDrawer.setAttribute('data-original-previous-sibling-gid', originalPreviousSiblingGid);
+      const subtaskGidList = response.data.map(subtask => subtask.gid);
+      const indexCurrent = subtaskGidList.indexOf(taskGid);
+      const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskGidList[indexCurrent - 1]: null;
+      document.anOriginalParents[0] = [originalParentGid, originalPreviousSiblingGid];
     });
+  } else {
+    document.anOriginalParents[0] = [null, null];
   }
 };
 
@@ -928,8 +937,7 @@ const saveUserReplaceTextList = function () {
 
 const setNewParentTask = function (taskGidList, setParentData, parentTask) {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
-  const originalParentGid = setParentDrawer.dataset.originalParentGid;
-  const originalPreviousSiblingGid = setParentDrawer.dataset.originalPreviousSiblingGid;
+  const originalParentsList = Object.values(document.anOriginalParents);
 
   let counter = 0;
   const recursiveSetNewParent = function (path, options, data) {
@@ -937,13 +945,20 @@ const setNewParentTask = function (taskGidList, setParentData, parentTask) {
       counter += 1;
       if (counter === taskGidList.length) {
         displaySuccessToast(parentTask, locStrings['toastContent-setParent-var-task'], function (callback) {
-          // Following requests need to be fixed as well
-          for (let i = 0; i < taskGidList.length; i++) {
-            callAsanaApi('POST', `tasks/${taskGidList[i]}/setParent`, {}, {'parent': originalParentGid, 'insert_after': originalPreviousSiblingGid}, function (response) {
-              callback();
-              runOptionalFunctionsAfterDelay(100);
+          if (setParentData.hasOwnProperty('insert_after')) taskGidList.reverse();
+          let counterUndo = 0;
+          const recursiveUndoParent = function () {
+            callAsanaApi('POST', `tasks/${taskGidList[counterUndo]}/setParent`, {}, {'parent': originalParentsList[counterUndo][0], 'insert_after': originalParentsList[counterUndo][1]}, function (response) {
+              counterUndo += 1;
+              if (counterUndo === taskGidList.length) {
+                callback();
+                runOptionalFunctionsAfterDelay(100);
+              } else {
+                recursiveUndoParent();
+              }
             });
-          }
+          };
+          recursiveUndoParent();
         });
         runOptionalFunctionsAfterDelay(100);
       } else {
