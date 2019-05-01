@@ -337,13 +337,7 @@ const displayLinksToSiblingSubtasks = function () {
     const subtaskListFiltered = subtaskList.filter(function (subtask) {
       return !subtask.is_rendered_as_separator || subtask.gid === taskGid;
     });
-    let indexCurrent;
-    for (let i = 0; i < subtaskListFiltered.length; i++) {
-      if (subtaskListFiltered[i].gid === taskGid) {
-        indexCurrent = i;
-        break;
-      }
-    }
+    const indexCurrent = subtaskListFiltered.map(subtask => subtask.gid).indexOf(taskGid);
     const indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
     const indexNext = (indexCurrent < subtaskListFiltered.length - 1)? indexCurrent + 1: null;
     deleteSiblingButtons();
@@ -653,14 +647,9 @@ const listenToClickOnKeyboardShortcutList = function () {
   const topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
     setTimeout(function () {
-      const menuItems = document.querySelectorAll('.menuItem-button.menuItem--small');
-      let helpButtonKeyboardShortcuts;
-      for (let i = 0; i < menuItems.length; i++) {
-        if (menuItems[i].firstElementChild.innerText === locStrings['helpButton-keyboardShortcuts']) {
-          helpButtonKeyboardShortcuts = menuItems[i];
-          break;
-        }
-      }
+      const menuItemsList = Array.from(document.querySelectorAll('.menuItem-button.menuItem--small'));
+      const indexKeyboardShortcuts = menuItemsList.map(menuItem => menuItem.firstElementChild.innerText).indexOf(locStrings['helpButton-keyboardShortcuts']);
+      const helpButtonKeyboardShortcuts = menuItemsList[indexKeyboardShortcuts];
       helpButtonKeyboardShortcuts.addEventListener('click', function () {
         setTimeout(function () {
           addToKeyboardShortcutsList();
