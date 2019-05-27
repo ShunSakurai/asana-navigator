@@ -58,6 +58,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Convert multiple tasks to subtasks
 - [x] Move back from inbox to where the user has left off (Tab+J)
 - [x] [Convert task to section and vice versa (Tab+:)](https://www.youtube.com/watch?v=4V_4FtMLZZk)
+- [ ] Jump to sibling subtasks even when the arrows fail to be added
 
 ## Usage
 
@@ -90,8 +91,8 @@ Please feel free to post feature requests, bug reports, and questions through th
 
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible
+- EN: Capitalize UI elements in the menu lists and the keyboard shortcut list, e.g. "Mark as **M**ilestone" and "Jump to **I**nbox."
 - JP: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use full-width characters for "?" and "!" in UI translation, use half-width characters for other symbols and occasions
-- ES, FR, PT: Compared to EN where menu items often use capital letters such as "Add to **P**roject (Tab+P)", these languages tend to use lower letters such as "Ajouter à un **p**rojet (Tab+P)"
 
 ## License
 

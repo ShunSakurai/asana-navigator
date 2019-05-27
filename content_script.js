@@ -65,17 +65,13 @@ const addToKeyboardShortcutsList = function () {
   keyboardShortcutsModalANSection.innerHTML = '<h3 class="KeyboardShortcutsModal-sectionHeader">Asana Navigator</h3>';
   keyboardShortcutsModal.firstElementChild.children[1].lastElementChild.appendChild(keyboardShortcutsModalANSection);
   const separator = 'separator';
-  const toTitleCase = function (string) {
-    // Should consider if language is German
-    return string[0] + string.slice(1).toLowerCase();
-  };
   const shortcutsArray = [
     [locStrings['shortcutDescription-backLink'], ['Tab', 'J']],
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
-    [toTitleCase(locStrings['menuButton-replaceDescription']).replace('...', ''), ['Tab', 'E']],
+    [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
     [locStrings['shortcutDescription-convertSection'], ['Tab', ':']],
-    [toTitleCase(locStrings['menuButton-setParent']).replace('...', ''), ['Tab', 'G']],
+    [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'G']],
   ];
   for (let i = 0; i < shortcutsArray.length; i++) {
     const [description, keyList] = shortcutsArray[i];
@@ -644,7 +640,7 @@ const listenToClickOnInboxSavePrevious = function () {
 };
 
 const listenToClickOnKeyboardShortcutList = function () {
-  const topbarHelpMenuButton = document.querySelector('.topbarHelpMenuButton');
+  const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
     setTimeout(function () {
       const menuItemsList = Array.from(document.querySelectorAll('.menuItem-button.menuItem--small'));
