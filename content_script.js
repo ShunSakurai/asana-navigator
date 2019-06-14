@@ -321,7 +321,7 @@ const deleteUserReplaceTextRow = function (button) {
   trToDelete.remove();
 };
 
-const displayLinksToSiblingSubtasks = function () {
+const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
   const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) return;
   const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
@@ -375,6 +375,10 @@ const displayLinksToSiblingSubtasks = function () {
       });
     } else {
       siblingButtons.appendChild(document.createElement('BR'));
+    }
+    if (idOfArrowToClick) {
+        const arrowToClick = document.querySelector(idOfArrowToClick);
+        if (arrowToClick) arrowToClick.click();
     }
   });
 };
@@ -982,23 +986,35 @@ document.addEventListener('keydown', function (event) {
       case 'ArrowDown':
       if (document.tabKeyIsDown && event.shiftKey) {
         const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
-        if (arrowNextSubtask) arrowNextSubtask.click();
+        if (arrowNextSubtask) {
+          arrowNextSubtask.click();
+        } else if (!document.querySelector('#SiblingButtons')) {
+          displayLinksToSiblingSubtasks('#ArrowNextSubtask');
+        }
       }
       break;
       case 'ArrowRight':
       if (document.tabKeyIsDown && event.shiftKey) {
         if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
-        } else {
+        } else if (!document.querySelector('#SiblingButtons')) {
           const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
-          if (arrowMiddleSubtask) arrowMiddleSubtask.click();
+          if (arrowMiddleSubtask) {
+            arrowMiddleSubtask.click();
+          } else {
+            displayLinksToSiblingSubtasks('#ArrowMiddleSubtask');
+          }
         }
       }
       break;
       case 'ArrowUp':
         if (document.tabKeyIsDown && event.shiftKey) {
           const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
-          if (arrowPreviousSubtask) arrowPreviousSubtask.click();
+          if (arrowPreviousSubtask) {
+            arrowPreviousSubtask.click();
+          } else if (!document.querySelector('#SiblingButtons')) {
+            displayLinksToSiblingSubtasks('#ArrowPreviousSubtask');
+          }
         }
         break;
     case 'e':
