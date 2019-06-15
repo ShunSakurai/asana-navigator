@@ -1058,6 +1058,13 @@ document.addEventListener('keydown', function (event) {
         if (items.anOptionsSection) convertTaskAndSection();
       });
       break;
+    case '*':
+      if (document.tabKeyIsDown && event.code == 'Quote') {
+        chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
+          if (items.anOptionsSection) convertTaskAndSection();
+        });
+      }
+      break;
   }
 });
 
