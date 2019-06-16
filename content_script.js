@@ -70,7 +70,7 @@ const addToKeyboardShortcutsList = function () {
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [locStrings['menuButton-replaceDescription'].replace('...', ''), ['Tab', 'E']],
-    [locStrings['shortcutDescription-convertSection'], ['Tab', ':']],
+    [locStrings['shortcutDescription-convertSection'], ['Tab', ':', separator, platStrings['shift'], 'Tab', ':']],
     [locStrings['menuButton-setParent'].replace('...', ''), ['Tab', 'G']],
   ];
   for (let i = 0; i < shortcutsArray.length; i++) {

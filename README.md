@@ -14,7 +14,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 ### MVP:
 
 #### Putting projects on top:
-- [x] Show projects on top
+- [x] [Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)
 - [x] Place project section selectors on top
 
 #### Going to sibling subtasks:
@@ -30,9 +30,8 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
-- [x] Implement keyboard shortcut to set new parent task (Tab+G)
+- [x] [Implement keyboard shortcut to set new parent task (Tab+G)](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/10)
 - [x] Show the new key combinations in Keyboard Shortcuts list
-
 
 #### Going to sibling subtasks:
 - [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
@@ -52,13 +51,13 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [ ] Use tool tips with black background
 - [x] Update only the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
-- [x] Replace text in the task description (Tab+E)
+- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/6)
 - [x] Support other languages
 - [x] Implement donation button
 - [x] Convert multiple tasks to subtasks
-- [x] Move back from inbox to where the user has left off (Tab+J)
-- [x] [Convert task to section and vice versa (Tab+:)](https://www.youtube.com/watch?v=4V_4FtMLZZk)
-- [ ] Jump to sibling subtasks even when the arrows fail to be added
+- [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/10)
+- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
+- [x] Jump to sibling subtasks even when the arrows fail to be added
 
 ## Usage
 
