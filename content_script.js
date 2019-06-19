@@ -997,11 +997,11 @@ document.addEventListener('keydown', function (event) {
       if (document.tabKeyIsDown && event.shiftKey) {
         if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
-        } else if (!document.querySelector('#SiblingButtons')) {
+        } else {
           const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
           if (arrowMiddleSubtask) {
             arrowMiddleSubtask.click();
-          } else {
+          } else if (!document.querySelector('#SiblingButtons')) {
             displayLinksToSiblingSubtasks('#ArrowMiddleSubtask');
           }
         }
