@@ -258,7 +258,7 @@ const createSetParentDropdownContainer = function (input, taskGidList, workspace
     input.parentNode.appendChild(setParentDropdownContainer);
   }
   let potentialTask;
-  const potentialTaskGidMatch = /^\d{15}$/.exec(input.value.trim()); // gid spec might change
+  const potentialTaskGidMatch = /^\d{15,}$/.exec(input.value.trim()); // gid spec might change
   const potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
   if (potentialTaskGid) {
     callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {

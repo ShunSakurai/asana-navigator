@@ -9,7 +9,7 @@
       "css": ["main.css"],
       "js": ["content_script.js", "ui_platform.js", "ui_translation.js"],
       "matches": ["https://app.asana.com/*"],
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ],
   "description" : "Go back from inbox, show projects on top, go to sibling subtasks, replace text in description, convert to a subtask or to a section.",
@@ -29,5 +29,5 @@
     "activeTab", "storage"
   ],
   "short_name": "AsaNavigator",
-  "version": "2.0.8"
+  "version": "2.0.9"
 }
