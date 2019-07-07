@@ -40,6 +40,7 @@ const localizationStrings = {
     'drawerLabel-setParent': 'Make this task a subtask of another task.', // krtmmb:[0,"Make this task a subtask of another task. It will be removed from the current project."]
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
+    'dropdown-searchInProject': 'Search in this project',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace text in description...',
     'menuButton-setParent': 'Convert to subtask(s)...',
@@ -107,6 +108,7 @@ const localizationStrings = {
     'drawerLabel-setParent': 'このタスクを他のタスクのサブタスクにしましょう。',
     'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける', // translating differently
     'drawerSwitch-setParent-var-button': '挿入場所: 上部{button}下部',
+    'dropdown-searchInProject': 'このプロジェクト内を検索',
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
     'menuButton-setParent': 'サブタスクに変換...',

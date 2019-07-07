@@ -47,7 +47,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Write an options page to enable/disable each feature
 
 ### Maybe later:
-- [ ] Search in the current open page, e.g. "search in this project"
+- [x] Search in the current open page, e.g. "search in this project"
 - [ ] Use tool tips with black background
 - [x] Update only the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)

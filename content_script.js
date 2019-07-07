@@ -32,6 +32,30 @@ const addRowToUserReplaceTextList = function () {
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
+const addSearchDropdownShortcut = function () {
+  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
+  if (!topbarPageHeaderStructure || !topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) return;
+  const projectName = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
+  const dropdownItem = document.createElement('DIV');
+  dropdownItem.setAttribute('id', 'InContextSearch');
+  dropdownItem.setAttribute('role', 'option');
+  dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InProjectIcon" focusable="false" viewBox="0 0 32 32">${topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings['dropdown-searchInProject']}</div></div></div>`;
+  setTimeout(function () {
+    const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
+    if (topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+    topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
+    topbarSearchDropdownContainer.addEventListener('click', function () {
+      document.querySelector('.TopbarSearchAdvancedSearchItem').click();
+      setTimeout(function () {
+        const searchInputProjectField = document.querySelector('#advanced_search_view_field_any_projects_with_sections');
+        searchInputProjectField.focus();
+        searchInputProjectField.value = projectName;
+        searchInputProjectField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInputProjectField}));
+      }, 100);
+    });
+  }, 500);
+};
+
 const addSetParentToExtraActions = function () {
   const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton) {
@@ -678,6 +702,21 @@ const listenToClickToCloseSiblingSubtasksDropdown = function (event) {
   }
 };
 
+const listenToSearchBarExpansion = function () {
+  const siblingButtons = document.querySelector('#SiblingButtons');
+  const targetNode = document.querySelector('#topbar_search_input');
+  if (!targetNode) return;
+  const observerConfig = {attributes: true, childList: false, subtree: false};
+  const mutationObserver = new MutationObserver(function(mutationsList, observer) {
+    mutationsList.forEach(function(mutation) {
+      if (targetNode.getAttribute('aria-expanded') == 'true') {
+        addSearchDropdownShortcut();
+      }
+    });
+  });
+  mutationObserver.observe(targetNode, observerConfig);
+};
+
 const loadUserReplaceTextList = function () {
   chrome.storage.sync.get({
     'anOptionsPairs': []
@@ -1085,6 +1124,7 @@ window.addEventListener('load', function () {
   createBackFromInboxButton();
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
+  listenToSearchBarExpansion();
   loadUserReplaceTextList();
   runOptionalFunctionsOnLoad();
 });
