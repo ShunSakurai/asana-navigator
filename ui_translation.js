@@ -13,6 +13,7 @@ const localizationStrings = {
     'snippet-save': 'Speichern',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
+    'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} in ',
     'typeaheadItem-NoMatch': 'Keine Übereinstimmungen gefunden',
   },
   'en': {
@@ -41,6 +42,8 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
     'dropdown-searchInProject': 'Search in this project',
+    'dropdown-searchMyTasks': 'Search in my tasks',
+    'dropdown-searchThisUser': 'Search in this user\'s tasks',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace text in description...',
     'menuButton-setParent': 'Convert to subtask(s)...',
@@ -56,6 +59,7 @@ const localizationStrings = {
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-descriptionReplaced-var-task': 'Description replaced: {task}',
     'toastContent-setParent-var-task': 'Set a new parent task: {task}',
+    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks in ', // y0qpni:[1,"{nameOrEmail}’s Tasks in {domainName}"]
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
   'es': {
@@ -69,6 +73,7 @@ const localizationStrings = {
     'snippet-save': 'Guardar',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} en ',
     'typeaheadItem-NoMatch': 'No se encontraron coincidencias',
   },
   'fr': {
@@ -82,6 +87,7 @@ const localizationStrings = {
     'snippet-save': 'Enregistrer',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} dans ',
     'typeaheadItem-NoMatch': 'Aucune correspondance',
   },
   'ja': {
@@ -109,6 +115,8 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける', // translating differently
     'drawerSwitch-setParent-var-button': '挿入場所: 上部{button}下部',
     'dropdown-searchInProject': 'このプロジェクト内を検索',
+    'dropdown-searchMyTasks': 'マイタスクを検索',
+    'dropdown-searchThisUser': 'このユーザーのタスクを検索',
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
     'menuButton-replaceDescription': '説明テキストを置換...',
     'menuButton-setParent': 'サブタスクに変換...',
@@ -124,6 +132,7 @@ const localizationStrings = {
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-var-task': '{task} の説明を置換しました。',
     'toastContent-setParent-var-task': '新しい親タスクを設定しました: {task}',
+    'topbarTitle-replacement-var-nameOrEmail': ' の {nameOrEmail} のタスク',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
   'pt': {
@@ -137,6 +146,7 @@ const localizationStrings = {
     'snippet-save': 'Salvar',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tarefas de {nameOrEmail} em ',
     'typeaheadItem-NoMatch': 'Nenhuma correspondência encontrada',
   }
 };

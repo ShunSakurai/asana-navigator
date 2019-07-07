@@ -33,13 +33,28 @@ const addRowToUserReplaceTextList = function () {
 };
 
 const addSearchDropdownShortcut = function () {
+  let mode, fieldValue;
   const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-  if (!topbarPageHeaderStructure || !topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) return;
-  const projectName = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
+  if (!topbarPageHeaderStructure) return;
+  const topbarClasses = topbarPageHeaderStructure.classList;
+  if(topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
+    mode = 'InProject';
+    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
+  } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
+    if (document.querySelector('.MyTasksPageHeader-ownAvatar')) {
+      mode = 'MyTasks';
+      fieldValue = 'me';
+    } else {
+      mode = 'ThisUser';
+      fieldValue = topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.children[1].textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
+    }
+  } else {
+    return;
+  }
   const dropdownItem = document.createElement('DIV');
   dropdownItem.setAttribute('id', 'InContextSearch');
   dropdownItem.setAttribute('role', 'option');
-  dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InProjectIcon" focusable="false" viewBox="0 0 32 32">${topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings['dropdown-searchInProject']}</div></div></div>`;
+  dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">${(mode == 'InProject')? topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML: '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div></div></div>`;
   setTimeout(function () {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
     if (topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
@@ -47,13 +62,13 @@ const addSearchDropdownShortcut = function () {
     topbarSearchDropdownContainer.addEventListener('click', function () {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
       setTimeout(function () {
-        const searchInputProjectField = document.querySelector('#advanced_search_view_field_any_projects_with_sections');
-        searchInputProjectField.focus();
-        searchInputProjectField.value = projectName;
-        searchInputProjectField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInputProjectField}));
+        const searchInContextInputField = document.querySelector(`#advanced_search_view_field_${(mode == 'InProject')? 'any_projects_with_sections': 'assignees'}`);
+        searchInContextInputField.focus();
+        searchInContextInputField.value = fieldValue;
+        searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
       }, 100);
     });
-  }, 500);
+  }, 300);
 };
 
 const addSetParentToExtraActions = function () {
