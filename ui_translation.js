@@ -42,6 +42,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
     'dropdown-searchInProject': 'Search in this project',
+    'dropdown-searchInTag': 'Search in this tag',
     'dropdown-searchMyTasks': 'Search in my tasks',
     'dropdown-searchThisUser': 'Search in this user\'s tasks',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
@@ -115,6 +116,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける', // translating differently
     'drawerSwitch-setParent-var-button': '挿入場所: 上部{button}下部',
     'dropdown-searchInProject': 'このプロジェクト内を検索',
+    'dropdown-searchInTag': 'このタグ内を検索',
     'dropdown-searchMyTasks': 'マイタスクを検索',
     'dropdown-searchThisUser': 'このユーザーのタスクを検索',
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
