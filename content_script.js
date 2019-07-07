@@ -60,7 +60,7 @@ const addSearchDropdownShortcut = function () {
   dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">${(mode == 'InProject' || mode == 'InTag')? topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML: '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div></div></div>`;
   setTimeout(function () {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
-    if (topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+    if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
     topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
     dropdownItem.addEventListener('click', function () {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
@@ -68,12 +68,13 @@ const addSearchDropdownShortcut = function () {
         setTimeout(function () { // Clicking on the button link didn't work
           document.querySelector('.advancedSearchView-addMoreFieldButton').click();
         }, 40);
-        setTimeout(function () { // No need to click the third button
-          document.querySelector('#advanced_search_header_Tags').click();
-        }, 80);
+        setTimeout(function () { // the ID of the second button differs in different languages
+          (document.querySelector('#advanced_search_header_Tags') || document.querySelector('.dropdown-menu.search-by-another-field').children[3]).click();
+        }, 80); // No need to click the third button
       }
       setTimeout(function () {
         const searchInContextInputField = document.querySelector(`#advanced_search_view_field_${(mode == 'InProject')? 'any_projects_with_sections': (mode == 'InTag')? 'any_tags': 'assignees'}`);
+        if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
         searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
@@ -729,7 +730,6 @@ const listenToClickToCloseSiblingSubtasksDropdown = function (event) {
 };
 
 const listenToSearchBarExpansion = function () {
-  const siblingButtons = document.querySelector('#SiblingButtons');
   const targetNode = document.querySelector('#topbar_search_input');
   if (!targetNode) return;
   const observerConfig = {attributes: true, childList: false, subtree: false};
@@ -911,12 +911,14 @@ const runOptionalFunctionsOnLoad = function () {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
+    'anOptionsSearch': true,
     'anOptionsShortcuts': true,
     'anOptionsDescription': true,
     'anOptionsParent': true
   }, function (items) {
     if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+    if (items.anOptionsSearch) listenToSearchBarExpansion();
     if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
     if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
     if (items.anOptionsParent) addSetParentToExtraActions();
@@ -1147,10 +1149,8 @@ window.addEventListener('blur', function () {
 
 // First load or page reload
 window.addEventListener('load', function () {
-  createBackFromInboxButton();
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
-  listenToSearchBarExpansion();
   loadUserReplaceTextList();
   runOptionalFunctionsOnLoad();
 });

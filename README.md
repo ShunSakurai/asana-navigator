@@ -47,7 +47,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Write an options page to enable/disable each feature
 
 ### Maybe later:
-- [x] Search tasks in the current open project, tag, or user
+- [x] [Search tasks in the current open project, tag, or user (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
 - [ ] Use tool tips with black background
 - [x] Update only the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
@@ -58,6 +58,8 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/10)
 - [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
 - [x] Jump to sibling subtasks even when the arrows fail to be added
+- [ ] Support task/section conversion in the new list/board project structure
+- [ ] Support Command/Ctrl+Shift+Up/Down arrow in the new list/board project structure
 
 ## Usage
 
