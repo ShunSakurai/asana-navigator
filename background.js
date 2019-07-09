@@ -17,13 +17,13 @@ chrome.runtime.onInstalled.addListener(
       });
     }
     // Use only when an important update is made
-    if (details.reason === 'update') {
-      const browserLanguages = window.navigator.languages;
-      if (browserLanguages.indexOf('ja') + 1 || browserLanguages.indexOf('ja-JP') + 1) {
-       chrome.tabs.create({url: 'pages/update-ja.html'});
-      } else {
-        chrome.tabs.create({url: 'pages/update-en.html'});
-      }
-     }
+    // if (details.reason === 'update') {
+    //   const browserLanguages = window.navigator.languages;
+    //   if (browserLanguages.indexOf('ja') + 1 || browserLanguages.indexOf('ja-JP') + 1) {
+    //    chrome.tabs.create({url: 'pages/update-ja.html'});
+    //   } else {
+    //     chrome.tabs.create({url: 'pages/update-en.html'});
+    //   }
+    // }
   }
 );

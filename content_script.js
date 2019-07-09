@@ -4,6 +4,8 @@ const addReplaceDescriptionToExtraActions = function () {
     singleTaskPaneExtraActionsButton.addEventListener('click', function () {
       const replaceDescriptionButton = document.createElement('A');
       replaceDescriptionButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
+      replaceDescriptionButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
+      replaceDescriptionButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
       replaceDescriptionButton.addEventListener('click', function () {
         displayReplaceDescriptionDialog();
         closeTaskPaneExtraActionsMenu();
@@ -58,6 +60,8 @@ const addSearchDropdownShortcut = function () {
   dropdownItem.setAttribute('id', 'InContextSearch');
   dropdownItem.setAttribute('role', 'option');
   dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">${(mode == 'InProject' || mode == 'InTag')? topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML: '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div></div></div>`;
+  dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
+  dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
   setTimeout(function () {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
     if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
@@ -89,6 +93,8 @@ const addSetParentToExtraActions = function () {
     taskPaneExtraActionsButton.addEventListener('click', function () {
       const setParentButton = document.createElement('A');
       setParentButton.setAttribute('class', `menuItem-button menuItem--small ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
+      setParentButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
+      setParentButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
@@ -304,7 +310,7 @@ const createSetParentDropdownContainer = function (input, taskGidList, workspace
   const queryValue = input.value || taskName;
   if (!document.querySelector('#SetParentDropdownContainer')) {
     const setParentDropdownContainer = document.createElement('DIV');
-    setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadSearchScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadSearchScrollable-contents"></div></div></div></div></div>';
+    setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadScrollable-contents"></div></div></div></div></div>';
     setParentDropdownContainer.setAttribute('id', 'SetParentDropdownContainer');
     input.parentNode.appendChild(setParentDropdownContainer);
   }
@@ -327,12 +333,16 @@ const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerG
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
   const siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
-  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu menu--default">' +
+  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
     subtaskList.map(
       subtask => `<a class="menuItem-button menuItem--small" ${(subtask.is_rendered_as_separator)? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
       `${(subtask.is_rendered_as_separator)? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
+  Array.from(siblingDropdown.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children).forEach(function (subtask) {
+    subtask.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
+    subtask.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
+  });
   const singleTaskPane = document.querySelector('.SingleTaskPane');
   singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
@@ -572,7 +582,7 @@ const displaySuccessToast = function (task, messageVarTask, functionToRunCallbac
   const toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
   const toastDiv = document.createElement('DIV');
-  toastDiv.innerHTML = '<div class="ToastManager-toastContainer"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
+  toastDiv.innerHTML = '<div class="ToastManager-toast"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
   messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
@@ -761,9 +771,9 @@ const openPageWithoutRefresh = function (newUrl) {
 
 const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function (response) {
-    const typeaheadSearchScrollableContents = document.querySelector('.TypeaheadSearchScrollable-contents');
-    while (typeaheadSearchScrollableContents && typeaheadSearchScrollableContents.lastElementChild) {
-      typeaheadSearchScrollableContents.lastElementChild.remove();
+    const typeaheadScrollableContents = document.querySelector('.TypeaheadScrollable-contents');
+    while (typeaheadScrollableContents && typeaheadScrollableContents.lastElementChild) {
+      typeaheadScrollableContents.lastElementChild.remove();
     }
     if (potentialTask) response.data.unshift(potentialTask);
     for (let i = 0; i < response.data.length; i++) {
@@ -773,13 +783,9 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
       if (response.data[i].is_rendered_as_separator) continue;
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
-      if (typeaheadSearchScrollableContents) typeaheadSearchScrollableContents.appendChild(dropdownItem);
-      dropdownItem.addEventListener('mouseover', function () {
-        this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');
-      });
-      dropdownItem.addEventListener('mouseout', function () {
-        this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');
-      });
+      if (typeaheadScrollableContents) typeaheadScrollableContents.appendChild(dropdownItem);
+      dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
+      dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
       dropdownItem.addEventListener('click', function () {
         const setParentData = {'parent': response.data[i].gid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
@@ -791,11 +797,11 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
         setNewParentTask(taskGidList, setParentData, response.data[i]);
       });
     }
-    if (typeaheadSearchScrollableContents && !typeaheadSearchScrollableContents.children.length) {
+    if (typeaheadScrollableContents && !typeaheadScrollableContents.children.length) {
       const dropdownItemHintText = document.createElement('DIV');
       dropdownItemHintText.setAttribute('class', 'HintTextTypeaheadItem');
       dropdownItemHintText.innerText = locStrings['typeaheadItem-NoMatch'];
-      typeaheadSearchScrollableContents.appendChild(dropdownItemHintText);
+      typeaheadScrollableContents.appendChild(dropdownItemHintText);
     }
   });
 };
