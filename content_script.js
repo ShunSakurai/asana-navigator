@@ -834,16 +834,37 @@ const replaceDescriptionPreset = function () {
 };
 
 const replaceDescriptionUserText = function () {
-  const userReplaceTextList = getUserReplaceTextList().map(a => [new RegExp(escapeHtml(a[0]), 'gm'), escapeHtml(a[1])]);
-  if (!userReplaceTextList.length) {
+  const userReplaceTextList = getUserReplaceTextList();
+  for (let i = 0; i < userReplaceTextList.length; i ++) {
+    try {
+      userReplaceTextList[i][0] = new RegExp(escapeHtml(userReplaceTextList[i][0]).replace('(?&lt;', '(?<'), 'gm');
+    } catch (error) {
+      const userTextToReplaceDialogTr = document.querySelector('#UserTextToReplaceDialogTable').firstElementChild.children;
+      let counter = 0;
+      for (let row = 1; row < userTextToReplaceDialogTr.length; row++) {
+        const userTextToReplaceInput = userTextToReplaceDialogTr[row].firstElementChild.firstElementChild;
+        if (userTextToReplaceInput.value) {
+          if (i == counter) {
+            userTextToReplaceInput.classList.add('IsInvalid');
+            setTimeout(function () {
+              userTextToReplaceInput.classList.remove('IsInvalid');
+            }, 2000);
+            throw(error);
+          }
+          counter += 1;
+        }
+      }
+    }
+  }
+  if (userReplaceTextList.length) {
+    replaceDescription(userReplaceTextList);
+  } else {
     const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
     replaceDescriptionDialogUserButton.classList.add('is-disabled');
     setTimeout(function () {
       replaceDescriptionDialogUserButton.classList.remove('is-disabled');
     }, 2000);
-    return;
   }
-  replaceDescription(userReplaceTextList);
 };
 
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]

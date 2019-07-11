@@ -12,6 +12,10 @@
     cursor: not-allowed;
 }
 
+.IsInvalid {
+    border-color: #ff5263 !important;
+}
+
 .NoBorderBottom {
     border-bottom: none !important;
 }
