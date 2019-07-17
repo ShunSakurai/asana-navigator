@@ -12,6 +12,7 @@ const localizationStrings = {
     'snippet-example': 'z. B. ',
     'snippet-save': 'Speichern',
     'snippet-tags': 'Tags',
+    'snippet-teams': 'Teams',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} ',
@@ -45,6 +46,7 @@ const localizationStrings = {
     'dropdown-searchInInbox': 'Search in Tasks I Follow',
     'dropdown-searchInProject': 'Search in this Project',
     'dropdown-searchInTag': 'Search in this Tag',
+    'dropdown-searchInTeam': 'Search in this Team',
     'dropdown-searchMyTasks': 'Search in My Tasks',
     'dropdown-searchThisUser': 'Search in this user\'s tasks',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
@@ -59,6 +61,7 @@ const localizationStrings = {
     'snippet-save': 'Save', // "14vpdb5"
     'snippet-spacing': ' ',
     'snippet-tags': 'Tags', // "1utfvzg":[0,"Tags",null,!0]
+    'snippet-teams': 'Teams', // "38lt4b":[0,"Teams"],"1di0myf":[0,"Teams"]
     'toastButtton-undo': 'Undo', // 14vtr68
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-descriptionReplaced-var-task': 'Description replaced: {task}',
@@ -76,6 +79,7 @@ const localizationStrings = {
     'snippet-example': 'ej. ',
     'snippet-save': 'Guardar',
     'snippet-tags': 'Etiquetas',
+    'snippet-teams': 'Equipos',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} ',
@@ -91,6 +95,7 @@ const localizationStrings = {
     'snippet-example': 'ex. ',
     'snippet-save': 'Enregistrer',
     'snippet-tags': 'Étiquettes',
+    'snippet-teams': 'Équipes',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} ',
@@ -123,6 +128,7 @@ const localizationStrings = {
     'dropdown-searchInInbox': '自分がフォローしているタスクを検索',
     'dropdown-searchInProject': 'このプロジェクト内を検索',
     'dropdown-searchInTag': 'このタグ内を検索',
+    'dropdown-searchInTeam': 'このチーム内を検索',
     'dropdown-searchMyTasks': 'マイタスクを検索',
     'dropdown-searchThisUser': 'このユーザーのタスクを検索',
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
@@ -137,6 +143,7 @@ const localizationStrings = {
     'snippet-save': '保存',
     'snippet-spacing': '', // no space between sentences
     'snippet-tags': 'タグ',
+    'snippet-teams': 'チーム',
     'toastButtton-undo': '元に戻す',
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-var-task': '{task} の説明を置換しました。',
@@ -154,6 +161,7 @@ const localizationStrings = {
     'snippet-example': 'ex. ',
     'snippet-save': 'Salvar',
     'snippet-tags': 'Tags',
+    'snippet-teams': 'Equipes',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Tarefas de {nameOrEmail} ',

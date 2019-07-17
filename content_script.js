@@ -35,9 +35,12 @@ const addRowToUserReplaceTextList = function () {
 };
 
 const addSearchDropdownShortcut = function () {
-  let mode, fieldValue;
   const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-  if (!topbarPageHeaderStructure) return;
+  if (!topbarPageHeaderStructure) {
+    addSearchDropdownShortcutInTeam();
+    return;
+  }
+  let mode, fieldValue;
   const topbarClasses = topbarPageHeaderStructure.classList;
   if (window.location.href.includes('https://app.asana.com/0/inbox/')) {
     mode = 'InInbox';
@@ -60,11 +63,7 @@ const addSearchDropdownShortcut = function () {
     return;
   }
   const dropdownItem = document.createElement('DIV');
-  dropdownItem.setAttribute('id', 'InContextSearch');
-  dropdownItem.setAttribute('role', 'option');
-  dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon"><svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">${(mode == 'InInbox')? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>': (mode == 'InProject' || mode == 'InTag')? topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.innerHTML: '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}</svg></div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div></div></div>`;
-  dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
-  dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
+  constructInContextSearchDropdownItem(dropdownItem, mode);
   setTimeout(function () {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
     if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
@@ -74,7 +73,7 @@ const addSearchDropdownShortcut = function () {
       if (mode == 'InTag') {
         setTimeout(function () { // Clicking on the button link didn't work
           document.querySelector('.advancedSearchView-addMoreFieldButton').click();
-        }, 35);
+        }, 30);
         setTimeout(function () { // the ID of the second button differs in different languages
           (document.querySelector(`#advanced_search_header_${locStrings['snippet-tags']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-2)[0]).click();
         }, 70); // No need to click the third button
@@ -88,6 +87,41 @@ const addSearchDropdownShortcut = function () {
       }, 100);
     });
   }, 200);
+};
+
+const addSearchDropdownShortcutInTeam = function () {
+  if (document.querySelector('.TeamPageFacepile-content')) {
+    const teamGid = findTeamGid(window.location.href);
+    callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function (response) {
+      const teamData = response.data;
+      if (teamData.organization.is_organization) {
+        const mode = 'InTeam';
+        const fieldValue = document.querySelector('.TopbarPageHeaderView-title').textContent;
+        const dropdownItem = document.createElement('DIV');
+        constructInContextSearchDropdownItem(dropdownItem, mode);
+        const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
+        if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+        topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
+        dropdownItem.addEventListener('click', function () {
+          document.querySelector('.TopbarSearchAdvancedSearchItem').click();
+          setTimeout(function () { // Clicking on the button link didn't work
+            document.querySelector('.advancedSearchView-addMoreFieldButton').click();
+          }, 30);
+          setTimeout(function () { // the ID of the second button differs in different languages
+            (document.querySelector('#advanced_search_header_Teams') || document.querySelector('.dropdown-menu.search-by-another-field').children[4]).click();
+            (document.querySelector(`#advanced_search_header_${locStrings['snippet-teams']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-1)[0]).click();
+          }, 70); // No need to click the third button
+          setTimeout(function () {
+            const searchInContextInputField = document.querySelector('#advanced_search_view_field_teams');
+            if (!searchInContextInputField) return;
+            searchInContextInputField.focus();
+            searchInContextInputField.value = fieldValue;
+            searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
+          }, 100);
+        });
+      }
+    });
+  }
 };
 
 const addSetParentToExtraActions = function () {
@@ -206,6 +240,25 @@ const closeTaskPaneExtraActionsMenu = function () {
   if (taskPaneExtraActionsButton.classList.contains('CircularButton--active') || taskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     taskPaneExtraActionsButton.click();
   }
+};
+
+const constructInContextSearchDropdownItem = function (dropdownItem, mode) {
+  dropdownItem.setAttribute('id', 'InContextSearch');
+  dropdownItem.setAttribute('role', 'option');
+  dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled">
+    <div class="TypeaheadItemStructure-icon">
+      <svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">
+        ${(mode == 'InInbox')? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>':
+        (mode == 'InProject' || mode == 'InTag')? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML:
+        '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}
+      </svg>
+    </div>
+    <div class="TypeaheadItemStructure-label">
+      <div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div>
+    </div>
+  </div>`;
+  dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
+  dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
 };
 
 // Works only where Tab+N is supported (project view, my task view, and subtask list)
@@ -639,6 +692,12 @@ const findTaskGid = function (url) { // gid spec might change
       return pattern.exec(url)[1];
     }
   }
+};
+
+const findTeamGid = function (url) { // gid spec might change
+  const teamGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)/;
+  const findTeamGidMatch = teamGidRegexPattern.exec(url);
+  if (findTeamGidMatch) return findTeamGidMatch[1];
 };
 
 const getLocaleAndSetLocalizedStrings = function () {

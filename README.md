@@ -47,7 +47,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Write an options page to enable/disable each feature
 
 ### Maybe later:
-- [x] [Search tasks in the current open project, tag, or user (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
+- [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project, tag, user, or team in organization (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
 - [ ] Use tool tips with black background
 - [x] Update only the right pane when navigating subtasks
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
