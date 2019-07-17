@@ -74,10 +74,10 @@ const addSearchDropdownShortcut = function () {
       if (mode == 'InTag') {
         setTimeout(function () { // Clicking on the button link didn't work
           document.querySelector('.advancedSearchView-addMoreFieldButton').click();
-        }, 40);
+        }, 35);
         setTimeout(function () { // the ID of the second button differs in different languages
-          (document.querySelector('#advanced_search_header_Tags') || document.querySelector('.dropdown-menu.search-by-another-field').children[3]).click();
-        }, 80); // No need to click the third button
+          (document.querySelector(`#advanced_search_header_${locStrings['snippet-tags']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-2)[0]).click();
+        }, 70); // No need to click the third button
       }
       setTimeout(function () {
         const searchInContextInputField = document.querySelector(`#advanced_search_view_field_${(mode == 'InInbox')? 'followers': (mode == 'InProject')? 'any_projects_with_sections': (mode == 'InTag')? 'any_tags': 'assignees'}`);

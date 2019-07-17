@@ -11,9 +11,10 @@ const localizationStrings = {
     'snippet-continue': 'Möchten Sie damit wirklich fortfahren?',
     'snippet-example': 'z. B. ',
     'snippet-save': 'Speichern',
+    'snippet-tags': 'Tags',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} in ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'Keine Übereinstimmungen gefunden',
   },
   'en': {
@@ -57,11 +58,12 @@ const localizationStrings = {
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"
     'snippet-spacing': ' ',
+    'snippet-tags': 'Tags', // "1utfvzg":[0,"Tags",null,!0]
     'toastButtton-undo': 'Undo', // 14vtr68
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-descriptionReplaced-var-task': 'Description replaced: {task}',
     'toastContent-setParent-var-task': 'Set a new parent task: {task}',
-    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks in ', // y0qpni:[1,"{nameOrEmail}’s Tasks in {domainName}"]
+    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks ', // "31yy2c":[1,"{nameOrEmail}’s Tasks - {domainName}"]
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
   'es': {
@@ -73,9 +75,10 @@ const localizationStrings = {
     'snippet-continue': '¿Deseas continuar?',
     'snippet-example': 'ej. ',
     'snippet-save': 'Guardar',
+    'snippet-tags': 'Etiquetas',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} en ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'No se encontraron coincidencias',
   },
   'fr': {
@@ -87,9 +90,10 @@ const localizationStrings = {
     'snippet-continue': 'Souhaitez-vous continuer ?',
     'snippet-example': 'ex. ',
     'snippet-save': 'Enregistrer',
+    'snippet-tags': 'Étiquettes',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} dans ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'Aucune correspondance',
   },
   'ja': {
@@ -132,11 +136,12 @@ const localizationStrings = {
     'snippet-example': '例: ',
     'snippet-save': '保存',
     'snippet-spacing': '', // no space between sentences
+    'snippet-tags': 'タグ',
     'toastButtton-undo': '元に戻す',
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-var-task': '{task} の説明を置換しました。',
     'toastContent-setParent-var-task': '新しい親タスクを設定しました: {task}',
-    'topbarTitle-replacement-var-nameOrEmail': ' の {nameOrEmail} のタスク',
+    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail} のタスク',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
   'pt': {
@@ -148,9 +153,10 @@ const localizationStrings = {
     'snippet-continue': 'Deseja continuar?',
     'snippet-example': 'ex. ',
     'snippet-save': 'Salvar',
+    'snippet-tags': 'Tags',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tarefas de {nameOrEmail} em ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Tarefas de {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'Nenhuma correspondência encontrada',
   }
 };
