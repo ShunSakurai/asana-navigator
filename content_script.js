@@ -108,7 +108,6 @@ const addSearchDropdownShortcutInTeam = function () {
             document.querySelector('.advancedSearchView-addMoreFieldButton').click();
           }, 30);
           setTimeout(function () { // the ID of the second button differs in different languages
-            (document.querySelector('#advanced_search_header_Teams') || document.querySelector('.dropdown-menu.search-by-another-field').children[4]).click();
             (document.querySelector(`#advanced_search_header_${locStrings['snippet-teams']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-1)[0]).click();
           }, 70); // No need to click the third button
           setTimeout(function () {
@@ -412,6 +411,11 @@ const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerG
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
+const deleteInContextSearchDropdownItem = function (event) {
+  const inContextSearchDropdown = document.querySelector('#InContextSearch');
+  if (inContextSearchDropdown && event.target.value.trim()) inContextSearchDropdown.remove();
+};
+
 const deleteProjectNamesOnTop = function () {
   const projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
   if (projectNamesOnTop) projectNamesOnTop.remove();
@@ -515,6 +519,7 @@ const displayProjectsOnTop = function () {
     const a = li.firstElementChild;
     const projectUrl = a.href;
     const projectGid = findProjectGid(projectUrl);
+    if (!a.firstElementChild) return;
     const projectName = a.firstElementChild.textContent;
 
     const taskAncestryAncestorProject = document.createElement('A');
@@ -807,12 +812,12 @@ const listenToSearchBarExpansion = function () {
   const observerConfig = {attributes: true, childList: false, subtree: false};
   const mutationObserver = new MutationObserver(function(mutationsList, observer) {
     mutationsList.forEach(function(mutation) {
-      if (targetNode.getAttribute('aria-expanded') == 'true') {
-        addSearchDropdownShortcut();
-      }
+      if (targetNode.getAttribute('value').trim()) return; // Keep dropdown item when the input field only contains spaces
+      if ((mutation.attributeName == 'aria-expanded' && targetNode.getAttribute('aria-expanded') == 'true') || mutation.attributeName == 'value') addSearchDropdownShortcut();
     });
   });
   mutationObserver.observe(targetNode, observerConfig);
+  targetNode.addEventListener('input', deleteInContextSearchDropdownItem);
 };
 
 const loadUserReplaceTextList = function () {
