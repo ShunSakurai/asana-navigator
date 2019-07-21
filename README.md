@@ -73,8 +73,9 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg87/asana-chrome-plugin) project. That extension is very nicely made. I learned a lot from him and his code.
 Thank you also to [Hiro-san](https://github.com/hiroyamada/) for giving me advice when I was struggling to implement the subtask dropdown feature.
 
-## Design decisions
+### Motivation and design decisions
 
+- I love Asana and use it every day to manage everything from personal to work stuff. It’s already great but I’m an efficiency-oriented person so I wanted to make it a little quicker. I hope some day Asana will implement those features on their own.
 - Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using content scripts and DOM methods.
 - By doing so, I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
 - I'd like to make all tools I create be customizable to each user's preference. Therefore, I created an options page where users can switch features on/off.

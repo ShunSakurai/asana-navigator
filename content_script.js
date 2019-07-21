@@ -54,7 +54,7 @@ const addSearchDropdownShortcut = function () {
   } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
     if (document.querySelector('.MyTasksPageHeader-ownAvatar')) {
       mode = 'MyTasks';
-      fieldValue = 'me';
+      fieldValue = topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.children[1].textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
     } else {
       mode = 'ThisUser';
       fieldValue = topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.children[1].textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
@@ -75,7 +75,7 @@ const addSearchDropdownShortcut = function () {
           document.querySelector('.advancedSearchView-addMoreFieldButton').click();
         }, 30);
         setTimeout(function () { // the ID of the second button differs in different languages
-          (document.querySelector(`#advanced_search_header_${locStrings['snippet-tags']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-2)[0]).click();
+          document.querySelector(`#advanced_search_header_${locStrings['snippet-tags']}`).click();
         }, 70); // No need to click the third button
       }
       setTimeout(function () {
@@ -108,15 +108,18 @@ const addSearchDropdownShortcutInTeam = function () {
             document.querySelector('.advancedSearchView-addMoreFieldButton').click();
           }, 30);
           setTimeout(function () { // the ID of the second button differs in different languages
-            (document.querySelector(`#advanced_search_header_${locStrings['snippet-teams']}`) || Array.from(document.querySelector('.dropdown-menu.search-by-another-field').children).slice(-1)[0]).click();
-          }, 70); // No need to click the third button
+            document.querySelector(`#advanced_search_header_${locStrings['snippet-more']}`).click();
+          }, 60);
+          setTimeout(function () {
+            document.querySelector('#teams').click();
+          }, 90);
           setTimeout(function () {
             const searchInContextInputField = document.querySelector('#advanced_search_view_field_teams');
             if (!searchInContextInputField) return;
             searchInContextInputField.focus();
             searchInContextInputField.value = fieldValue;
             searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
-          }, 100);
+          }, 120);
         });
       }
     });
@@ -260,7 +263,7 @@ const constructInContextSearchDropdownItem = function (dropdownItem, mode) {
   dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
 };
 
-// Works only where Tab+N is supported (project view, my task view, and subtask list)
+// Works only where Tab+N is supported (project view, my tasks view, and subtask list)
 // section_migration_status is considered to be "not_migrated" at the moment
 const convertTaskAndSection = function () {
   const focusedItemRow = document.querySelector('.ItemRow--focused');
@@ -300,7 +303,7 @@ const convertTaskAndSection = function () {
 
       if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
         const currentProjectGid = findProjectGid(window.location.href);
-        // if section_migration_status is "migrated," the path will be: isSection? 'tasks': `projects/${currentProjectGid}/sections`
+        // if section_migration_status is "completed," the path will be: isSection? 'tasks': `projects/${currentProjectGid}/sections`
         callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
           if (focusedTaskData.parent) {
             callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function (response) {});
