@@ -3,14 +3,14 @@ const addReplaceDescriptionToExtraActions = function () {
   if (singleTaskPaneExtraActionsButton) {
     singleTaskPaneExtraActionsButton.addEventListener('click', function () {
       const replaceDescriptionButton = document.createElement('A');
-      replaceDescriptionButton.setAttribute('class', 'menuItem-button menuItem--small SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
+      replaceDescriptionButton.setAttribute('class', 'MenuItemBase-button MenuItemBase--small Menu-menuItem SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
       replaceDescriptionButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
       replaceDescriptionButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
       replaceDescriptionButton.addEventListener('click', function () {
         displayReplaceDescriptionDialog();
         closeTaskPaneExtraActionsMenu();
       });
-      replaceDescriptionButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
+      replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
       setTimeout(function () {
         const nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
@@ -131,14 +131,14 @@ const addSetParentToExtraActions = function () {
   if (taskPaneExtraActionsButton) {
     taskPaneExtraActionsButton.addEventListener('click', function () {
       const setParentButton = document.createElement('A');
-      setParentButton.setAttribute('class', `menuItem-button menuItem--small ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
+      setParentButton.setAttribute('class', `MenuItemBase-button MenuItemBase--small Menu-menuItem ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
       setParentButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
       setParentButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
       setParentButton.addEventListener('click', function () {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="menuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
+      setParentButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
       setTimeout(function () {
         const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
@@ -393,7 +393,7 @@ const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerG
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
     subtaskList.map(
-      subtask => `<a class="menuItem-button menuItem--small" ${(subtask.is_rendered_as_separator)? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="menuItem-label">` +
+      subtask => `<a class="MenuItemBase-button MenuItemBase--small Menu-menuItem" ${(subtask.is_rendered_as_separator)? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
       `${(subtask.is_rendered_as_separator)? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
@@ -778,7 +778,7 @@ const listenToClickOnKeyboardShortcutList = function () {
   const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
     setTimeout(function () {
-      const menuItemsList = Array.from(document.querySelectorAll('.menuItem-button.menuItem--small'));
+      const menuItemsList = Array.from(document.querySelectorAll('.MenuItemBase-button.MenuItemBase--small.Menu-menuItem'));
       const indexKeyboardShortcuts = menuItemsList.map(menuItem => menuItem.firstElementChild.innerText).indexOf(locStrings['helpButton-keyboardShortcuts']);
       const helpButtonKeyboardShortcuts = menuItemsList[indexKeyboardShortcuts];
       helpButtonKeyboardShortcuts.addEventListener('click', function () {
@@ -964,7 +964,7 @@ const returnReplaceDescriptionInnerHTML = function () {
           </div>
         </div>
       </div>
-      <div class="buttons"><div class="buttonView new-button new-primary-button buttonView--primary buttonView--large" id="ReplaceDescriptionDialogPresetButton" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
+      <div class="buttons"><div class="buttonView new-button buttonView--primary buttonView--large" id="ReplaceDescriptionDialogPresetButton" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
       <div class="divider"></div>
       <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
         <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-var-link'].replace('{link}', '<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
@@ -985,7 +985,7 @@ const returnReplaceDescriptionInnerHTML = function () {
         </div>
       </div>
       <div class="footer-top"></div>
-      <div class="buttons"><div class="buttonView new-button new-primary-button buttonView--primary buttonView--large" tabindex="0" id="ReplaceDescriptionDialogUserButton"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
+      <div class="buttons"><div class="buttonView new-button buttonView--primary buttonView--large" tabindex="0" id="ReplaceDescriptionDialogUserButton"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
   </div>`;
 };
