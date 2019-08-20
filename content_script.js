@@ -35,16 +35,17 @@ const addRowToUserReplaceTextList = function () {
 };
 
 const addSearchDropdownShortcut = function () {
-  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-  if (!topbarPageHeaderStructure) {
+  if (document.querySelector('.TeamPageFacepile-content')) {
     addSearchDropdownShortcutInTeam();
     return;
   }
   let mode, fieldValue;
+  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
+  if (!topbarPageHeaderStructure) return;
   const topbarClasses = topbarPageHeaderStructure.classList;
   if (window.location.href.includes('https://app.asana.com/0/inbox/')) {
     mode = 'InInbox';
-    fieldValue = 'me';
+    fieldValue = locStrings['snippet-me'];
   } else if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
     mode = 'InProject';
     fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
@@ -71,15 +72,23 @@ const addSearchDropdownShortcut = function () {
     dropdownItem.addEventListener('click', function () {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
       if (mode == 'InTag') {
-        setTimeout(function () { // Clicking on the button link didn't work
-          document.querySelector('.advancedSearchView-addMoreFieldButton').click();
+        setTimeout(function () {
+          document.querySelector('.AdvancedSearchFooter-addFilter').click();
+          document.querySelector('.AdvancedSearchFooter-addFilter').focus();
         }, 30);
-        setTimeout(function () { // the ID of the second button differs in different languages
-          document.querySelector(`#advanced_search_header_${locStrings['snippet-tags']}`).click();
-        }, 70); // No need to click the third button
+        setTimeout(function () {
+          const addFilterTagsButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-tags'])[0].parentNode;
+          addFilterTagsButtonA.classList.add('is-highlighted');
+          // none of these commented out lines work:
+          // addFilterTagsButtonA.parentNode.dispatchEvent(new Event('mouseenter'));
+          // document.dispatchEvent(new Event('keydown', {'code': 'ArrowDown', 'key': 'ArrowDown', 'charCode': 40, 'keyCode': 40, 'which': 40}));
+          // document.dispatchEvent(new Event('keyup', {'code': 'ArrowDown', 'key': 'ArrowDown', 'charCode': 40, 'keyCode': 40, 'which': 40}));
+        }, 70);
+        // need to click the third button
+        return;
       }
       setTimeout(function () {
-        const searchInContextInputField = document.querySelector(`#advanced_search_view_field_${(mode == 'InInbox')? 'followers': (mode == 'InProject')? 'any_projects_with_sections': (mode == 'InTag')? 'any_tags': 'assignees'}`);
+        const searchInContextInputField = ((mode == 'InInbox')? document.querySelectorAll('.DomainUserFilter')[1]: document.querySelector(`.${(mode == 'InProject')? 'ProjectFilter': (mode == 'InTag')? 'TagFilter': 'DomainUserFilter'}`)).firstElementChild.firstElementChild.children[1];
         if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
@@ -90,40 +99,42 @@ const addSearchDropdownShortcut = function () {
 };
 
 const addSearchDropdownShortcutInTeam = function () {
-  if (document.querySelector('.TeamPageFacepile-content')) {
-    const teamGid = findTeamGid(window.location.href);
-    callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function (response) {
-      const teamData = response.data;
-      if (teamData.organization.is_organization) {
-        const mode = 'InTeam';
-        const fieldValue = document.querySelector('.TopbarPageHeaderView-title').textContent;
-        const dropdownItem = document.createElement('DIV');
-        constructInContextSearchDropdownItem(dropdownItem, mode);
-        const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
-        if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
-        topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
-        dropdownItem.addEventListener('click', function () {
-          document.querySelector('.TopbarSearchAdvancedSearchItem').click();
-          setTimeout(function () { // Clicking on the button link didn't work
-            document.querySelector('.advancedSearchView-addMoreFieldButton').click();
-          }, 30);
-          setTimeout(function () { // the ID of the second button differs in different languages
-            document.querySelector(`#advanced_search_header_${locStrings['snippet-more']}`).click();
-          }, 60);
-          setTimeout(function () {
-            document.querySelector('#teams').click();
-          }, 90);
-          setTimeout(function () {
-            const searchInContextInputField = document.querySelector('#advanced_search_view_field_teams');
-            if (!searchInContextInputField) return;
-            searchInContextInputField.focus();
-            searchInContextInputField.value = fieldValue;
-            searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
-          }, 120);
-        });
-      }
-    });
-  }
+  const teamGid = findTeamGid(window.location.href);
+  callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function (response) {
+    const teamData = response.data;
+    if (teamData.organization.is_organization) {
+      const mode = 'InTeam';
+      const fieldValue = document.querySelector('.TopbarPageHeaderStructure-title').textContent;
+      const dropdownItem = document.createElement('DIV');
+      constructInContextSearchDropdownItem(dropdownItem, mode);
+      const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
+      if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+      topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
+      dropdownItem.addEventListener('click', function () {
+        document.querySelector('.TopbarSearchAdvancedSearchItem').click();
+        setTimeout(function () {
+          document.querySelector('.AdvancedSearchFooter-addFilter').click();
+          document.querySelector('.AdvancedSearchFooter-addFilter').focus();
+        }, 30);
+        setTimeout(function () {
+          const addFilterMoreButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-more'])[0].parentNode;
+          addFilterMoreButtonA.classList.add('is-highlighted');
+        }, 60);
+        // I can't display the contents of "More" menu
+        return;
+        setTimeout(function () {
+          document.querySelectorAll('.MenuItemBase-button.Menu-menuItem')[0].click();
+        }, 90);
+        setTimeout(function () {
+          const searchInContextInputField = document.querySelector('.TeamFilter').firstElementChild.firstElementChild.children[1];
+          if (!searchInContextInputField) return;
+          searchInContextInputField.focus();
+          searchInContextInputField.value = fieldValue;
+          searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
+        }, 120);
+      });
+    }
+  });
 };
 
 const addSetParentToExtraActions = function () {
@@ -940,7 +951,7 @@ const replaceDescriptionUserText = function () {
 // exclude XML entities: [['&amp;', '&'], ['&gt;', '>'], ['&lt;', '<'], ['&quot;', '"']]
 const replaceTextListEntity = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;', 'Â'], ['&acirc;', 'â'], ['&acute;', '´'], ['&AElig;', 'Æ'], ['&aelig;', 'æ'], ['&Agrave;', 'À'], ['&agrave;', 'à'], ['&Alpha;', 'Α'], ['&alpha;', 'α'], ['&and;', '∧'], ['&ang;', '∠'], ['&apos;', '\''], ['&Aring;', 'Å'], ['&aring;', 'å'], ['&asymp;', '≈'], ['&Atilde;', 'Ã'], ['&atilde;', 'ã'], ['&Auml;', 'Ä'], ['&auml;', 'ä'], ['&bdquo;', '„'], ['&Beta;', 'Β'], ['&beta;', 'β'], ['&brvbar;', '¦'], ['&bull;', '•'], ['&cap;', '∩'], ['&Ccedil;', 'Ç'], ['&ccedil;', 'ç'], ['&cedil;', '¸'], ['&cent;', '¢'], ['&Chi;', 'Χ'], ['&chi;', 'χ'], ['&circ;', 'ˆ'], ['&clubs;', '♣'], ['&cong;', '≅'], ['&copy;', '©'], ['&crarr;', '↵'], ['&cup;', '∪'], ['&curren;', '¤'], ['&dagger;', '†'], ['&Dagger;', '‡'], ['&dArr;', '⇓'], ['&darr;', '↓'], ['&deg;', '°'], ['&Delta;', 'Δ'], ['&delta;', 'δ'], ['&diams;', '♦'], ['&divide;', '÷'], ['&Eacute;', 'É'], ['&eacute;', 'é'], ['&Ecirc;', 'Ê'], ['&ecirc;', 'ê'], ['&Egrave;', 'È'], ['&egrave;', 'è'], ['&empty;', '∅'], ['&emsp;', ' '], ['&ensp;', ' '], ['&Epsilon;', 'Ε'], ['&epsilon;', 'ε'], ['&equiv;', '≡'], ['&Eta;', 'Η'], ['&eta;', 'η'], ['&ETH;', 'Ð'], ['&eth;', 'ð'], ['&Euml;', 'Ë'], ['&euml;', 'ë'], ['&euro;', '€'], ['&exist;', '∃'], ['&fnof;', 'ƒ'], ['&forall;', '∀'], ['&frac12;', '½'], ['&frac14;', '¼'], ['&frac34;', '¾'], ['&Gamma;', 'Γ'], ['&gamma;', 'γ'], ['&ge;', '≥'], ['&hArr;', '⇔'], ['&harr;', '↔'], ['&hearts;', '♥'], ['&hellip;', '…'], ['&Iacute;', 'Í'], ['&iacute;', 'í'], ['&Icirc;', 'Î'], ['&icirc;', 'î'], ['&iexcl;', '¡'], ['&Igrave;', 'Ì'], ['&igrave;', 'ì'], ['&infin;', '∞'], ['&int;', '∫'], ['&Iota;', 'Ι'], ['&iota;', 'ι'], ['&iquest;', '¿'], ['&isin;', '∈'], ['&Iuml;', 'Ï'], ['&iuml;', 'ï'], ['&Kappa;', 'Κ'], ['&kappa;', 'κ'], ['&Lambda;', 'Λ'], ['&lambda;', 'λ'], ['&laquo;', '«'], ['&lArr;', '⇐'], ['&larr;', '←'], ['&lceil;', '⌈'], ['&ldquo;', '“'], ['&le;', '≤'], ['&lfloor;', '⌊'], ['&lowast;', '∗'], ['&loz;', '◊'], ['&lrm;', '‎'], ['&lsaquo;', '‹'], ['&lsquo;', '‘'], ['&macr;', '¯'], ['&mdash;', '—'], ['&micro;', 'µ'], ['&middot;', '·'], ['&minus;', '−'], ['&Mu;', 'Μ'], ['&mu;', 'μ'], ['&nabla;', '∇'], ['&ndash;', '–'], ['&ne;', '≠'], ['&ni;', '∋'], ['&not;', '¬'], ['&notin;', '∉'], ['&nsub;', '⊄'], ['&Ntilde;', 'Ñ'], ['&ntilde;', 'ñ'], ['&Nu;', 'Ν'], ['&nu;', 'ν'], ['&Oacute;', 'Ó'], ['&oacute;', 'ó'], ['&Ocirc;', 'Ô'], ['&ocirc;', 'ô'], ['&OElig;', 'Œ'], ['&oelig;', 'œ'], ['&Ograve;', 'Ò'], ['&ograve;', 'ò'], ['&oline;', '‾'], ['&Omega;', 'Ω'], ['&omega;', 'ω'], ['&Omicron;', 'Ο'], ['&omicron;', 'ο'], ['&oplus;', '⊕'], ['&or;', '∨'], ['&ordf;', 'ª'], ['&ordm;', 'º'], ['&Oslash;', 'Ø'], ['&oslash;', 'ø'], ['&Otilde;', 'Õ'], ['&otilde;', 'õ'], ['&otimes;', '⊗'], ['&Ouml;', 'Ö'], ['&ouml;', 'ö'], ['&para;', '¶'], ['&part;', '∂'], ['&permil;', '‰'], ['&perp;', '⊥'], ['&Phi;', 'Φ'], ['&phi;', 'φ'], ['&Pi;', 'Π'], ['&pi;', 'π'], ['&piv;', 'ϖ'], ['&plusmn;', '±'], ['&pound;', '£'], ['&prime;', '′'], ['&Prime;', '″'], ['&prod;', '∏'], ['&prop;', '∝'], ['&Psi;', 'Ψ'], ['&psi;', 'ψ'], ['&radic;', '√'], ['&raquo;', '»'], ['&rArr;', '⇒'], ['&rarr;', '→'], ['&rceil;', '⌉'], ['&rdquo;', '”'], ['&reg;', '®'], ['&rfloor;', '⌋'], ['&Rho;', 'Ρ'], ['&rho;', 'ρ'], ['&rlm;', '‏'], ['&rsaquo;', '›'], ['&rsquo;', '’'], ['&sbquo;', '‚'], ['&Scaron;', 'Š'], ['&scaron;', 'š'], ['&sdot;', '⋅'], ['&sect;', '§'], ['&Sigma;', 'Σ'], ['&sigma;', 'σ'], ['&sigmaf;', 'ς'], ['&sim;', '∼'], ['&spades;', '♠'], ['&sub;', '⊂'], ['&sube;', '⊆'], ['&sum;', '∑'], ['&sup1;', '¹'], ['&sup2;', '²'], ['&sup3;', '³'], ['&sup;', '⊃'], ['&supe;', '⊇'], ['&szlig;', 'ß'], ['&Tau;', 'Τ'], ['&tau;', 'τ'], ['&there4;', '∴'], ['&Theta;', 'Θ'], ['&theta;', 'θ'], ['&thetasym;', 'ϑ'], ['&thinsp;', ' '], ['&THORN;', 'Þ'], ['&thorn;', 'þ'], ['&tilde;', '˜'], ['&times;', '×'], ['&trade;', '™'], ['&Uacute;', 'Ú'], ['&uacute;', 'ú'], ['&uArr;', '⇑'], ['&uarr;', '↑'], ['&Ucirc;', 'Û'], ['&ucirc;', 'û'], ['&Ugrave;', 'Ù'], ['&ugrave;', 'ù'], ['&uml;', '¨'], ['&upsih;', 'ϒ'], ['&Upsilon;', 'Υ'], ['&upsilon;', 'υ'], ['&Uuml;', 'Ü'], ['&uuml;', 'ü'], ['&Xi;', 'Ξ'], ['&xi;', 'ξ'], ['&Yacute;', 'Ý'], ['&yacute;', 'ý'], ['&yen;', '¥'], ['&Yuml;', 'Ÿ'], ['&yuml;', 'ÿ'], ['&Zeta;', 'Ζ'], ['&zeta;', 'ζ'], ['&zwj;', '‍'], ['&zwnj;', '‌']].map(a => [new RegExp(a[0].replace('&', '&amp;'), 'g'), a[1]]);
 
-const replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9\-:;/._=+&%?!#$'@]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
+const replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9!#$%&'+,\-./:;=?@_~]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
 
 const returnReplaceDescriptionInnerHTML = function () {
   return `<div>

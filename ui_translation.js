@@ -10,6 +10,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Tastenkombinationen',
     'snippet-continue': 'Möchten Sie damit wirklich fortfahren?',
     'snippet-example': 'z. B. ',
+    'snippet-me': 'mir',
     'snippet-more': 'Mehr',
     'snippet-save': 'Speichern',
     'snippet-tags': 'Tags',
@@ -59,7 +60,8 @@ const localizationStrings = {
     'snippet-continue': 'Do you want to continue?', // l3zrkk:[0,"Your import will be cancelled. Do you want to continue?"]
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"
-    'snippet-more': 'More', // yiss4w:[0,"More"]
+    'snippet-me': 'me', // ay8rvu
+    'snippet-more': 'More', // yiss4w
     'snippet-spacing': ' ',
     'snippet-tags': 'Tags', // "1utfvzg":[0,"Tags",null,!0]
     'toastButtton-undo': 'Undo', // 14vtr68
@@ -77,6 +79,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Atajos del teclado',
     'snippet-continue': '¿Deseas continuar?',
     'snippet-example': 'ej. ',
+    'snippet-me': 'Mí',
     'snippet-more': 'Más',
     'snippet-save': 'Guardar',
     'snippet-tags': 'Etiquetas',
@@ -93,6 +96,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Raccourcis clavier',
     'snippet-continue': 'Souhaitez-vous continuer ?',
     'snippet-example': 'ex. ',
+    'snippet-me': 'moi',
     'snippet-more': 'Plus',
     'snippet-save': 'Enregistrer',
     'snippet-tags': 'Étiquettes',
@@ -141,6 +145,7 @@ const localizationStrings = {
     'snippet-continue': '続行してよろしいですか？',
     'snippet-example': '例: ',
     'snippet-save': '保存',
+    'snippet-me': '自分',
     'snippet-more': 'その他',
     'snippet-spacing': '', // no space between sentences
     'snippet-tags': 'タグ',
@@ -159,6 +164,7 @@ const localizationStrings = {
     'helpButton-keyboardShortcuts': 'Atalhos do teclado',
     'snippet-continue': 'Deseja continuar?',
     'snippet-example': 'ex. ',
+    'snippet-me': 'mim',
     'snippet-more': 'Mais',
     'snippet-save': 'Salvar',
     'snippet-tags': 'Tags',
