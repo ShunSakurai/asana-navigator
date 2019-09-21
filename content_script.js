@@ -358,10 +358,10 @@ const convertTaskAndSection = function () {
 const createBackFromInboxButton = function () {
   const inboxNavigationBar = document.querySelector('.InboxNavigationBar');
   if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
-    const backLinkFromInbox = document.createElement('DIV');
+    const backLinkFromInbox = document.createElement('LI');
     backLinkFromInbox.setAttribute('class', 'InboxNavigationBar-backLink');
     backLinkFromInbox.innerHTML = '<a class="InboxButton-backLink disabled">&times;</a>';
-    inboxNavigationBar.appendChild(backLinkFromInbox);
+    inboxNavigationBar.firstElementChild.appendChild(backLinkFromInbox);
     if (document.anPreviousUrl) {
       backLinkFromInbox.innerHTML = `<a class="InboxButton-backLink" href="${document.anPreviousUrl}" title="${locStrings['buttonTitle-backLink']} (Tab+J)">&times;</a>`;
       backLinkFromInbox.addEventListener('click', function (event) {

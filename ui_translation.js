@@ -140,7 +140,7 @@ const localizationStrings = {
     'menuButton-setParent': 'サブタスクに変換...',
     'shortcutDescription-backLink': '受信トレイから戻る',
     'shortcutDescription-convertSection': 'タスクとセクションを相互に変換',
-    'shortcutDescription-siblingSubtasks': '前/次のサブタスクに移動',
+    'shortcutDescription-siblingSubtasks': '前 / 次のサブタスクを開く',
     'shortcutDescription-subtasksDropdown': '前後のサブタスクを表示',
     'snippet-continue': '続行してよろしいですか？',
     'snippet-example': '例: ',

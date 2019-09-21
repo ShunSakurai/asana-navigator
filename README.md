@@ -21,7 +21,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Show arrows to go to previous/next sibling subtasks
 
 #### Setting new parent tasks:
-- [x] Set new parent task from the toolbar
+- [x] [Set new parent task from the toolbar](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/7)
 
 #### Publishing:
 - [x] Publish on Chrome Web Store
