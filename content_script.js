@@ -1,18 +1,18 @@
-const addReplaceDescriptionToExtraActions = function () {
+const addReplaceDescriptionToExtraActions = function() {
   const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
-    singleTaskPaneExtraActionsButton.addEventListener('click', function () {
+    singleTaskPaneExtraActionsButton.addEventListener('click', function() {
       const replaceDescriptionButton = document.createElement('A');
       replaceDescriptionButton.setAttribute('class', 'MenuItemBase-button MenuItemBase--small Menu-menuItem SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
-      replaceDescriptionButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
-      replaceDescriptionButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
-      replaceDescriptionButton.addEventListener('click', function () {
+      replaceDescriptionButton.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
+      replaceDescriptionButton.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
+      replaceDescriptionButton.addEventListener('click', function() {
         displayReplaceDescriptionDialog();
         closeTaskPaneExtraActionsMenu();
       });
       replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+E</span></div></span>`;
 
-      setTimeout(function () {
+      setTimeout(function() {
         const nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
         if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
           nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
@@ -22,7 +22,7 @@ const addReplaceDescriptionToExtraActions = function () {
   }
 };
 
-const addRowToUserReplaceTextList = function () {
+const addRowToUserReplaceTextList = function() {
   const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
   if (!userTextToReplaceDialogTable) return;
   const newUserTextTr = document.createElement('TR');
@@ -30,11 +30,11 @@ const addRowToUserReplaceTextList = function () {
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
     <td><a class="delete-row-link">&nbsp;×</a></td>`;
-  newUserTextTr.lastElementChild.addEventListener('click', function (event) {deleteUserReplaceTextRow(event.target);});
+  newUserTextTr.lastElementChild.addEventListener('click', function(event) {deleteUserReplaceTextRow(event.target);});
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
 };
 
-const addSearchDropdownShortcut = function () {
+const addSearchDropdownShortcut = function() {
   if (document.querySelector('.TeamPageFacepile-content')) {
     addSearchDropdownShortcutInTeam();
     return;
@@ -48,10 +48,10 @@ const addSearchDropdownShortcut = function () {
     fieldValue = locStrings['snippet-me'];
   } else if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
     mode = 'InProject';
-    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
+    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent;
   } else if (topbarPageHeaderStructure.classList.contains('TagPageHeader')) {
     mode = 'InTag';
-    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.firstElementChild.textContent;
+    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent;
   } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
     if (document.querySelector('.MyTasksPageHeader-ownAvatar')) {
       mode = 'MyTasks';
@@ -65,18 +65,18 @@ const addSearchDropdownShortcut = function () {
   }
   const dropdownItem = document.createElement('DIV');
   constructInContextSearchDropdownItem(dropdownItem, mode);
-  setTimeout(function () {
+  setTimeout(function() {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
     if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
     topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
-    dropdownItem.addEventListener('click', function () {
+    dropdownItem.addEventListener('click', function() {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
       if (mode == 'InTag') {
-        setTimeout(function () {
+        setTimeout(function() {
           document.querySelector('.AdvancedSearchFooter-addFilter').click();
           document.querySelector('.AdvancedSearchFooter-addFilter').focus();
         }, 30);
-        setTimeout(function () {
+        setTimeout(function() {
           const addFilterTagsButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-tags'])[0].parentNode;
           addFilterTagsButtonA.classList.add('is-highlighted');
           // none of these commented out lines work:
@@ -87,8 +87,8 @@ const addSearchDropdownShortcut = function () {
         // need to click the third button
         return;
       }
-      setTimeout(function () {
-        const searchInContextInputField = ((mode == 'InInbox')? document.querySelectorAll('.DomainUserFilter')[1]: document.querySelector(`.${(mode == 'InProject')? 'ProjectFilter': (mode == 'InTag')? 'TagFilter': 'DomainUserFilter'}`)).firstElementChild.firstElementChild.children[1];
+      setTimeout(function() {
+        const searchInContextInputField = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : (mode == 'InTag') ? 'TagFilter' : 'DomainUserFilter'}`)).firstElementChild.firstElementChild.children[1];
         if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
@@ -98,9 +98,9 @@ const addSearchDropdownShortcut = function () {
   }, 200);
 };
 
-const addSearchDropdownShortcutInTeam = function () {
+const addSearchDropdownShortcutInTeam = function() {
   const teamGid = findTeamGid(window.location.href);
-  callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function (response) {
+  callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function(response) {
     const teamData = response.data;
     if (teamData.organization.is_organization) {
       const mode = 'InTeam';
@@ -110,22 +110,22 @@ const addSearchDropdownShortcutInTeam = function () {
       const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
       if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
       topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
-      dropdownItem.addEventListener('click', function () {
+      dropdownItem.addEventListener('click', function() {
         document.querySelector('.TopbarSearchAdvancedSearchItem').click();
-        setTimeout(function () {
+        setTimeout(function() {
           document.querySelector('.AdvancedSearchFooter-addFilter').click();
           document.querySelector('.AdvancedSearchFooter-addFilter').focus();
         }, 30);
-        setTimeout(function () {
+        setTimeout(function() {
           const addFilterMoreButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-more'])[0].parentNode;
           addFilterMoreButtonA.classList.add('is-highlighted');
         }, 60);
         // I can't display the contents of "More" menu
         return;
-        setTimeout(function () {
+        setTimeout(function() {
           document.querySelectorAll('.MenuItemBase-button.Menu-menuItem')[0].click();
         }, 90);
-        setTimeout(function () {
+        setTimeout(function() {
           const searchInContextInputField = document.querySelector('.TeamFilter').firstElementChild.firstElementChild.children[1];
           if (!searchInContextInputField) return;
           searchInContextInputField.focus();
@@ -137,23 +137,23 @@ const addSearchDropdownShortcutInTeam = function () {
   });
 };
 
-const addSetParentToExtraActions = function () {
+const addSetParentToExtraActions = function() {
   const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton) {
-    taskPaneExtraActionsButton.addEventListener('click', function () {
+    taskPaneExtraActionsButton.addEventListener('click', function() {
       const setParentButton = document.createElement('A');
       setParentButton.setAttribute('class', `MenuItemBase-button MenuItemBase--small Menu-menuItem ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
-      setParentButton.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
-      setParentButton.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
-      setParentButton.addEventListener('click', function () {
+      setParentButton.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
+      setParentButton.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
+      setParentButton.addEventListener('click', function() {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
       });
       setParentButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut">TAB+G</span></div></span>`;
 
-      setTimeout(function () {
+      setTimeout(function() {
         const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
-        const nextExtraActionButton = advancedActionsMenuItemButton? advancedActionsMenuItemButton.parentNode: document.querySelector('.MenuSeparator');
+        const nextExtraActionButton = advancedActionsMenuItemButton ? advancedActionsMenuItemButton.parentNode : document.querySelector('.MenuSeparator');
         if (nextExtraActionButton && !document.querySelector(`.${taskPaneTypeString}TaskPaneExtraActionsButton-setParent`)) {
           nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
         }
@@ -162,7 +162,7 @@ const addSetParentToExtraActions = function () {
   }
 };
 
-const addToKeyboardShortcutsList = function () {
+const addToKeyboardShortcutsList = function() {
   const keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
   if (!keyboardShortcutsModal) return;
   if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
@@ -185,14 +185,14 @@ const addToKeyboardShortcutsList = function () {
     const keyboardShortcutsModalRow = document.createElement('DIV');
     keyboardShortcutsModalRow.setAttribute('class', 'KeyboardShortcutsModal-row');
     keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys">` +
-    keyList.map(a => (a === separator)? '/': '<span class="KeyboardShortcutsModal-key">' + a + '</span>').join('') + '</span>';
+    keyList.map(a => (a === separator) ? '/' : '<span class="KeyboardShortcutsModal-key">' + a + '</span>').join('') + '</span>';
     keyboardShortcutsModalANSection.appendChild(keyboardShortcutsModalRow);
   }
 };
 
-const callAsanaApi = function (request, path, options, data, callback) {
+const callAsanaApi = function(request, path, options, data, callback) {
   const xhr = new XMLHttpRequest();
-  xhr.addEventListener('load', function () {
+  xhr.addEventListener('load', function() {
     callback(JSON.parse(this.response));
   });
   const manifest = chrome.runtime.getManifest();
@@ -221,7 +221,7 @@ const callAsanaApi = function (request, path, options, data, callback) {
   xhr.send(requestData);
 };
 
-const clickSectionSelector = function (a) {
+const clickSectionSelector = function(a) {
   const taskProjectsProjectGid = findProjectGid(a.previousSibling.href);
   const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   let floatingSelectLabel;
@@ -232,37 +232,37 @@ const clickSectionSelector = function (a) {
     }
   }
   floatingSelectLabel.scrollIntoView(false);
-  setTimeout(function () {
+  setTimeout(function() {
       floatingSelectLabel.click();
   }, 100);
 };
 
-const closeReplaceDescriptionDialog = function () {
+const closeReplaceDescriptionDialog = function() {
   const replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
   if (replaceDescriptionDialogView) replaceDescriptionDialogView.remove();
 };
 
-const closeSetParentDrawer = function () {
+const closeSetParentDrawer = function() {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
   if (setParentDrawer) setParentDrawer.remove();
   document.removeEventListener('click', listenToClickToCloseSetParentDropdown);
 };
 
-const closeTaskPaneExtraActionsMenu = function () {
+const closeTaskPaneExtraActionsMenu = function() {
   const [taskPaneTypeString, taskPaneExtraActionsButton] = getTaskPaneTypeAndElement('ExtraActionsButton');
   if (taskPaneExtraActionsButton.classList.contains('CircularButton--active') || taskPaneExtraActionsButton.classList.contains('is-dropdownVisible')) {
     taskPaneExtraActionsButton.click();
   }
 };
 
-const constructInContextSearchDropdownItem = function (dropdownItem, mode) {
+const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
   dropdownItem.setAttribute('id', 'InContextSearch');
   dropdownItem.setAttribute('role', 'option');
   dropdownItem.innerHTML = `<div class="TypeaheadItemStructure TypeaheadItemStructure--enabled">
     <div class="TypeaheadItemStructure-icon">
       <svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">
-        ${(mode == 'InInbox')? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>':
-        (mode == 'InProject' || mode == 'InTag')? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML:
+        ${(mode == 'InInbox') ? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>' :
+        (mode == 'InProject' || mode == 'InTag') ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML :
         '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}
       </svg>
     </div>
@@ -270,29 +270,29 @@ const constructInContextSearchDropdownItem = function (dropdownItem, mode) {
       <div class="TypeaheadItemStructure-title">${locStrings[`dropdown-search${mode}`]}</div>
     </div>
   </div>`;
-  dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
-  dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
+  dropdownItem.addEventListener('mouseover', function() {this.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
+  dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
 };
 
 // Works only where Tab+N is supported (project view, my tasks view, and subtask list)
 // section_migration_status is considered to be "not_migrated" at the moment
-const convertTaskAndSection = function () {
+const convertTaskAndSection = function() {
   const focusedItemRow = document.querySelector('.ItemRow--focused');
   if (!focusedItemRow) return;
   const isSection = focusedItemRow.classList.contains('SectionRow');
   const isSubtask = focusedItemRow.classList.contains('SubtaskTaskRow') || focusedItemRow.classList.contains('SectionRow--subtask');
-  const taskTextarea = (isSection? focusedItemRow: focusedItemRow.children[1]).children[1].children[1];
+  const taskTextarea = (isSection ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
   const focusedTaskGid = /_(\d+)/.exec(taskTextarea.id)[1];
   const focusedTaskName = taskTextarea.textContent;
 
-  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,parent,projects.section_migration_status,subtasks,workspace'}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,parent,projects.section_migration_status,subtasks,workspace'}, {}, function(response) {
     const focusedTaskData = response.data;
     if (focusedTaskData.subtasks.length) {
       const returning = window.confirm(locStrings['confirmMessage-abortConvertBySubtasks']);
       return;
     }
     const workspaceGid = focusedTaskData.workspace.gid;
-    const focusedTaskAssigneeGid = focusedTaskData.assignee? focusedTaskData.assignee.gid: 'null';
+    const focusedTaskAssigneeGid = focusedTaskData.assignee ? focusedTaskData.assignee.gid : 'null';
     const confirmed = window.confirm('Asana Navigator: ' + (
       isSection?
       [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']]:
@@ -302,9 +302,9 @@ const convertTaskAndSection = function () {
 
     if (isSubtask) {
       const taskGid = findTaskGid(window.location.href);
-      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
-        callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function (response) {
-          callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+        callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function(response) {
+          callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
           });
         });
       });
@@ -314,15 +314,15 @@ const convertTaskAndSection = function () {
 
       if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
         const currentProjectGid = findProjectGid(window.location.href);
-        // if section_migration_status is "completed," the path will be: isSection? 'tasks': `projects/${currentProjectGid}/sections`
-        callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
+        // if section_migration_status is "completed," the path will be: isSection ? 'tasks' : `projects/${currentProjectGid}/sections`
+        callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
           if (focusedTaskData.parent) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function (response) {});
+            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
           }
           for (let i = 0; i < projectGidList.length; i++) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
+            callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function(response) {
               if (i === projectGidList.length - 1) {
-                callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+                callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
                 });
               }
             });
@@ -331,22 +331,22 @@ const convertTaskAndSection = function () {
       } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
         // Different from the user gid
         const userTaskListGid = findProjectGid(window.location.href);
-        callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection? '': ':')), 'workspace': workspaceGid}, {}, function (response) {
-          callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function (response) {});
+        callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+          callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function(response) {});
           if (focusedTaskData.parent) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function (response) {});
+            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
           }
           if (projectGidList.length) {
             for (let i = 0; i < projectGidList.length; i++) {
-              callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function (response) {
+              callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function(response) {
                 if (i === projectGidList.length - 1) {
-                  callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+                  callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
                   });
                 }
               });
             }
           } else {
-            callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function (response) {
+            callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
             });
           }
         });
@@ -355,7 +355,7 @@ const convertTaskAndSection = function () {
   });
 };
 
-const createBackFromInboxButton = function () {
+const createBackFromInboxButton = function() {
   const inboxNavigationBar = document.querySelector('.InboxNavigationBar');
   if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
     const backLinkFromInbox = document.createElement('LI');
@@ -364,7 +364,7 @@ const createBackFromInboxButton = function () {
     inboxNavigationBar.firstElementChild.appendChild(backLinkFromInbox);
     if (document.anPreviousUrl) {
       backLinkFromInbox.innerHTML = `<a class="InboxButton-backLink" href="${document.anPreviousUrl}" title="${locStrings['buttonTitle-backLink']} (Tab+J)">&times;</a>`;
-      backLinkFromInbox.addEventListener('click', function (event) {
+      backLinkFromInbox.addEventListener('click', function(event) {
         openPageWithoutRefresh(document.anPreviousUrl);
         event.preventDefault();
         document.anPreviousUrl = undefined;
@@ -373,9 +373,9 @@ const createBackFromInboxButton = function () {
   }
 };
 
-const createSetParentDropdownContainer = function (input, taskGidList, workspaceGid) {
+const createSetParentDropdownContainer = function(input, taskGidList, workspaceGid) {
   const singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
-  const taskName = (singleTaskTitleInput)? singleTaskTitleInput.children[1].textContent: '';
+  const taskName = (singleTaskTitleInput) ? singleTaskTitleInput.children[1].textContent : '';
   const queryValue = input.value || taskName;
   if (!document.querySelector('#SetParentDropdownContainer')) {
     const setParentDropdownContainer = document.createElement('DIV');
@@ -385,9 +385,9 @@ const createSetParentDropdownContainer = function (input, taskGidList, workspace
   }
   let potentialTask;
   const potentialTaskGidMatch = /^\d{15,}$/.exec(input.value.trim()); // gid spec might change
-  const potentialTaskGid = (potentialTaskGidMatch)? potentialTaskGidMatch[0]: findTaskGid(input.value);
+  const potentialTaskGid = (potentialTaskGidMatch) ? potentialTaskGidMatch[0] : findTaskGid(input.value);
   if (potentialTaskGid) {
-    callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function (response) {
+    callAsanaApi('GET', `tasks/${potentialTaskGid}`, {}, {}, function(response) {
       potentialTask = response.data;
       populateFromTypeahead(taskGidList, workspaceGid, queryValue, potentialTask);
     });
@@ -396,7 +396,7 @@ const createSetParentDropdownContainer = function (input, taskGidList, workspace
   }
 };
 
-const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerGid) {
+const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGid) {
   const completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
   const incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
@@ -404,73 +404,74 @@ const createSiblingSubtasksDropdown = function (subtaskList, taskGid, containerG
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
     subtaskList.map(
-      subtask => `<a class="MenuItemBase-button MenuItemBase--small Menu-menuItem" ${(subtask.is_rendered_as_separator)? '': `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
-      `${(subtask.is_rendered_as_separator)? '<u>' + subtask.name + '</u>': ((subtask.gid === taskGid)? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;': (subtask.completed? completeIcon: incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
+      subtask => `<a class="MenuItemBase-button MenuItemBase--small Menu-menuItem" ${(subtask.is_rendered_as_separator) ? '' : `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
+      `${(subtask.is_rendered_as_separator) ? '<u>' + subtask.name + '</u>' : ((subtask.gid === taskGid) ? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;' : (subtask.completed ? completeIcon : incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
-  Array.from(siblingDropdown.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children).forEach(function (subtask) {
-    subtask.addEventListener('mouseover', function () {this.classList.add('is-highlighted');});
-    subtask.addEventListener('mouseout', function () {this.classList.remove('is-highlighted');});
+  Array.from(siblingDropdown.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children).forEach(function(subtask) {
+    subtask.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
+    subtask.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
   });
-  const singleTaskPane = document.querySelector('.SingleTaskPane');
-  singleTaskPane.insertBefore(siblingDropdown, singleTaskPane.firstElementChild);
+  const asanaMain = document.querySelector('#asana_main');
+  asanaMain.insertBefore(siblingDropdown, asanaMain.firstElementChild);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
-  siblingDropdown.addEventListener('click', function (event) {
+  siblingDropdown.addEventListener('click', function(event) {
     if (event.target.href) {
       openPageWithoutRefresh(event.target.href);
     } else {
       openPageWithoutRefresh(event.target.parentNode.href);
     }
+    deleteSiblingSubtasksDropdown();
   });
   document.addEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
-const deleteInContextSearchDropdownItem = function (event) {
+const deleteInContextSearchDropdownItem = function(event) {
   const inContextSearchDropdown = document.querySelector('#InContextSearch');
   if (inContextSearchDropdown && event.target.value.trim()) inContextSearchDropdown.remove();
 };
 
-const deleteProjectNamesOnTop = function () {
+const deleteProjectNamesOnTop = function() {
   const projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
   if (projectNamesOnTop) projectNamesOnTop.remove();
 };
 
-const deleteSetParentTypeaheadDropdown = function () {
+const deleteSetParentTypeaheadDropdown = function() {
   const setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
   if (setParentDropdownContainer) setParentDropdownContainer.remove();
 };
 
-const deleteSiblingButtons = function () {
+const deleteSiblingButtons = function() {
   const SiblingButtons = document.querySelector('#SiblingButtons');
   if (SiblingButtons) SiblingButtons.remove();
 };
 
-const deleteSiblingSubtasksDropdown = function () {
+const deleteSiblingSubtasksDropdown = function() {
   const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) siblingDropdown.remove();
   document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
 
-const deleteUserReplaceTextRow = function (button) {
+const deleteUserReplaceTextRow = function(button) {
   const trToDelete = button.parentNode.parentNode;
   trToDelete.remove();
 };
 
-const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
+const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
   const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) return;
   const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   const taskGid = findTaskGid(window.location.href);
   const containerGid = findProjectGid(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,is_rendered_as_separator,name'}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,is_rendered_as_separator,name'}, {}, function(response) {
     const subtaskList = response.data;
-    const subtaskListFiltered = subtaskList.filter(function (subtask) {
+    const subtaskListFiltered = subtaskList.filter(function(subtask) {
       return !subtask.is_rendered_as_separator || subtask.gid === taskGid;
     });
     const indexCurrent = subtaskListFiltered.map(subtask => subtask.gid).indexOf(taskGid);
-    const indexPrevious = (indexCurrent > 0)? indexCurrent - 1: null;
-    const indexNext = (indexCurrent < subtaskListFiltered.length - 1)? indexCurrent + 1: null;
+    const indexPrevious = (indexCurrent > 0) ? indexCurrent - 1 : null;
+    const indexNext = (indexCurrent < subtaskListFiltered.length - 1) ? indexCurrent + 1 : null;
     deleteSiblingButtons();
     const siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
@@ -483,7 +484,7 @@ const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
       divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
       siblingButtons.appendChild(divArrowPreviousSubtask);
       const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
-      if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function (event) {
+      if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function(event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}`);
         event.preventDefault();
       });
@@ -495,7 +496,7 @@ const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
     divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
     siblingButtons.appendChild(divArrowMiddleSubtask);
     const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
-    if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function (event) {
+    if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function(event) {
       createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
     });
     if (indexNext) {
@@ -504,7 +505,7 @@ const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
       divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
       siblingButtons.appendChild(divArrowNextSubtask);
       const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
-      if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function (event) {
+      if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function(event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}`);
         event.preventDefault();
       });
@@ -518,7 +519,7 @@ const displayLinksToSiblingSubtasks = function (idOfArrowToClick) {
   });
 };
 
-const displayProjectsOnTop = function () {
+const displayProjectsOnTop = function() {
   const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
   if (!taskProjectsProjectList) return;
   const taskAncestry = document.createElement('DIV');
@@ -529,7 +530,7 @@ const displayProjectsOnTop = function () {
   taskAncestry.appendChild(taskAncestryAncestorProjects);
 
   const taskGid = findTaskGid(window.location.href);
-  Array.from(taskProjectsProjectList.children).forEach(function (li) {
+  Array.from(taskProjectsProjectList.children).forEach(function(li) {
     const a = li.firstElementChild;
     const projectUrl = a.href;
     const projectGid = findProjectGid(projectUrl);
@@ -541,20 +542,20 @@ const displayProjectsOnTop = function () {
     taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
     taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
     taskAncestryAncestorProject.textContent = projectName;
-    taskAncestryAncestorProject.addEventListener('click', function (event) {
+    taskAncestryAncestorProject.addEventListener('click', function(event) {
       a.click();
       event.preventDefault();
     });
     taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
 
     // Section selectors as DOM elements are loaded later, so fetching them via API
-    callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function (response) {
+    callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function(response) {
       if (response.data.length && !response.data.map(section => section.gid).includes(taskGid)) {
         const taskAncestryAncestorProjectSectionSelector = document.createElement('A');
         taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
         taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
         taskAncestryAncestorProjects.insertBefore(taskAncestryAncestorProjectSectionSelector, taskAncestryAncestorProjects.querySelector('#Project' + projectGid).nextSibling);
-        taskAncestryAncestorProjectSectionSelector.addEventListener('click', function () {
+        taskAncestryAncestorProjectSectionSelector.addEventListener('click', function() {
           clickSectionSelector(this);
         });
       }
@@ -566,7 +567,7 @@ const displayProjectsOnTop = function () {
   if (singleTaskPaneBody) singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
-const displayReplaceDescriptionDialog = function () {
+const displayReplaceDescriptionDialog = function() {
   const replaceDescriptionDialog = document.createElement('DIV');
   replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
   replaceDescriptionDialog.setAttribute('class', 'tab-ring');
@@ -574,7 +575,7 @@ const displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
   document.querySelector('#CloseReplaceDescriptionDialogButton').addEventListener('click', closeReplaceDescriptionDialog);
-  document.querySelectorAll('.delete-row-link').forEach(link => link.addEventListener('click', function (event) {deleteUserReplaceTextRow(event.target);}));
+  document.querySelectorAll('.delete-row-link').forEach(link => link.addEventListener('click', function(event) {deleteUserReplaceTextRow(event.target);}));
   document.querySelector('#AddRowToUserReplaceTextListLink').addEventListener('click', addRowToUserReplaceTextList);
   document.querySelector('#SaveUserReplaceTextListLink').addEventListener('click', saveUserReplaceTextList);
   addRowToUserReplaceTextList();
@@ -584,7 +585,7 @@ const displayReplaceDescriptionDialog = function () {
   replaceDescriptionDialogUserButton.addEventListener('click', replaceDescriptionUserText);
   replaceDescriptionDialogPresetButton.focus();
 
-  replaceDescriptionDialog.addEventListener('keydown', function (event) {
+  replaceDescriptionDialog.addEventListener('keydown', function(event) {
     switch (event.key){
       case 'Enter':
         if (document.activeElement === replaceDescriptionDialogPresetButton) {
@@ -611,7 +612,7 @@ const displayReplaceDescriptionDialog = function () {
   });
 };
 
-const displaySetParentDrawer = function () {
+const displaySetParentDrawer = function() {
   if (document.querySelector('.SetParentDrawer')) return;
   const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body');
   if (!taskPaneBody) return;
@@ -620,19 +621,20 @@ const displaySetParentDrawer = function () {
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
   `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span id="SetParentSwitch" class="switch"></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
-  const singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
-  taskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
+  taskPaneBody.insertBefore(setParentDrawer, taskPaneBody.firstElementChild);
+  // const singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
+  // taskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
-  document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function () {
+  document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function() {
     closeSetParentDrawer();
   });
-  document.querySelector('#SetParentSwitch').addEventListener('click', function () {
+  document.querySelector('#SetParentSwitch').addEventListener('click', function() {
     toggleSetParentSwitch(this);
   });
 
   const setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
   const taskGid = findTaskGid(window.location.href);
-  callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function(response) {
     let taskGidList;
     const workspaceGid = response.data.workspace.gid;
     if (taskPaneTypeString === 'Single') {
@@ -641,8 +643,8 @@ const displaySetParentDrawer = function () {
       const taskRowHighlightedOrFocused = Array.from(document.querySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
       taskGidList = taskRowHighlightedOrFocused.map(divTaskRow => /_(\d+)/.exec(divTaskRow.children[1].children[1].children[1].id)[1]);
     }
-    ['click', 'focus', 'input'].forEach(function (e) {
-      setParentDrawerTypeaheadInput.addEventListener(e, function (event) {
+    ['click', 'focus', 'input'].forEach(function(e) {
+      setParentDrawerTypeaheadInput.addEventListener(e, function(event) {
         const that = this;
         createSetParentDropdownContainer(that, taskGidList, workspaceGid);
       });
@@ -653,53 +655,53 @@ const displaySetParentDrawer = function () {
   document.addEventListener('click', listenToClickToCloseSetParentDropdown);
 };
 
-const displaySuccessToast = function (task, messageVarTask, functionToRunCallbackAtLast) {
+const displaySuccessToast = function(task, messageVarTask, functionToRunCallbackAtLast) {
   const toastManager = document.querySelector('.ToastManager');
   if (!toastManager) return;
   const toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toast"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
-  messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed)? '✓ ': ''}${escapeHtml(task.name)}</a> `) +
+  messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed) ? '✓ ' : ''}${escapeHtml(task.name)}</a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
   const toastNotificationContent = toastDiv.firstElementChild.firstElementChild.firstElementChild;
   const toastALink = toastNotificationContent.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
-  toastALink.addEventListener('click', function (event) {
+  toastALink.addEventListener('click', function(event) {
     openPageWithoutRefresh(`https://app.asana.com/0/0/${task.gid}`);
     event.preventDefault();
   });
   const closeButton = toastNotificationContent.firstElementChild.children[1];
-  closeButton.addEventListener('click', function () {
+  closeButton.addEventListener('click', function() {
     toastDiv.remove();
   });
   const undoButton = toastNotificationContent.children[1];
-  undoButton.addEventListener('click', function () {
+  undoButton.addEventListener('click', function() {
     undoButton.outerText = locStrings['toastButtton-undoing'];
-    functionToRunCallbackAtLast(function () {
+    functionToRunCallbackAtLast(function() {
       toastDiv.remove();
     });
   });
   toastManager.appendChild(toastDiv);
-  setTimeout(function () {
+  setTimeout(function() {
     toastDiv.remove();
   }, 15000);
 };
 
-const escapeHtml = function (text) {
+const escapeHtml = function(text) {
   const map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
   };
-  return text.replace(/[&<>"']/g, function (m) {
+  return text.replace(/[&<>"']/g, function(m) {
     return map[m];
   });
 };
 
-const findProjectGid = function (url) { // gid spec might change
+const findProjectGid = function(url) { // gid spec might change
   const projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
   const findProjectGidMatch = projectGidRegexPattern.exec(url);
   if (findProjectGidMatch) return findProjectGidMatch[1];
 };
 
-const findTaskGid = function (url) { // gid spec might change
+const findTaskGid = function(url) { // gid spec might change
   const taskGidRegexPatterns = [
     /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
     /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+\/?f?/,
@@ -713,13 +715,13 @@ const findTaskGid = function (url) { // gid spec might change
   }
 };
 
-const findTeamGid = function (url) { // gid spec might change
+const findTeamGid = function(url) { // gid spec might change
   const teamGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)/;
   const findTeamGidMatch = teamGidRegexPattern.exec(url);
   if (findTeamGidMatch) return findTeamGidMatch[1];
 };
 
-const getLocaleAndSetLocalizedStrings = function () {
+const getLocaleAndSetLocalizedStrings = function() {
   let locale = 'en';
   const scriptArray = Array.from(document.scripts);
   for (let i = 0; i < scriptArray.length; i++) {
@@ -738,7 +740,7 @@ const getLocaleAndSetLocalizedStrings = function () {
   }
 };
 
-const getPlatformAndSetPlatStrings = function () {
+const getPlatformAndSetPlatStrings = function() {
   let platform = 'win';
   if (window.navigator.platform.indexOf('Mac') != -1) platform = 'mac';
   for (let key in platformStrings.win) {
@@ -750,7 +752,7 @@ const getPlatformAndSetPlatStrings = function () {
   }
 };
 
-const getTaskPaneTypeAndElement = function (subsequentClassName) {
+const getTaskPaneTypeAndElement = function(subsequentClassName) {
   const singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
   if (singleTaskPaneElement) return ['Single', singleTaskPaneElement];
   const multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
@@ -758,7 +760,7 @@ const getTaskPaneTypeAndElement = function (subsequentClassName) {
   return ['', undefined];
 };
 
-const getUserReplaceTextList = function () {
+const getUserReplaceTextList = function() {
   const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
   if (!userTextToReplaceDialogTable) return;
   const userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
@@ -771,13 +773,13 @@ const getUserReplaceTextList = function () {
   return userReplaceTextList;
 };
 
-const listenToClickOnInboxSavePrevious = function () {
-  setTimeout(function () {
+const listenToClickOnInboxSavePrevious = function() {
+  setTimeout(function() {
     const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
     if (sidebarInboxLink) {
-      sidebarInboxLink.addEventListener('click', function () {
+      sidebarInboxLink.addEventListener('click', function() {
         document.anPreviousUrl = window.location.href;
-        setTimeout(function () {
+        setTimeout(function() {
           createBackFromInboxButton();
         }, 100);
       });
@@ -785,15 +787,15 @@ const listenToClickOnInboxSavePrevious = function () {
   }, 500);
 };
 
-const listenToClickOnKeyboardShortcutList = function () {
+const listenToClickOnKeyboardShortcutList = function() {
   const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton');
-  if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function () {
-    setTimeout(function () {
+  if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function() {
+    setTimeout(function() {
       const menuItemsList = Array.from(document.querySelectorAll('.MenuItemBase-button.MenuItemBase--small.Menu-menuItem'));
       const indexKeyboardShortcuts = menuItemsList.map(menuItem => menuItem.firstElementChild.innerText).indexOf(locStrings['helpButton-keyboardShortcuts']);
       const helpButtonKeyboardShortcuts = menuItemsList[indexKeyboardShortcuts];
-      helpButtonKeyboardShortcuts.addEventListener('click', function () {
-        setTimeout(function () {
+      helpButtonKeyboardShortcuts.addEventListener('click', function() {
+        setTimeout(function() {
           addToKeyboardShortcutsList();
         }, 100);
       });
@@ -801,7 +803,7 @@ const listenToClickOnKeyboardShortcutList = function () {
   });
 };
 
-const listenToClickToCloseSetParentDropdown = function (event) {
+const listenToClickToCloseSetParentDropdown = function(event) {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
   if (setParentDrawer) {
     if (!setParentDrawer.contains(event.target)) {
@@ -810,7 +812,7 @@ const listenToClickToCloseSetParentDropdown = function (event) {
   }
 };
 
-const listenToClickToCloseSiblingSubtasksDropdown = function (event) {
+const listenToClickToCloseSiblingSubtasksDropdown = function(event) {
   const siblingButtons = document.querySelector('#SiblingButtons');
   const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) {
@@ -820,7 +822,7 @@ const listenToClickToCloseSiblingSubtasksDropdown = function (event) {
   }
 };
 
-const listenToSearchBarExpansion = function () {
+const listenToSearchBarExpansion = function() {
   const targetNode = document.querySelector('#topbar_search_input');
   if (!targetNode) return;
   const observerConfig = {attributes: true, childList: false, subtree: false};
@@ -834,24 +836,24 @@ const listenToSearchBarExpansion = function () {
   targetNode.addEventListener('input', deleteInContextSearchDropdownItem);
 };
 
-const loadUserReplaceTextList = function () {
+const loadUserReplaceTextList = function() {
   chrome.storage.sync.get({
     'anOptionsPairs': []
-  }, function (items) {
+  }, function(items) {
     document.loadedUserReplaceTextList = items.anOptionsPairs;
   });
 };
 
-const openPageWithoutRefresh = function (newUrl) {
+const openPageWithoutRefresh = function(newUrl) {
   window.history.pushState({}, '', newUrl);
   window.history.back();
-  setTimeout(function () {
+  setTimeout(function() {
     window.history.forward();
   }, 100);
 };
 
-const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function (response) {
+const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, potentialTask) {
+  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function(response) {
     const typeaheadScrollableContents = document.querySelector('.TypeaheadScrollable-contents');
     while (typeaheadScrollableContents && typeaheadScrollableContents.lastElementChild) {
       typeaheadScrollableContents.lastElementChild.remove();
@@ -865,9 +867,9 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
       const dropdownItem = document.createElement('DIV');
       dropdownItem.innerHTML = returnTypeAheadInnerHTML(response.data[i]);
       if (typeaheadScrollableContents) typeaheadScrollableContents.appendChild(dropdownItem);
-      dropdownItem.addEventListener('mouseover', function () {this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
-      dropdownItem.addEventListener('mouseout', function () {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
-      dropdownItem.addEventListener('click', function () {
+      dropdownItem.addEventListener('mouseover', function() {this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
+      dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
+      dropdownItem.addEventListener('click', function() {
         const setParentData = {'parent': response.data[i].gid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentData.insert_before = null;
@@ -887,21 +889,21 @@ const populateFromTypeahead = function (taskGidList, workspaceGid, queryValue, p
   });
 };
 
-const replaceDescription = function (replaceTextList) {
+const replaceDescription = function(replaceTextList) {
   const taskGid = findTaskGid(window.location.href);
   if (isNaN(taskGid)) return; // gid spec might change
-  callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function (response) {
+  callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function(response) {
     const htmlNotesOriginal = response.data.html_notes;
     let htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
     for (let i = 0; i < replaceTextList.length; i ++) {
       const pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0], pair[1]);
     }
-    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function (response) {
+    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function(response) {
       closeTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
-      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function (callback) {
-        callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function (response) {
+      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function(callback) {
+        callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function(response) {
           callback();
         });
       });
@@ -909,12 +911,12 @@ const replaceDescription = function (replaceTextList) {
   });
 };
 
-const replaceDescriptionPreset = function () {
+const replaceDescriptionPreset = function() {
   const replaceTextList = replaceTextListRegex.concat(replaceTextListEntity);
   replaceDescription(replaceTextList);
 };
 
-const replaceDescriptionUserText = function () {
+const replaceDescriptionUserText = function() {
   const userReplaceTextList = getUserReplaceTextList();
   for (let i = 0; i < userReplaceTextList.length; i ++) {
     try {
@@ -927,7 +929,7 @@ const replaceDescriptionUserText = function () {
         if (userTextToReplaceInput.value) {
           if (i == counter) {
             userTextToReplaceInput.classList.add('IsInvalid');
-            setTimeout(function () {
+            setTimeout(function() {
               userTextToReplaceInput.classList.remove('IsInvalid');
             }, 2000);
             throw(error);
@@ -942,7 +944,7 @@ const replaceDescriptionUserText = function () {
   } else {
     const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
     replaceDescriptionDialogUserButton.classList.add('is-disabled');
-    setTimeout(function () {
+    setTimeout(function() {
       replaceDescriptionDialogUserButton.classList.remove('is-disabled');
     }, 2000);
   }
@@ -953,7 +955,7 @@ const replaceTextListEntity = [['&Aacute;', 'Á'], ['&aacute;', 'á'], ['&Acirc;
 
 const replaceTextListRegex = [[/(?:&lt;|&quot;|')?(<a href=")(mailto:)?([A-Za-z0-9!#$%&'+,\-./:;=?@_~]+)(">)\3(<\/a>)(\?)?(?:&gt;|&quot;|')? &lt;\2?\1\2\3[\/\s]*\4\3[\/\s]*\5\6&gt;(?:&gt;|&quot;|')?/g, '$1$2$3$4$3$5$6']];
 
-const returnReplaceDescriptionInnerHTML = function () {
+const returnReplaceDescriptionInnerHTML = function() {
   return `<div>
     <div class="dialog-background"></div>
     <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
@@ -1001,21 +1003,21 @@ const returnReplaceDescriptionInnerHTML = function () {
   </div>`;
 };
 
-const returnTypeAheadInnerHTML = function (task) {
-  const parentName = (task.parent)? task.parent.name: '';
-  const projectNameList = (task.projects)? task.projects.map(a => a.name).join(', '): '';
+const returnTypeAheadInnerHTML = function(task) {
+  const parentName = (task.parent) ? task.parent.name : '';
+  const projectNameList = (task.projects) ? task.projects.map(a => a.name).join(', ') : '';
   return `<div role="option" data-task-gid="${task.gid}" title="` +
-  escapeHtml(task.name) + `${(parentName)? '&#13;‹ ' + escapeHtml(parentName): ''}` + `${(projectNameList)? '&#13;(' + escapeHtml(projectNameList) + ')': ''}` +
+  escapeHtml(task.name) + `${(parentName) ? '&#13;‹ ' + escapeHtml(parentName) : ''}` + `${(projectNameList) ? '&#13;(' + escapeHtml(projectNameList) + ')' : ''}` +
   '"><div class="TypeaheadItemStructure TypeaheadItemStructure--enabled"><div class="TypeaheadItemStructure-icon">' +
-  `${(task.completed)? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>': '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
+  `${(task.completed) ? '<svg class="Icon CheckCircleFullIcon TaskTypeaheadItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>' : '<svg class="Icon CheckCircleIcon TaskTypeaheadItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>'}` +
   `</div><div class="TypeaheadItemStructure-label"><div class="TypeaheadItemStructure-title"><span>${escapeHtml(task.name)}</span>` +
-  `${(parentName)? '<span class="TaskTypeaheadItem-parentTask">' + escapeHtml(parentName) + '</span>': ''}`+
+  `${(parentName) ? '<span class="TaskTypeaheadItem-parentTask">' + escapeHtml(parentName) + '</span>' : ''}`+
   '</div>' +
-  `${(projectNameList)? '<div class="TypeaheadItemStructure-subtitle">' + escapeHtml(projectNameList) + '</div>': ''}`+
+  `${(projectNameList) ? '<div class="TypeaheadItemStructure-subtitle">' + escapeHtml(projectNameList) + '</div>' : ''}`+
   '</div></div></div>';
 };
 
-const runOptionalFunctionsOnLoad = function () {
+const runOptionalFunctionsOnLoad = function() {
   chrome.storage.sync.get({
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
@@ -1023,7 +1025,7 @@ const runOptionalFunctionsOnLoad = function () {
     'anOptionsShortcuts': true,
     'anOptionsDescription': true,
     'anOptionsParent': true
-  }, function (items) {
+  }, function(items) {
     if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsSearch) listenToSearchBarExpansion();
@@ -1033,15 +1035,15 @@ const runOptionalFunctionsOnLoad = function () {
   });
 };
 
-const runOptionalFunctionsAfterDelay = function (delay) {
+const runOptionalFunctionsAfterDelay = function(delay) {
   chrome.storage.sync.get({
     'anOptionsInbox': true,
     'anOptionsProjects': true,
     'anOptionsSubtasks': true,
     'anOptionsDescription': true,
     'anOptionsParent': true
-  }, function (items) {
-    setTimeout(function () {
+  }, function(items) {
+    setTimeout(function() {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
       if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
@@ -1051,21 +1053,21 @@ const runOptionalFunctionsAfterDelay = function (delay) {
   });
 };
 
-const saveOriginalParents = function (taskGidList) {
+const saveOriginalParents = function(taskGidList) {
   document.anOriginalParents = {};
   const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   const taskGid = findTaskGid(window.location.href);
   if (taskGidList.length >= 2) {
     for (let i = 0; i < taskGidList.length; i++) {
-      callAsanaApi('GET', `tasks/${taskGidList[i]}`, {}, {'opt_fields': 'parent'}, function (response) {
+      callAsanaApi('GET', `tasks/${taskGidList[i]}`, {}, {'opt_fields': 'parent'}, function(response) {
         if (!response.data.parent) {
           document.anOriginalParents[i] = [null, null];
         } else {
           const originalParentGid = response.data.parent.gid;
-          callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
+          callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function(response) {
             const subtaskGidList = response.data.map(subtask => subtask.gid);
             const indexCurrent = subtaskGidList.indexOf(taskGidList[i]);
-            const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskGidList[indexCurrent - 1]: null;
+            const originalPreviousSiblingGid = (indexCurrent > 0) ? subtaskGidList[indexCurrent - 1] : null;
             document.anOriginalParents[i] = [originalParentGid, originalPreviousSiblingGid];
           });
         }
@@ -1073,10 +1075,10 @@ const saveOriginalParents = function (taskGidList) {
     }
   } else if (taskAncestryTaskLinks.length) {
     const originalParentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
-    callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function (response) {
+    callAsanaApi('GET', `tasks/${originalParentGid}/subtasks`, {}, {}, function(response) {
       const subtaskGidList = response.data.map(subtask => subtask.gid);
       const indexCurrent = subtaskGidList.indexOf(taskGid);
-      const originalPreviousSiblingGid = (indexCurrent > 0)? subtaskGidList[indexCurrent - 1]: null;
+      const originalPreviousSiblingGid = (indexCurrent > 0) ? subtaskGidList[indexCurrent - 1] : null;
       document.anOriginalParents[0] = [originalParentGid, originalPreviousSiblingGid];
     });
   } else {
@@ -1084,35 +1086,35 @@ const saveOriginalParents = function (taskGidList) {
   }
 };
 
-const saveUserReplaceTextList = function () {
+const saveUserReplaceTextList = function() {
   const userReplaceTextList = getUserReplaceTextList();
   chrome.storage.sync.set({
     'anOptionsPairs': userReplaceTextList
-  }, function () {
+  }, function() {
     document.loadedUserReplaceTextList = userReplaceTextList;
     const saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
     const savedText = '✓ ';
     saveTextLink.textContent = savedText + saveTextLink.textContent;
-    setTimeout(function () {
+    setTimeout(function() {
       saveTextLink.textContent = saveTextLink.textContent.replace(savedText, '');
     }, 2000);
   });
 };
 
-const setNewParentTask = function (taskGidList, setParentData, parentTask) {
+const setNewParentTask = function(taskGidList, setParentData, parentTask) {
   const setParentDrawer = document.querySelector('.SetParentDrawer');
   const originalParentsList = Object.values(document.anOriginalParents);
 
   let counter = 0;
-  const recursiveSetNewParent = function (path, options, data) {
-    callAsanaApi('POST', path, options, data, function (response) {
+  const recursiveSetNewParent = function(path, options, data) {
+    callAsanaApi('POST', path, options, data, function(response) {
       counter += 1;
       if (counter === taskGidList.length) {
-        displaySuccessToast(parentTask, locStrings['toastContent-setParent-var-task'], function (callback) {
+        displaySuccessToast(parentTask, locStrings['toastContent-setParent-var-task'], function(callback) {
           if (setParentData.hasOwnProperty('insert_after')) taskGidList.reverse();
           let counterUndo = 0;
-          const recursiveUndoParent = function () {
-            callAsanaApi('POST', `tasks/${taskGidList[counterUndo]}/setParent`, {}, {'parent': originalParentsList[counterUndo][0], 'insert_after': originalParentsList[counterUndo][1]}, function (response) {
+          const recursiveUndoParent = function() {
+            callAsanaApi('POST', `tasks/${taskGidList[counterUndo]}/setParent`, {}, {'parent': originalParentsList[counterUndo][0], 'insert_after': originalParentsList[counterUndo][1]}, function(response) {
               counterUndo += 1;
               if (counterUndo === taskGidList.length) {
                 callback();
@@ -1135,7 +1137,7 @@ const setNewParentTask = function (taskGidList, setParentData, parentTask) {
   closeSetParentDrawer();
 };
 
-const toggleSetParentSwitch = function (input) {
+const toggleSetParentSwitch = function(input) {
   if (input.classList.contains('checked')) {
     input.classList.remove('checked');
   } else {
@@ -1146,14 +1148,14 @@ const toggleSetParentSwitch = function (input) {
 document.tabKeyIsDown = false;
 document.tabKeyIsDownOnModal = false;
 
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', function(event) {
   switch (event.key){
     case 'Tab':
       document.tabKeyIsDown = true;
       break;
     case '/':
       if (event.metaKey || event.ctrlKey) {
-        chrome.storage.sync.get({'anOptionsShortcuts': true}, function (items) {
+        chrome.storage.sync.get({'anOptionsShortcuts': true}, function(items) {
           if (items.anOptionsShortcuts) addToKeyboardShortcutsList();
         });
       }
@@ -1194,7 +1196,7 @@ document.addEventListener('keydown', function (event) {
         break;
     case 'e':
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
-        chrome.storage.sync.get({'anOptionsDescription': true}, function (items) {
+        chrome.storage.sync.get({'anOptionsDescription': true}, function(items) {
           if (items.anOptionsDescription) {
             if (document.querySelector('#ReplaceDescriptionDialogView')) {
               closeReplaceDescriptionDialog();
@@ -1222,20 +1224,20 @@ document.addEventListener('keydown', function (event) {
       if (document.querySelector('.SetParentDrawer')) {
         closeSetParentDrawer();
       } else {
-        chrome.storage.sync.get({'anOptionsParent': true}, function (items) {
+        chrome.storage.sync.get({'anOptionsParent': true}, function(items) {
           if (items.anOptionsParent) displaySetParentDrawer();
         });
       }
       break;
     case ':':
       if (!document.tabKeyIsDown) break;
-      chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
+      chrome.storage.sync.get({'anOptionsSection': true}, function(items) {
         if (items.anOptionsSection) convertTaskAndSection();
       });
       break;
     case '*':
       if (document.tabKeyIsDown && event.code == 'Quote') {
-        chrome.storage.sync.get({'anOptionsSection': true}, function (items) {
+        chrome.storage.sync.get({'anOptionsSection': true}, function(items) {
           if (items.anOptionsSection) convertTaskAndSection();
         });
       }
@@ -1243,20 +1245,20 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-document.addEventListener('keyup', function (event) {
+document.addEventListener('keyup', function(event) {
   if (event.key === 'Tab') {
     document.tabKeyIsDown = false;
     document.tabKeyIsDownOnModal = false;
   }
 });
 
-window.addEventListener('blur', function () {
+window.addEventListener('blur', function() {
   document.tabKeyIsDown = false;
   document.tabKeyIsDownOnModal = false;
 });
 
 // First load or page reload
-window.addEventListener('load', function () {
+window.addEventListener('load', function() {
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
   loadUserReplaceTextList();
@@ -1265,7 +1267,7 @@ window.addEventListener('load', function () {
 
 // After jumping from other resources on Asana
 chrome.runtime.onMessage.addListener(
-  function (message, sender, sendResponse) {
+  function(message, sender, sendResponse) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated' && message.status === 'complete') {
       runOptionalFunctionsAfterDelay(400);
     }
