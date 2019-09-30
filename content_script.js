@@ -121,17 +121,16 @@ const addSearchDropdownShortcutInTeam = function() {
           addFilterMoreButtonA.classList.add('is-highlighted');
         }, 60);
         // I can't display the contents of "More" menu
-        return;
-        setTimeout(function() {
-          document.querySelectorAll('.MenuItemBase-button.Menu-menuItem')[0].click();
-        }, 90);
-        setTimeout(function() {
-          const searchInContextInputField = document.querySelector('.TeamFilter').firstElementChild.firstElementChild.children[1];
-          if (!searchInContextInputField) return;
-          searchInContextInputField.focus();
-          searchInContextInputField.value = fieldValue;
-          searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
-        }, 120);
+        // setTimeout(function() {
+        //   document.querySelectorAll('.MenuItemBase-button.Menu-menuItem')[0].click();
+        // }, 90);
+        // setTimeout(function() {
+        //   const searchInContextInputField = document.querySelector('.TeamFilter').firstElementChild.firstElementChild.children[1];
+        //   if (!searchInContextInputField) return;
+        //   searchInContextInputField.focus();
+        //   searchInContextInputField.value = fieldValue;
+        //   searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
+        // }, 120);
       });
     }
   });
@@ -277,11 +276,12 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
 // Works only where Tab+N is supported (project view, my tasks view, and subtask list)
 // section_migration_status is considered to be "not_migrated" at the moment
 const convertTaskAndSection = function() {
-  const focusedItemRow = document.querySelector('.ItemRow--focused');
+  const focusedItemRow = document.querySelector('.ItemRow--focused') || document.querySelector('.SpreadsheetRow--highlighted');
   if (!focusedItemRow) return;
-  const isSection = focusedItemRow.classList.contains('SectionRow');
+  const isGrid = focusedItemRow.classList.contains('SpreadsheetRow--highlighted');
+  const isSection = focusedItemRow.classList.contains('SectionRow') || focusedItemRow.classList.contains('SpreadsheetSectionRow');
   const isSubtask = focusedItemRow.classList.contains('SubtaskTaskRow') || focusedItemRow.classList.contains('SectionRow--subtask');
-  const taskTextarea = (isSection ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
+  const taskTextarea = isGrid ? (isSection ? focusedItemRow.firstElementChild.firstElementChild.children[1].children[1] : focusedItemRow.firstElementChild.firstElementChild.children[3]).children[1] : (isSection ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
   const focusedTaskGid = /_(\d+)/.exec(taskTextarea.id)[1];
   const focusedTaskName = taskTextarea.textContent;
 
@@ -332,7 +332,9 @@ const convertTaskAndSection = function() {
         // Different from the user gid
         const userTaskListGid = findProjectGid(window.location.href);
         callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
-          callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function(response) {});
+          callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function(response) {
+            if (!projectGidList.length) callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
+          });
           if (focusedTaskData.parent) {
             callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
           }
@@ -345,9 +347,6 @@ const convertTaskAndSection = function() {
                 }
               });
             }
-          } else {
-            callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
-            });
           }
         });
       }
