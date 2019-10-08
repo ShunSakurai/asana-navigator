@@ -55,10 +55,10 @@ const addSearchDropdownShortcut = function() {
   } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
     if (document.querySelector('.MyTasksPageHeader-ownAvatar')) {
       mode = 'MyTasks';
-      fieldValue = topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.children[1].textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
+      fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
     } else {
       mode = 'ThisUser';
-      fieldValue = topbarPageHeaderStructure.firstElementChild.firstElementChild.firstElementChild.children[1].textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
+      fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
     }
   } else {
     return;
@@ -1205,6 +1205,9 @@ document.addEventListener('keydown', function(event) {
           }
         });
       }
+      break;
+    case 'Escape':
+      if (document.querySelector('#SiblingSubtasksDropdownContainer')) deleteSiblingSubtasksDropdown();
       break;
     case 'i': {
       if (!document.tabKeyIsDown) break;
