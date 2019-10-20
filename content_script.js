@@ -537,7 +537,7 @@ const displayProjectsOnTop = function() {
     const projectName = a.firstElementChild.textContent;
 
     const taskAncestryAncestorProject = document.createElement('A');
-    taskAncestryAncestorProject.setAttribute('class', 'NavigationLink TaskAncestry-ancestorProject');
+    taskAncestryAncestorProject.setAttribute('class', 'ProjectLinkLabel NavigationLink TaskAncestry-ancestorProject');
     taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
     taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
     taskAncestryAncestorProject.textContent = projectName;
@@ -547,17 +547,12 @@ const displayProjectsOnTop = function() {
     });
     taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
 
-    // Section selectors as DOM elements are loaded later, so fetching them via API
-    callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function(response) {
-      if (response.data.length && !response.data.map(section => section.gid).includes(taskGid)) {
-        const taskAncestryAncestorProjectSectionSelector = document.createElement('A');
-        taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
-        taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
-        taskAncestryAncestorProjects.insertBefore(taskAncestryAncestorProjectSectionSelector, taskAncestryAncestorProjects.querySelector('#Project' + projectGid).nextSibling);
-        taskAncestryAncestorProjectSectionSelector.addEventListener('click', function() {
-          clickSectionSelector(this);
-        });
-      }
+    const taskAncestryAncestorProjectSectionSelector = document.createElement('A');
+    taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
+    taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
+    taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProjectSectionSelector);
+    taskAncestryAncestorProjectSectionSelector.addEventListener('click', function() {
+      clickSectionSelector(this);
     });
   });
   deleteProjectNamesOnTop();
@@ -659,7 +654,7 @@ const displaySuccessToast = function(task, messageVarTask, functionToRunCallback
   if (!toastManager) return;
   const toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toast"><div class="ToastNotification SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
-  messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed) ? '✓ ' : ''}${escapeHtml(task.name)}</a> `) +
+  messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}"><strong>${(task.completed) ? '✓ ' : ''}${escapeHtml(task.name)}</strong></a> `) +
     '</span></div><a class="CloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a></div>' +
     `<div class="Button Button--small Button--secondary" tabindex="0" role="button" aria-disabled="false">${locStrings['toastButtton-undo']}</div></div></div></div>`;
   const toastNotificationContent = toastDiv.firstElementChild.firstElementChild.firstElementChild;

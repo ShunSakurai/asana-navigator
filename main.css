@@ -20,6 +20,10 @@
     border-bottom: none !important;
 }
 
+.ProjectLinkLabel {
+    margin-right: 5px !important;
+}
+
 .ReplaceUserTextSection {
     max-height: 400px;
 }
