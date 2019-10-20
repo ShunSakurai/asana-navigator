@@ -635,7 +635,8 @@ const displaySetParentDrawer = function() {
       taskGidList = [taskGid];
     } else {
       const taskRowHighlightedOrFocused = Array.from(document.querySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
-      taskGidList = taskRowHighlightedOrFocused.map(divTaskRow => /_(\d+)/.exec(divTaskRow.children[1].children[1].children[1].id)[1]);
+      const spreadsheetRowsHighlighted = Array.from(document.querySelectorAll('.SpreadsheetRow--highlighted'));
+      taskGidList = (taskRowHighlightedOrFocused.length ? taskRowHighlightedOrFocused: spreadsheetRowsHighlighted).map(divTaskRow => /_(\d+)$/.exec((taskRowHighlightedOrFocused.length ? divTaskRow.children[1].children[1] : divTaskRow.firstElementChild.firstElementChild.children[3]).children[1].id)[1]);
     }
     ['click', 'focus', 'input'].forEach(function(e) {
       setParentDrawerTypeaheadInput.addEventListener(e, function(event) {
