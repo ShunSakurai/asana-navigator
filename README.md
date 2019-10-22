@@ -57,9 +57,9 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Convert multiple tasks to subtasks
 - [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/10)
 - [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
+- [ ] Support task/section conversion in the new list/board switchable projects
 - [x] Jump to sibling subtasks even when the arrows fail to be added
 - [ ] Display subtasks in calendar and/or timeline
-- [ ] Support task/section conversion in the new list/board project structure
 - [ ] Support Command/Ctrl+Shift+Up/Down arrow in the new list/board project structure
 
 ## Usage

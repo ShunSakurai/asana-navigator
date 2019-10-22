@@ -273,36 +273,75 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
   dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
 };
 
+const convertProjectSection = function(workspaceGid, projectGid, projectSectionDOM) {
+  const sectionIndex = Array.from(document.querySelectorAll('.TaskGroupHeader')).indexOf(projectSectionDOM) + 1; // The first section is "(no section)"
+  callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function(response) {
+    const projectSections = response.data;
+    const sectionGid = projectSections[sectionIndex].gid;
+    callAsanaApi('POST', 'tasks', {'name': projectSections[sectionIndex].name, 'workspace': workspaceGid}, {}, function(response) {
+      callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {}, function(response) {});
+      callAsanaApi('GET', `sections/${sectionGid}/tasks`, {}, {}, function(response) {
+        const tasksInSection = response.data;
+        let counter = 0;
+        const recursiveMoveToSection = function(path, options, data) {
+          callAsanaApi('POST', path, options, data, function(response) {
+            counter += 1;
+            if (counter == tasksInSection.length) {
+              callAsanaApi('DELETE', `sections/${sectionGid}`, {}, {}, function(response) {});
+            } else {
+              path = `tasks/${tasksInSection[counter].gid}/addProject`;
+              recursiveMoveToSection(path, options, data);
+            }
+          });
+        };
+        recursiveMoveToSection(`tasks/${tasksInSection[counter].gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {});
+      });
+    });
+  });
+};
+
 // Works only where Tab+N is supported (project view, my tasks view, and subtask list)
-// section_migration_status is considered to be "not_migrated" at the moment
 const convertTaskAndSection = function() {
+  const projectSectionDOM = document.querySelector('.TaskGroupHeader[draggable~="false"]');
+  if (projectSectionDOM) {
+    const confirmed = window.confirm('Asana Navigator: ' +
+      [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']].join(locStrings['snippet-spacing'])
+    );
+    const projectGid = findProjectGid(window.location.href);
+    callAsanaApi('GET', `projects/${projectGid}`, {opt_fields: 'workspace'}, {}, function(response) {
+      const workspaceGid = response.data.workspace.gid;
+      if (confirmed) convertProjectSection(workspaceGid, projectGid, projectSectionDOM);
+    });
+    return;
+  }
+
   const focusedItemRow = document.querySelector('.ItemRow--focused') || document.querySelector('.SpreadsheetRow--highlighted');
   if (!focusedItemRow) return;
   const isGrid = focusedItemRow.classList.contains('SpreadsheetRow--highlighted');
-  const isSection = focusedItemRow.classList.contains('SectionRow') || focusedItemRow.classList.contains('SpreadsheetSectionRow');
+  const isSeparator = focusedItemRow.classList.contains('SectionRow') || focusedItemRow.classList.contains('SpreadsheetSectionRow');
   const isSubtask = focusedItemRow.classList.contains('SubtaskTaskRow') || focusedItemRow.classList.contains('SectionRow--subtask');
-  const taskTextarea = isGrid ? (isSection ? focusedItemRow.firstElementChild.firstElementChild.children[1].children[1] : focusedItemRow.firstElementChild.firstElementChild.children[3]).children[1] : (isSection ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
-  const focusedTaskGid = /_(\d+)/.exec(taskTextarea.id)[1];
+  const taskTextarea = isGrid ? (isSeparator ? focusedItemRow.firstElementChild.firstElementChild.children[1].children[1] : focusedItemRow.firstElementChild.firstElementChild.children[3]).children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
+  const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
   const focusedTaskName = taskTextarea.textContent;
 
-  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,parent,projects.section_migration_status,subtasks,workspace'}, {}, function(response) {
+  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,parent,projects,subtasks,workspace'}, {}, function(response) {
     const focusedTaskData = response.data;
     if (focusedTaskData.subtasks.length) {
-      const returning = window.confirm(locStrings['confirmMessage-abortConvertBySubtasks']);
+      const returning = window.confirm(locStrings['confirmMessage-abortConversionWithSubtasks']);
       return;
     }
     const workspaceGid = focusedTaskData.workspace.gid;
     const focusedTaskAssigneeGid = focusedTaskData.assignee ? focusedTaskData.assignee.gid : 'null';
     const confirmed = window.confirm('Asana Navigator: ' + (
-      isSection?
-      [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']]:
+      isSeparator ?
+      [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']] :
       [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
     ).join(locStrings['snippet-spacing']));
     if (!confirmed) return;
 
     if (isSubtask) {
       const taskGid = findTaskGid(window.location.href);
-      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
         callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function(response) {
           callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
           });
@@ -314,8 +353,7 @@ const convertTaskAndSection = function() {
 
       if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
         const currentProjectGid = findProjectGid(window.location.href);
-        // if section_migration_status is "completed," the path will be: isSection ? 'tasks' : `projects/${currentProjectGid}/sections`
-        callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+        callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
           if (focusedTaskData.parent) {
             callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
           }
@@ -331,7 +369,7 @@ const convertTaskAndSection = function() {
       } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
         // Different from the user gid
         const userTaskListGid = findProjectGid(window.location.href);
-        callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSection ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+        callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
           callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function(response) {
             if (!projectGidList.length) callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
           });
@@ -691,7 +729,7 @@ const escapeHtml = function(text) {
 };
 
 const findProjectGid = function(url) { // gid spec might change
-  const projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\/\d+\/?f?/;
+  const projectGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)\//;
   const findProjectGidMatch = projectGidRegexPattern.exec(url);
   if (findProjectGidMatch) return findProjectGidMatch[1];
 };
