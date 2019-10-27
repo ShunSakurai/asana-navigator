@@ -10,8 +10,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Set up Chrome extension's content script structure
 - [x] Write base XMLHttpRequest function
 - [x] Create the icon
-
-### MVP:
+- [x] Publish on Chrome Web Store after implementing MVP features
 
 #### Putting projects on top:
 - [x] [Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)
@@ -19,53 +18,46 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 
 #### Going to sibling subtasks:
 - [x] Show arrows to go to previous/next sibling subtasks
+- [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
+- [x] Update only the right pane when navigating subtasks
+- [x] Jump to sibling subtasks even when the arrows fail to be added
 
 #### Setting new parent tasks:
 - [x] [Set new parent task from the toolbar](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/7)
+- [x] Search for task ID when the input is an integer
+- [x] Show information such as projects and completed/incomplete
+- [x] Convert multiple tasks to subtasks
 
-#### Publishing:
-- [x] Publish on Chrome Web Store
+#### Replacing text:
+- [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
+- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/6)
 
-### Later:
+#### Convecting task to section and vice versa:
+- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
+- [ ] Support task/section conversion in the new list/board switchable projects
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
 - [x] [Implement keyboard shortcut to set new parent task (Tab+G)](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/10)
-- [x] Show the new key combinations in Keyboard Shortcuts list
-
-#### Going to sibling subtasks:
-- [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
-
-#### Setting new parent tasks:
-- [x] Search for task ID when the input is an integer
-- [x] Show information such as projects and completed/incomplete
+- [x] Show additional keyboard shortcuts in the list (Cmd/Ctrl+/)
 
 #### More seamless UI:
 - [x] Display undo toast on bottom left
+- [ ] Use tool tips with black background
+- [x] Support other languages
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
-
-### Maybe later:
-- [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project, tag, user, or team in organization (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
-- [ ] Use tool tips with black background
-- [x] Update only the right pane when navigating subtasks
-- [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
-- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/6)
-- [x] Support other languages
 - [x] Implement donation button
-- [x] Convert multiple tasks to subtasks
+- [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project, tag, user, or team in organization (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
 - [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/10)
-- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
-- [ ] Support task/section conversion in the new list/board switchable projects
-- [x] Jump to sibling subtasks even when the arrows fail to be added
 - [ ] Display subtasks in calendar and/or timeline
 - [ ] Support Command/Ctrl+Shift+Up/Down arrow in the new list/board project structure
 
 ## Usage
 
 - Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne)
-- You can also `git clone` this repository and load the folder to Google Chrome to install it as a developer
+- You can also `git clone` this repository (or download the repository as a zip file) and load the folder to Google Chrome to install it as a developer
 - The features are automatically enabled when you are on an Asana task page. Please reload the Asana task page if this extension doesn't work well.
 - Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
 
