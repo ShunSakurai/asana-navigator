@@ -274,27 +274,72 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
 };
 
 const convertProjectSection = function(workspaceGid, projectGid, projectSectionDOM) {
-  const sectionIndex = Array.from(document.querySelectorAll('.TaskGroupHeader')).indexOf(projectSectionDOM) + 1; // The first section is "(no section)"
+  const taskGroupHeaders = Array.from(document.querySelectorAll('.TaskGroupHeader'));
   callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function(response) {
     const projectSections = response.data;
+    const sectionIndex = taskGroupHeaders.indexOf(projectSectionDOM) + (projectSections.length - taskGroupHeaders.length); // The first section might be "(no section)"
     const sectionGid = projectSections[sectionIndex].gid;
-    callAsanaApi('POST', 'tasks', {'name': projectSections[sectionIndex].name, 'workspace': workspaceGid}, {}, function(response) {
+    callAsanaApi('POST', 'tasks', {'name': projectSections[sectionIndex].name.replace(/[:：]+$/, ''), 'workspace': workspaceGid}, {}, function(response) {
       callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {}, function(response) {});
       callAsanaApi('GET', `sections/${sectionGid}/tasks`, {}, {}, function(response) {
         const tasksInSection = response.data;
-        let counter = 0;
-        const recursiveMoveToSection = function(path, options, data) {
-          callAsanaApi('POST', path, options, data, function(response) {
-            counter += 1;
-            if (counter == tasksInSection.length) {
-              callAsanaApi('DELETE', `sections/${sectionGid}`, {}, {}, function(response) {});
-            } else {
-              path = `tasks/${tasksInSection[counter].gid}/addProject`;
-              recursiveMoveToSection(path, options, data);
-            }
-          });
-        };
-        recursiveMoveToSection(`tasks/${tasksInSection[counter].gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {});
+        if (tasksInSection.length == 0) {
+          callAsanaApi('DELETE', `sections/${sectionGid}`, {}, {}, function(response) {});
+        } else {
+          let counter = 0;
+          const recursiveMoveToSection = function(path, options, data) {
+            callAsanaApi('POST', path, options, data, function(response) {
+              counter += 1;
+              if (counter == tasksInSection.length) {
+                callAsanaApi('DELETE', `sections/${sectionGid}`, {}, {}, function(response) {});
+              } else {
+                path = `tasks/${tasksInSection[counter].gid}/addProject`;
+                recursiveMoveToSection(path, options, data);
+              }
+            });
+          };
+          recursiveMoveToSection(`tasks/${tasksInSection[counter].gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {});
+        }
+      });
+    });
+  });
+};
+
+const convertProjectTask = function(focusedTaskData) {
+  const focusedTaskGid = focusedTaskData.gid;
+  const focusedTaskName = focusedTaskData.name;
+  const currentProjectGid = findProjectGid(window.location.href);
+  const currentSectionGid = focusedTaskData.memberships.filter(membership => membership.project.gid == currentProjectGid)[0].section.gid;
+  callAsanaApi('GET', `sections/${currentSectionGid}/tasks`, {}, {}, function(response) {
+    const tasksInSection = response.data;
+    let indexInSection;
+    for (let i = 0; i < tasksInSection.length; i++) {
+      if (tasksInSection[i].gid == focusedTaskGid) {
+        indexInSection = i;
+        break;
+      }
+    }
+    const tasksToMove = tasksInSection.slice(indexInSection + 1);
+    callAsanaApi('POST', `projects/${currentProjectGid}/sections`, {'name': (focusedTaskName.replace(/[:：]+$/, '') + ':')}, {}, function(response) {
+      const newSectionGid = response.data.gid;
+      callAsanaApi('POST', `projects/${currentProjectGid}/sections/insert`, {'section': newSectionGid, 'after_section': currentSectionGid}, {}, function(response) {
+        if (tasksToMove.length == 0) {
+          callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
+        } else {
+          let counter = 0;
+          const recursiveMoveToSection = function(path, options, data) {
+            callAsanaApi('POST', path, options, data, function(response) {
+              counter += 1;
+              if (counter == tasksToMove.length) {
+                callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
+              } else {
+                path = `tasks/${tasksToMove[counter].gid}/addProject`;
+                recursiveMoveToSection(path, options, data);
+              }
+            });
+          };
+          recursiveMoveToSection(`tasks/${tasksToMove[counter].gid}/addProject`, {'section': newSectionGid, 'project': currentProjectGid}, {});
+        }
       });
     });
   });
@@ -304,7 +349,8 @@ const convertProjectSection = function(workspaceGid, projectGid, projectSectionD
 const convertTaskAndSection = function() {
   const projectSectionDOM = document.querySelector('.TaskGroupHeader[draggable~="false"]');
   if (projectSectionDOM) {
-    const confirmed = window.confirm('Asana Navigator: ' +
+    const confirmed = window.confirm(
+      'Asana Navigator: ' +
       [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']].join(locStrings['snippet-spacing'])
     );
     const projectGid = findProjectGid(window.location.href);
@@ -315,79 +361,70 @@ const convertTaskAndSection = function() {
     return;
   }
 
-  const focusedItemRow = document.querySelector('.ItemRow--focused') || document.querySelector('.SpreadsheetRow--highlighted');
-  if (!focusedItemRow) return;
-  const isGrid = focusedItemRow.classList.contains('SpreadsheetRow--highlighted');
-  const isSeparator = focusedItemRow.classList.contains('SectionRow') || focusedItemRow.classList.contains('SpreadsheetSectionRow');
-  const isSubtask = focusedItemRow.classList.contains('SubtaskTaskRow') || focusedItemRow.classList.contains('SectionRow--subtask');
-  const taskTextarea = isGrid ? (isSeparator ? focusedItemRow.firstElementChild.firstElementChild.children[1].children[1] : focusedItemRow.firstElementChild.firstElementChild.children[3]).children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
-  const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
-  const focusedTaskName = taskTextarea.textContent;
+  const focusedItemRow = document.querySelector('.ItemRow--focused') || document.querySelector('.SpreadsheetRow--highlighted')|| document.querySelector('.SpreadsheetRow--withShadedBackground');
+  if (!focusedItemRow) {
+    const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
+    return;
+  }
+  const isProjectTask = !focusedItemRow.classList.contains('ItemRow--focused');
+  const isMultiple = (document.querySelectorAll('.ItemRow--focused, .ItemRow--highlighted').length + document.querySelectorAll('.SpreadsheetRow--highlighted').length + document.querySelectorAll('.SpreadsheetRow--withShadedBackground').length) > 1;
+  const isSeparator = focusedItemRow.classList.contains('SectionRow');
 
-  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,parent,projects,subtasks,workspace'}, {}, function(response) {
+  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
+  if (!isSeparator && !topbarPageHeaderStructure.classList.contains('ProjectPageHeader') && !topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
+    const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
+    return;
+  }
+  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
+  const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
+
+  callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,memberships.(project|section),name,parent,projects,subtasks,workspace'}, {}, function(response) {
     const focusedTaskData = response.data;
+    const focusedTaskAssigneeGid = focusedTaskData.assignee ? focusedTaskData.assignee.gid : null;
+    const focusedTaskName = focusedTaskData.name;
+    const focusedTaskParentGid = focusedTaskData.parent ? focusedTaskData.parent.gid : null;
+    const workspaceGid = focusedTaskData.workspace.gid;
+
     if (focusedTaskData.subtasks.length) {
       const returning = window.confirm(locStrings['confirmMessage-abortConversionWithSubtasks']);
       return;
     }
-    const workspaceGid = focusedTaskData.workspace.gid;
-    const focusedTaskAssigneeGid = focusedTaskData.assignee ? focusedTaskData.assignee.gid : 'null';
-    const confirmed = window.confirm('Asana Navigator: ' + (
-      isSeparator ?
-      [locStrings['confirmMessage-convertToTask'], locStrings['snippet-continue']] :
-      [locStrings['confirmMessage-convertToSection'], locStrings['confirmMessage-deleteInformation'], locStrings['confirmMessage-taskIdChanged'], locStrings['snippet-continue']]
-    ).join(locStrings['snippet-spacing']));
+
+    const confirmed = window.confirm(
+      'Asana Navigator: ' +
+      (isSeparator ? locStrings['confirmMessage-convertToTask'] : locStrings['confirmMessage-convertToSection']) + '\n' +
+      (isMultiple ? locStrings['confirmMessage-multipleTasks'] + '\n' : '') +
+      ((isProjectTask && (focusedTaskAssigneeGid || focusedTaskParentGid)) ? locStrings['confirmMessage-taskInProject'] + '\n' : '') +
+      ((!isProjectTask && response.data.projects.length) ? locStrings['confirmMessage-taskNotInProject'] + '\n' : '') +
+      (isSeparator ? '' : (locStrings['confirmMessage-deleteInformation'] + '\n' + locStrings['confirmMessage-taskIdChanged'] + '\n')) +
+      locStrings['snippet-continue']
+    );
     if (!confirmed) return;
 
-    if (isSubtask) {
-      const taskGid = findTaskGid(window.location.href);
-      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
-        callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': taskGid}, {}, function(response) {
-          callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
-          });
-        });
-      });
+    if (isProjectTask) {
+      convertProjectTask(focusedTaskData);
     } else {
-      const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-      const projectGidList = focusedTaskData.projects.map(project => project.gid);
-
-      if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
-        const currentProjectGid = findProjectGid(window.location.href);
-        callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid, 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
-          if (focusedTaskData.parent) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
-          }
-          for (let i = 0; i < projectGidList.length; i++) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function(response) {
-              if (i === projectGidList.length - 1) {
-                callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
+      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid ? focusedTaskAssigneeGid : 'null', 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+        const newTaskGid = response.data.gid;
+        if (focusedTaskAssigneeGid) {
+          callAsanaApi('GET', `users/${focusedTaskAssigneeGid}/user_task_list`, {'workspace': workspaceGid}, {}, function(response) {
+            const userTaskListGid = response.data.gid;
+            callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': newTaskGid}, function(response) {
+              if (focusedTaskParentGid) {
+                callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskParentGid}, {}, function(response) {
+                    callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
                 });
+              } else {
+                callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
               }
             });
-          }
-        });
-      } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
-        // Different from the user gid
-        const userTaskListGid = findProjectGid(window.location.href);
-        callAsanaApi('POST', 'tasks', {'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
-          callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': response.data.gid}, function(response) {
-            if (!projectGidList.length) callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
           });
-          if (focusedTaskData.parent) {
-            callAsanaApi('POST', `tasks/${response.data.gid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskData.parent.gid}, {}, function(response) {});
-          }
-          if (projectGidList.length) {
-            for (let i = 0; i < projectGidList.length; i++) {
-              callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'insert_after': focusedTaskGid, 'project': projectGidList[i]}, {}, function(response) {
-                if (i === projectGidList.length - 1) {
-                  callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {
-                  });
-                }
-              });
-            }
-          }
-        });
-      }
+        } else if (focusedTaskParentGid) {
+          callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskParentGid}, {}, function(response) {
+              callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
+          });
+        }
+      });
     }
   });
 };
@@ -674,7 +711,7 @@ const displaySetParentDrawer = function() {
     } else {
       const taskRowHighlightedOrFocused = Array.from(document.querySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
       const spreadsheetRowsHighlighted = Array.from(document.querySelectorAll('.SpreadsheetRow--highlighted'));
-      taskGidList = (taskRowHighlightedOrFocused.length ? taskRowHighlightedOrFocused: spreadsheetRowsHighlighted).map(divTaskRow => /_(\d+)$/.exec((taskRowHighlightedOrFocused.length ? divTaskRow.children[1].children[1] : divTaskRow.firstElementChild.firstElementChild.children[3]).children[1].id)[1]);
+      taskGidList = (taskRowHighlightedOrFocused.length ? taskRowHighlightedOrFocused : spreadsheetRowsHighlighted).map(divTaskRow => /_(\d+)$/.exec((taskRowHighlightedOrFocused.length ? divTaskRow.children[1].children[1] : divTaskRow.firstElementChild.firstElementChild.children[3]).children[1].id)[1]);
     }
     ['click', 'focus', 'input'].forEach(function(e) {
       setParentDrawerTypeaheadInput.addEventListener(e, function(event) {

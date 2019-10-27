@@ -33,8 +33,8 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/6)
 
 #### Convecting task to section and vice versa:
-- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207) -- [Watch it in action](https://www.youtube.com/watch?v=4V_4FtMLZZk)
-- [ ] Support task/section conversion in the new list/board switchable projects
+- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207)
+- [x] Support task/section conversion in the new list/board switchable projects -- [Watch it in action](https://youtu.be/BJz_p7d-WAE)
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
