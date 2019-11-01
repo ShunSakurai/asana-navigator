@@ -1,3 +1,5 @@
+(function() {
+
 const addReplaceDescriptionToExtraActions = function() {
   const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
@@ -1347,3 +1349,5 @@ chrome.runtime.onMessage.addListener(
       runOptionalFunctionsAfterDelay(400);
     }
 });
+
+})();

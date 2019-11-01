@@ -1,3 +1,5 @@
+(function() {
+
 const saveOptions = function () {
   const inboxEnabled = document.getElementById('inbox').checked;
   const projectsEnabled = document.getElementById('projects').checked;
@@ -49,3 +51,5 @@ const loadOptions = function () {
 
 document.addEventListener('DOMContentLoaded', loadOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
+
+})();
