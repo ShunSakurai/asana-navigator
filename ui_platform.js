@@ -1,11 +1,11 @@
 const platformStrings = {
-  'mac': {
-    'shift': '⇧',
-    'sep': ''
+  mac: {
+    shift: '⇧',
+    sep: ''
   },
-  'win': {
-    'shift': 'Shift',
-    'sep': '+'
+  win: {
+    shift: 'Shift',
+    sep: '+'
   }
 };
 

@@ -2,7 +2,7 @@
 // The UI strings shouldn't include HTML special characters to prevent XSS vulnerability
 
 const localizationStrings = {
-  'de': {
+  de: {
     'arrowTitle-subtasksDropdown': 'Unteraufgaben',
     'dialogMessage-visitReference-var-link': 'Bitte verwenden Sie das {link}, um mehr zu erfahren.',
     'drawerLabel-setParent': 'Machen Sie diese Aufgabe zu einer Unteraufgabe einer anderen Aufgabe.',
@@ -19,7 +19,7 @@ const localizationStrings = {
     'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'Keine Übereinstimmungen gefunden',
   },
-  'en': {
+  en: {
     // Commenting the same or relevant UI from translations/en.bundle.js
     'arrowTitle-nextSubtask': 'Next subtask',
     'arrowTitle-previousSubtask': 'Previous subtask',
@@ -75,7 +75,7 @@ const localizationStrings = {
     'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks ', // "31yy2c":[1,"{nameOrEmail}’s Tasks - {domainName}"]
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
-  'es': {
+  es: {
     'arrowTitle-subtasksDropdown': 'Subtareas',
     'dialogMessage-visitReference-var-link': 'Por favor visita la {link} para más información.',
     'drawerLabel-setParent': 'Transformar esta tarea en una subtarea de otra tarea.',
@@ -92,7 +92,7 @@ const localizationStrings = {
     'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'No se encontraron coincidencias',
   },
-  'fr': {
+  fr: {
     'arrowTitle-subtasksDropdown': 'Sous-tâches',
     'dialogMessage-visitReference-var-link': 'Veuillez consulter le {link} pour plus d\'informations.',
     'drawerLabel-setParent': 'Transformez cette tâche en sous-tâche d\'une autre tâche.',
@@ -109,7 +109,7 @@ const localizationStrings = {
     'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} ',
     'typeaheadItem-NoMatch': 'Aucune correspondance',
   },
-  'ja': {
+  ja: {
     'arrowTitle-nextSubtask': '次のサブタスク',
     'arrowTitle-previousSubtask': '前のサブタスク',
     'arrowTitle-subtasksDropdown': '前後のサブタスク', // translating differently
@@ -164,7 +164,7 @@ const localizationStrings = {
     'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail} のタスク',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
-  'pt': {
+  pt: {
     'arrowTitle-subtasksDropdown': 'Subtarefas',
     'dialogMessage-visitReference-var-link': 'Visite o {link} para mais informações.',
     'drawerLabel-setParent': 'Tornar esta uma subtarefa de outra tarefa.',

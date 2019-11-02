@@ -81,10 +81,6 @@ const addSearchDropdownShortcut = function() {
         setTimeout(function() {
           const addFilterTagsButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-tags'])[0].parentNode;
           addFilterTagsButtonA.classList.add('is-highlighted');
-          // none of these commented out lines work:
-          // addFilterTagsButtonA.parentNode.dispatchEvent(new Event('mouseenter'));
-          // document.dispatchEvent(new Event('keydown', {'code': 'ArrowDown', 'key': 'ArrowDown', 'charCode': 40, 'keyCode': 40, 'which': 40}));
-          // document.dispatchEvent(new Event('keyup', {'code': 'ArrowDown', 'key': 'ArrowDown', 'charCode': 40, 'keyCode': 40, 'which': 40}));
         }, 70);
         // need to click the third button
         return;
@@ -94,7 +90,7 @@ const addSearchDropdownShortcut = function() {
         if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
-        searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
+        searchInContextInputField.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, target: searchInContextInputField}));
       }, 100);
     });
   }, 200);
@@ -123,16 +119,6 @@ const addSearchDropdownShortcutInTeam = function() {
           addFilterMoreButtonA.classList.add('is-highlighted');
         }, 60);
         // I can't display the contents of "More" menu
-        // setTimeout(function() {
-        //   document.querySelectorAll('.MenuItemBase-button.Menu-menuItem')[0].click();
-        // }, 90);
-        // setTimeout(function() {
-        //   const searchInContextInputField = document.querySelector('.TeamFilter').firstElementChild.firstElementChild.children[1];
-        //   if (!searchInContextInputField) return;
-        //   searchInContextInputField.focus();
-        //   searchInContextInputField.value = fieldValue;
-        //   searchInContextInputField.dispatchEvent(new Event('input', {'bubbles': true, 'cancelable': true, 'target': searchInContextInputField}));
-        // }, 120);
       });
     }
   });
@@ -200,7 +186,7 @@ const callAsanaApi = function(request, path, options, data, callback) {
   const client_name = ['chrome-extension', manifest.version, manifest.name].join(':'); // Be polite to Asana API
   let requestData;
   if (request === 'POST' || request === 'PUT') {
-    requestData = JSON.stringify({'data': data});
+    requestData = JSON.stringify({data: data});
     options.client_name = client_name;
   } else {
     options.opt_client_name = client_name;
@@ -281,8 +267,8 @@ const convertProjectSection = function(workspaceGid, projectGid, projectSectionD
     const projectSections = response.data;
     const sectionIndex = taskGroupHeaders.indexOf(projectSectionDOM) + (projectSections.length - taskGroupHeaders.length); // The first section might be "(no section)"
     const sectionGid = projectSections[sectionIndex].gid;
-    callAsanaApi('POST', 'tasks', {'name': projectSections[sectionIndex].name.replace(/[:：]+$/, ''), 'workspace': workspaceGid}, {}, function(response) {
-      callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {}, function(response) {});
+    callAsanaApi('POST', 'tasks', {name: projectSections[sectionIndex].name.replace(/[:：]+$/, ''), workspace: workspaceGid}, {}, function(response) {
+      callAsanaApi('POST', `tasks/${response.data.gid}/addProject`, {section: projectSections[sectionIndex - 1].gid, project: projectGid}, {}, function(response) {});
       callAsanaApi('GET', `sections/${sectionGid}/tasks`, {}, {}, function(response) {
         const tasksInSection = response.data;
         if (tasksInSection.length == 0) {
@@ -300,7 +286,7 @@ const convertProjectSection = function(workspaceGid, projectGid, projectSectionD
               }
             });
           };
-          recursiveMoveToSection(`tasks/${tasksInSection[counter].gid}/addProject`, {'section': projectSections[sectionIndex - 1].gid, 'project': projectGid}, {});
+          recursiveMoveToSection(`tasks/${tasksInSection[counter].gid}/addProject`, {section: projectSections[sectionIndex - 1].gid, project: projectGid}, {});
         }
       });
     });
@@ -322,9 +308,9 @@ const convertProjectTask = function(focusedTaskData) {
       }
     }
     const tasksToMove = tasksInSection.slice(indexInSection + 1);
-    callAsanaApi('POST', `projects/${currentProjectGid}/sections`, {'name': (focusedTaskName.replace(/[:：]+$/, '') + ':')}, {}, function(response) {
+    callAsanaApi('POST', `projects/${currentProjectGid}/sections`, {name: (focusedTaskName.replace(/[:：]+$/, '') + ':')}, {}, function(response) {
       const newSectionGid = response.data.gid;
-      callAsanaApi('POST', `projects/${currentProjectGid}/sections/insert`, {'section': newSectionGid, 'after_section': currentSectionGid}, {}, function(response) {
+      callAsanaApi('POST', `projects/${currentProjectGid}/sections/insert`, {section: newSectionGid, after_section: currentSectionGid}, {}, function(response) {
         if (tasksToMove.length == 0) {
           callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
         } else {
@@ -340,7 +326,7 @@ const convertProjectTask = function(focusedTaskData) {
               }
             });
           };
-          recursiveMoveToSection(`tasks/${tasksToMove[counter].gid}/addProject`, {'section': newSectionGid, 'project': currentProjectGid}, {});
+          recursiveMoveToSection(`tasks/${tasksToMove[counter].gid}/addProject`, {section: newSectionGid, project: currentProjectGid}, {});
         }
       });
     });
@@ -406,14 +392,14 @@ const convertTaskAndSection = function() {
     if (isProjectTask) {
       convertProjectTask(focusedTaskData);
     } else {
-      callAsanaApi('POST', 'tasks', {'assignee': focusedTaskAssigneeGid ? focusedTaskAssigneeGid : 'null', 'name': (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), 'workspace': workspaceGid}, {}, function(response) {
+      callAsanaApi('POST', 'tasks', {assignee: focusedTaskAssigneeGid ? focusedTaskAssigneeGid : 'null', name: (focusedTaskName.replace(/[:：]+$/, '') + (isSeparator ? '' : ':')), workspace: workspaceGid}, {}, function(response) {
         const newTaskGid = response.data.gid;
         if (focusedTaskAssigneeGid) {
-          callAsanaApi('GET', `users/${focusedTaskAssigneeGid}/user_task_list`, {'workspace': workspaceGid}, {}, function(response) {
+          callAsanaApi('GET', `users/${focusedTaskAssigneeGid}/user_task_list`, {workspace: workspaceGid}, {}, function(response) {
             const userTaskListGid = response.data.gid;
-            callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {'insert_after': focusedTaskGid, 'task': newTaskGid}, function(response) {
+            callAsanaApi('POST', `user_task_lists/${userTaskListGid}/tasks/insert`, {}, {insert_after: focusedTaskGid, task: newTaskGid}, function(response) {
               if (focusedTaskParentGid) {
-                callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskParentGid}, {}, function(response) {
+                callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {insert_after: focusedTaskGid, parent: focusedTaskParentGid}, {}, function(response) {
                     callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
                 });
               } else {
@@ -422,7 +408,7 @@ const convertTaskAndSection = function() {
             });
           });
         } else if (focusedTaskParentGid) {
-          callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {'insert_after': focusedTaskGid, 'parent': focusedTaskParentGid}, {}, function(response) {
+          callAsanaApi('POST', `tasks/${newTaskGid}/setParent`, {insert_after: focusedTaskGid, parent: focusedTaskParentGid}, {}, function(response) {
               callAsanaApi('DELETE', `tasks/${focusedTaskGid}`, {}, {}, function(response) {});
           });
         }
@@ -540,7 +526,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
   const taskGid = findTaskGid(window.location.href);
   const containerGid = findProjectGid(window.location.href) || '0';
 
-  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {'opt_fields': 'completed,is_rendered_as_separator,name'}, {}, function(response) {
+  callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {opt_fields: 'completed,is_rendered_as_separator,name'}, {}, function(response) {
     const subtaskList = response.data;
     const subtaskListFiltered = subtaskList.filter(function(subtask) {
       return !subtask.is_rendered_as_separator || subtask.gid === taskGid;
@@ -910,7 +896,7 @@ const listenToSearchBarExpansion = function() {
 
 const loadUserReplaceTextList = function() {
   chrome.storage.sync.get({
-    'anOptionsPairs': []
+    anOptionsPairs: []
   }, function(items) {
     document.loadedUserReplaceTextList = items.anOptionsPairs;
   });
@@ -925,7 +911,7 @@ const openPageWithoutRefresh = function(newUrl) {
 };
 
 const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, potentialTask) {
-  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {'type': 'task','query': queryValue, 'opt_fields': 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function(response) {
+  callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {type: 'task',query: queryValue, opt_fields: 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function(response) {
     const typeaheadScrollableContents = document.querySelector('.TypeaheadScrollable-contents');
     while (typeaheadScrollableContents && typeaheadScrollableContents.lastElementChild) {
       typeaheadScrollableContents.lastElementChild.remove();
@@ -942,7 +928,7 @@ const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, po
       dropdownItem.addEventListener('mouseover', function() {this.firstElementChild.firstElementChild.classList.add('TypeaheadItemStructure--highlighted');});
       dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
       dropdownItem.addEventListener('click', function() {
-        const setParentData = {'parent': response.data[i].gid};
+        const setParentData = {parent: response.data[i].gid};
         if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
           setParentData.insert_before = null;
         } else {
@@ -964,18 +950,18 @@ const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, po
 const replaceDescription = function(replaceTextList) {
   const taskGid = findTaskGid(window.location.href);
   if (isNaN(taskGid)) return; // gid spec might change
-  callAsanaApi('GET', `tasks/${taskGid}`, {'opt_fields': 'html_notes'}, {}, function(response) {
+  callAsanaApi('GET', `tasks/${taskGid}`, {opt_fields: 'html_notes'}, {}, function(response) {
     const htmlNotesOriginal = response.data.html_notes;
     let htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
     for (let i = 0; i < replaceTextList.length; i ++) {
       const pair = replaceTextList[i];
       htmlNotes = htmlNotes.replace(pair[0], pair[1]);
     }
-    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': '<body>' + htmlNotes + '</body>'}, function(response) {
+    callAsanaApi('PUT', `tasks/${taskGid}`, {}, {html_notes: '<body>' + htmlNotes + '</body>'}, function(response) {
       closeTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
       displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function(callback) {
-        callAsanaApi('PUT', `tasks/${taskGid}`, {}, {'html_notes': htmlNotesOriginal}, function(response) {
+        callAsanaApi('PUT', `tasks/${taskGid}`, {}, {html_notes: htmlNotesOriginal}, function(response) {
           callback();
         });
       });
@@ -1091,12 +1077,12 @@ const returnTypeAheadInnerHTML = function(task) {
 
 const runOptionalFunctionsOnLoad = function() {
   chrome.storage.sync.get({
-    'anOptionsProjects': true,
-    'anOptionsSubtasks': true,
-    'anOptionsSearch': true,
-    'anOptionsShortcuts': true,
-    'anOptionsDescription': true,
-    'anOptionsParent': true
+    anOptionsProjects: true,
+    anOptionsSubtasks: true,
+    anOptionsSearch: true,
+    anOptionsShortcuts: true,
+    anOptionsDescription: true,
+    anOptionsParent: true
   }, function(items) {
     if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
@@ -1109,11 +1095,11 @@ const runOptionalFunctionsOnLoad = function() {
 
 const runOptionalFunctionsAfterDelay = function(delay) {
   chrome.storage.sync.get({
-    'anOptionsInbox': true,
-    'anOptionsProjects': true,
-    'anOptionsSubtasks': true,
-    'anOptionsDescription': true,
-    'anOptionsParent': true
+    anOptionsInbox: true,
+    anOptionsProjects: true,
+    anOptionsSubtasks: true,
+    anOptionsDescription: true,
+    anOptionsParent: true
   }, function(items) {
     setTimeout(function() {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
@@ -1131,7 +1117,7 @@ const saveOriginalParents = function(taskGidList) {
   const taskGid = findTaskGid(window.location.href);
   if (taskGidList.length >= 2) {
     for (let i = 0; i < taskGidList.length; i++) {
-      callAsanaApi('GET', `tasks/${taskGidList[i]}`, {}, {'opt_fields': 'parent'}, function(response) {
+      callAsanaApi('GET', `tasks/${taskGidList[i]}`, {}, {opt_fields: 'parent'}, function(response) {
         if (!response.data.parent) {
           document.anOriginalParents[i] = [null, null];
         } else {
@@ -1161,7 +1147,7 @@ const saveOriginalParents = function(taskGidList) {
 const saveUserReplaceTextList = function() {
   const userReplaceTextList = getUserReplaceTextList();
   chrome.storage.sync.set({
-    'anOptionsPairs': userReplaceTextList
+    anOptionsPairs: userReplaceTextList
   }, function() {
     document.loadedUserReplaceTextList = userReplaceTextList;
     const saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
@@ -1186,7 +1172,7 @@ const setNewParentTask = function(taskGidList, setParentData, parentTask) {
           if (setParentData.hasOwnProperty('insert_after')) taskGidList.reverse();
           let counterUndo = 0;
           const recursiveUndoParent = function() {
-            callAsanaApi('POST', `tasks/${taskGidList[counterUndo]}/setParent`, {}, {'parent': originalParentsList[counterUndo][0], 'insert_after': originalParentsList[counterUndo][1]}, function(response) {
+            callAsanaApi('POST', `tasks/${taskGidList[counterUndo]}/setParent`, {}, {parent: originalParentsList[counterUndo][0], insert_after: originalParentsList[counterUndo][1]}, function(response) {
               counterUndo += 1;
               if (counterUndo === taskGidList.length) {
                 callback();
@@ -1229,7 +1215,7 @@ document.addEventListener('keydown', function(event) {
       break;
     case '/':
       if (event.metaKey || event.ctrlKey) {
-        chrome.storage.sync.get({'anOptionsShortcuts': true}, function(items) {
+        chrome.storage.sync.get({anOptionsShortcuts: true}, function(items) {
           if (items.anOptionsShortcuts) addToKeyboardShortcutsList();
         });
       }
@@ -1270,7 +1256,7 @@ document.addEventListener('keydown', function(event) {
         break;
     case 'e':
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
-        chrome.storage.sync.get({'anOptionsDescription': true}, function(items) {
+        chrome.storage.sync.get({anOptionsDescription: true}, function(items) {
           if (items.anOptionsDescription) {
             if (document.querySelector('#ReplaceDescriptionDialogView')) {
               closeReplaceDescriptionDialog();
@@ -1301,20 +1287,20 @@ document.addEventListener('keydown', function(event) {
       if (document.querySelector('.SetParentDrawer')) {
         closeSetParentDrawer();
       } else {
-        chrome.storage.sync.get({'anOptionsParent': true}, function(items) {
+        chrome.storage.sync.get({anOptionsParent: true}, function(items) {
           if (items.anOptionsParent) displaySetParentDrawer();
         });
       }
       break;
     case ':':
       if (!document.tabKeyIsDown) break;
-      chrome.storage.sync.get({'anOptionsSection': true}, function(items) {
+      chrome.storage.sync.get({anOptionsSection: true}, function(items) {
         if (items.anOptionsSection) convertTaskAndSection();
       });
       break;
     case '*':
       if (document.tabKeyIsDown && event.code == 'Quote') {
-        chrome.storage.sync.get({'anOptionsSection': true}, function(items) {
+        chrome.storage.sync.get({anOptionsSection: true}, function(items) {
           if (items.anOptionsSection) convertTaskAndSection();
         });
       }

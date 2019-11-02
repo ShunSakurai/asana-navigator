@@ -10,14 +10,14 @@ const saveOptions = function () {
   const parentEnabled = document.getElementById('parent').checked;
   const sectionEnabled = document.getElementById('section').checked;
   chrome.storage.sync.set({
-    'anOptionsInbox': inboxEnabled,
-    'anOptionsProjects': projectsEnabled,
-    'anOptionsSubtasks': subtasksEnabled,
-    'anOptionsSearch': searchEnabled,
-    'anOptionsShortcuts': shortcutsEnabled,
-    'anOptionsDescription': descriptionEnabled,
-    'anOptionsParent': parentEnabled,
-    'anOptionsSection': sectionEnabled
+    anOptionsInbox: inboxEnabled,
+    anOptionsProjects: projectsEnabled,
+    anOptionsSubtasks: subtasksEnabled,
+    anOptionsSearch: searchEnabled,
+    anOptionsShortcuts: shortcutsEnabled,
+    anOptionsDescription: descriptionEnabled,
+    anOptionsParent: parentEnabled,
+    anOptionsSection: sectionEnabled
   }, function () {
     const status = document.getElementById('status');
     status.textContent = 'Options saved';
@@ -29,14 +29,14 @@ const saveOptions = function () {
 
 const loadOptions = function () {
   chrome.storage.sync.get({
-    'anOptionsInbox': true,
-    'anOptionsProjects': true,
-    'anOptionsSubtasks': true,
-    'anOptionsSearch': true,
-    'anOptionsShortcuts': true,
-    'anOptionsDescription': true,
-    'anOptionsParent': true,
-    'anOptionsSection': true
+    anOptionsInbox: true,
+    anOptionsProjects: true,
+    anOptionsSubtasks: true,
+    anOptionsSearch: true,
+    anOptionsShortcuts: true,
+    anOptionsDescription: true,
+    anOptionsParent: true,
+    anOptionsSection: true
   }, function (items) {
     document.getElementById('inbox').checked = items.anOptionsInbox;
     document.getElementById('projects').checked = items.anOptionsProjects;

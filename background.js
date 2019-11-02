@@ -1,12 +1,3 @@
-chrome.tabs.onUpdated.addListener(
-  function (tabId, changeInfo, tab) {
-    if (tab.url && tab.url.includes('https://app.asana.com/0/') && changeInfo.status) {
-      changeInfo.name = 'asanaNavigatorOnUpdated';
-      chrome.tabs.sendMessage(tabId, changeInfo);
-    }
-  }
-);
-
 chrome.runtime.onInstalled.addListener(
   function (details) {
     if (details.reason === 'install' || details.reason === 'update') {
@@ -25,5 +16,14 @@ chrome.runtime.onInstalled.addListener(
     //     chrome.tabs.create({url: 'pages/update-en.html'});
     //   }
     // }
+  }
+);
+
+chrome.tabs.onUpdated.addListener(
+  function (tabId, changeInfo, tab) {
+    if (tab.url && tab.url.includes('https://app.asana.com/0/') && changeInfo.status) {
+      changeInfo.name = 'asanaNavigatorOnUpdated';
+      chrome.tabs.sendMessage(tabId, changeInfo);
+    }
   }
 );
