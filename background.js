@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener(
 
 chrome.tabs.onUpdated.addListener(
   function (tabId, changeInfo, tab) {
-    if (tab.url && tab.url.includes('https://app.asana.com/0/') && changeInfo.status) {
+    if (tab.url && tab.url.includes('https://app.asana.com/0/') && changeInfo.status && changeInfo.status == 'complete') {
       changeInfo.name = 'asanaNavigatorOnUpdated';
       chrome.tabs.sendMessage(tabId, changeInfo);
     }

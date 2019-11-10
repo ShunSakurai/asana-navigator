@@ -19,15 +19,16 @@
     "48": "images/an48.png",
     "16": "images/an16.png"
   },
-  "incognito": "split",
+  "incognito": "spanning",
   "manifest_version": 2,
   "name": "Asana Navigator",
-  "offline_enabled": false,
-  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html"
+  },
   "permissions": [
     "https://app.asana.com/*",
-    "activeTab", "storage"
+    "activeTab", "storage", "tabs"
   ],
   "short_name": "AsaNavigator",
-  "version": "2.2.2"
+  "version": "2.2.3"
 }
