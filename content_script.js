@@ -169,8 +169,8 @@ const addToKeyboardShortcutsList = function() {
     const [description, keyList] = shortcutsArray[i];
     const keyboardShortcutsModalRow = document.createElement('DIV');
     keyboardShortcutsModalRow.setAttribute('class', 'KeyboardShortcutsModal-row');
-    keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys">` +
-    keyList.map(a => (a === separator) ? '/' : '<span class="KeyboardShortcutsModal-key">' + a + '</span>').join('') + '</span>';
+    keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys"><span class="KeyboardShortcutsModal-key"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal">` +
+    keyList.map(a => (a === separator) ? ' / ' : '<span class="KeyboardShortcutLabel-key">' + a + '</span>').join('') + '</span></span></span>';
     keyboardShortcutsModalANSection.appendChild(keyboardShortcutsModalRow);
   }
 };

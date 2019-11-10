@@ -1,6 +1,6 @@
 # Asana Navigator
 
-Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) to enhance navigation for [Asana](https://asana.com/) tasks
+Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/asana-navigator/) extension to enhance navigation for [Asana](https://asana.com/) tasks
 
 ## Feature list as well as to-do list
 
@@ -11,6 +11,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Write base XMLHttpRequest function
 - [x] Create the icon
 - [x] Publish on Chrome Web Store after implementing MVP features
+- [x] Publish as a Firefox Browser Add-on
 
 #### Putting projects on top:
 - [x] [Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)
@@ -30,7 +31,7 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 
 #### Replacing text:
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
-- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/6)
+- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/34586/6)
 
 #### Convecting task to section and vice versa:
 - [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207)
@@ -50,21 +51,29 @@ Unofficial [Google Chrome extension](https://chrome.google.com/webstore/detail/a
 - [x] Write an options page to enable/disable each feature
 - [x] Implement donation button
 - [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project, tag, user, or team in organization (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
-- [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/asana-navigator-unofficial-efficiency-google-chrome-extension-to-enhance-navigation-for-asana-tasks/34586/10)
+- [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/34586/10)
 - [ ] Display subtasks in calendar and/or timeline
 - [ ] Support Command/Ctrl+Shift+Up/Down arrow in the new list/board project structure
 
 ## Usage
 
+Chrome:
 - Install it from the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne)
 - You can also `git clone` this repository (or download the repository as a zip file) and load the folder to Google Chrome to install it as a developer
-- The features are automatically enabled when you are on an Asana task page. Please reload the Asana task page if this extension doesn't work well.
-- Options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
+- The options are accessible by clicking the icon on the toolbar or by going to [chrome://extensions](chrome://extensions) > Asana Navigator > Details > Extension options
+
+Firefox:
+- Install it from the [Firefox AMO store](https://addons.mozilla.org/en-US/firefox/addon/asana-navigator/)
+- Asana Navigator doesn't work with Firefox if added as a temporary add-on, because of the limitation of `chrome.storage.sync`
+- The options are accessible from [about:addons](about:addons) > Asana Navigator > Preferences
+
+Common:
+- The features are automatically enabled when you are on an Asana task page
+- Please reload the Asana task page if this extension doesn't work well
 
 ## Special thanks
 
 I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg87/asana-chrome-plugin) project. That extension is very nicely made. I learned a lot from him and his code.
-Thank you also to [Hiro-san](https://github.com/hiroyamada/) for giving me advice when I was struggling to implement the subtask dropdown feature.
 
 ### Motivation and design decisions
 
@@ -75,14 +84,14 @@ Thank you also to [Hiro-san](https://github.com/hiroyamada/) for giving me advic
 
 ## Privacy policy and terms of use
 
-We don't store your data. We physically can't. (Borrowed part from [here](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy).) All communications are between you and Asana API. All options are saved to your Google Chrome, not on our servers.
+[We don't store your data. We physically can't.](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy) All communications are between you and Asana API. All options are saved to your browser, not on our servers.
 
 I try my best to maintain the quality and safety of this extension, but please use it at your own risk. The author doesn't take any responsibility for any damage caused by use of this extension.
 
 ## Feedback and contribution
 
 I'd love to hear from users and developers.
-Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or [Asana Community Forum](https://forum.asana.com/t/34586). I'd also welcome pull requests and help with translating the UI.
+Please feel free to post feature requests, bug reports, and questions through the [Chrome Web Store](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne), [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/asana-navigator/), [GitHub Issues](https://github.com/ShunSakurai/asana-navigator/issues), or [Asana Community Forum](https://forum.asana.com/t/34586). I'd also welcome pull requests and help with translating the UI.
 
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible
