@@ -449,8 +449,7 @@ const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGi
     subtask.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
     subtask.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
   });
-  const asanaMain = document.querySelector('#asana_main');
-  asanaMain.insertBefore(siblingDropdown, asanaMain.firstElementChild);
+  document.body.appendChild(siblingDropdown);
   document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
   siblingDropdown.addEventListener('click', function(event) {
     if (event.target.href) {
