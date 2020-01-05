@@ -14,8 +14,10 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 - [x] Publish as a Firefox Browser Add-on
 
 #### Putting projects on top:
-- [x] [Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)
-- [x] Place project section selectors on top
+- [x] ~~[Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)~~
+- [x] ~~Place project section selectors on top~~
+
+No longer needed because of the improved task pane layout now being rolled out
 
 #### Going to sibling subtasks:
 - [x] Show arrows to go to previous/next sibling subtasks
@@ -52,8 +54,8 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 - [x] Implement donation button
 - [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project, tag, user, or team in organization (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
 - [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/34586/10)
+- [ ] Display preview of @mentioned tasks
 - [ ] Display subtasks in calendar and/or timeline
-- [ ] Support Command/Ctrl+Shift+Up/Down arrow in the new list/board project structure
 
 ## Usage
 

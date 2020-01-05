@@ -48,7 +48,7 @@ const localizationStrings = {
     'drawerLabel-setParent': 'Make this task a subtask of another task.', // krtmmb:[0,"Make this task a subtask of another task. It will be removed from the current project."]
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
-    'dropdown-searchInInbox': 'Search in Tasks I Follow',
+    'dropdown-searchInInbox': 'Search in Tasks I collaborate on',
     'dropdown-searchInProject': 'Search in this Project',
     'dropdown-searchInTag': 'Search in this Tag',
     'dropdown-searchInTeam': 'Search in this Team',
@@ -137,7 +137,7 @@ const localizationStrings = {
     'drawerLabel-setParent': 'このタスクを他のタスクのサブタスクにしましょう。',
     'drawerPlaceholder-setParent': '名前またはIDでタスクを見つける', // translating differently
     'drawerSwitch-setParent-var-button': '挿入場所: 上部{button}下部',
-    'dropdown-searchInInbox': '自分がフォローしているタスクを検索',
+    'dropdown-searchInInbox': 'コラボレーターとして参加しているタスクを検索',
     'dropdown-searchInProject': 'このプロジェクト内を検索',
     'dropdown-searchInTag': 'このタグ内を検索',
     'dropdown-searchInTeam': 'このチーム内を検索',

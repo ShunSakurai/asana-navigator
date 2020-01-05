@@ -13,9 +13,9 @@ const addReplaceDescriptionToExtraActions = function() {
       replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">E</span></span></span></div></span>`;
 
       setTimeout(function() {
-        const nextExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-makeADuplicate');
-        if (nextExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
-          nextExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, nextExtraActionButton);
+        const previousExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-print');
+        if (previousExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
+          previousExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, previousExtraActionButton.nextSibling);
         }
       }, 100);
     });
@@ -338,7 +338,8 @@ const convertTaskAndSection = function() {
     const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
     return;
   }
-  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
+  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2].children[1]
+  || (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
   const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
 
   callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,memberships.(project|section),name,parent,projects,subtasks,workspace'}, {}, function(response) {
@@ -511,7 +512,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
     deleteSiblingButtons();
     const siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
+    const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPaneSpreadsheet-titleRow') || document.querySelector('.SingleTaskPane-titleRow');
     if (singleTaskPaneTitleRow) singleTaskPaneTitleRow.appendChild(siblingButtons);
 
     if (indexPrevious || indexPrevious === 0) {
@@ -645,7 +646,7 @@ const displayReplaceDescriptionDialog = function() {
 
 const displaySetParentDrawer = function() {
   if (document.querySelector('.SetParentDrawer')) return;
-  const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body');
+  const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body', true) || getTaskPaneTypeAndElement('Spreadsheet-body');
   if (!taskPaneBody) return;
   const setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
@@ -784,12 +785,12 @@ const getPlatformAndSetPlatStrings = function() {
   }
 };
 
-const getTaskPaneTypeAndElement = function(subsequentClassName) {
+const getTaskPaneTypeAndElement = function(subsequentClassName, returnBoolean) {
   const singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
   if (singleTaskPaneElement) return ['Single', singleTaskPaneElement];
   const multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
   if (multiTaskPaneElement) return ['Multi', multiTaskPaneElement];
-  return ['', undefined];
+  return returnBoolean? false: ['', undefined];
 };
 
 const getUserReplaceTextList = function() {
@@ -1233,7 +1234,7 @@ document.addEventListener('keydown', function(event) {
             if (document.querySelector('#ReplaceDescriptionDialogView')) {
               closeReplaceDescriptionDialog();
             } else {
-              if (document.querySelector('.SingleTaskPane')) displayReplaceDescriptionDialog();
+              if (document.querySelector('.SingleTaskPane') || document.querySelector('.SingleTaskPaneSpreadsheet')) displayReplaceDescriptionDialog();
             }
           }
         });
