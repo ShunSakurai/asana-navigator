@@ -723,9 +723,7 @@ const escapeHtml = function(text) {
   const map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
   };
-  return text.replace(/[&<>"']/g, function(m) {
-    return map[m];
-  });
+  return text.replace(/[&<>"']/g, m => map[m]);
 };
 
 const findProjectGid = function(url) { // gid spec might change
@@ -928,14 +926,19 @@ const replaceDescription = function(replaceTextList) {
   callAsanaApi('GET', `tasks/${taskGid}`, {opt_fields: 'html_notes'}, {}, function(response) {
     const htmlNotesOriginal = response.data.html_notes;
     let htmlNotes = htmlNotesOriginal.replace(/^<body>/, '').replace(/<\/body>$/, '');
+    let counter = 0;
     for (let i = 0; i < replaceTextList.length; i ++) {
       const pair = replaceTextList[i];
-      htmlNotes = htmlNotes.replace(pair[0], pair[1]);
+      htmlNotes = htmlNotes.replace(pair[0], function() {
+        ++counter;
+        return pair[1];
+      });
     }
     callAsanaApi('PUT', `tasks/${taskGid}`, {}, {html_notes: '<body>' + htmlNotes + '</body>'}, function(response) {
       closeTaskPaneExtraActionsMenu();
       closeReplaceDescriptionDialog();
-      displaySuccessToast(response.data, locStrings['toastContent-descriptionReplaced-var-task'], function(callback) {
+      const messageVarTask = locStrings['toastContent-descriptionReplaced-var-task'].replace('{counter}', counter);
+      displaySuccessToast(response.data, messageVarTask, function(callback) {
         callAsanaApi('PUT', `tasks/${taskGid}`, {}, {html_notes: htmlNotesOriginal}, function(response) {
           callback();
         });

@@ -12,7 +12,7 @@
       "run_at": "document_end"
     }
   ],
-  "description" : "Go back from inbox, show projects on top, go to sibling subtasks, search in context, replace text, convert to subtask or section.",
+  "description" : "Go back from inbox, jump to sibling subtasks, search in context, replace text in description, convert tasks to subtask or section.",
   "homepage_url": "https://github.com/ShunSakurai/asana-navigator",
   "icons": {
     "128": "images/an128.png",
@@ -30,5 +30,5 @@
     "activeTab", "storage", "tabs"
   ],
   "short_name": "AsaNavigator",
-  "version": "2.3.0"
+  "version": "2.3.1"
 }

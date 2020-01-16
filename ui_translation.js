@@ -70,7 +70,7 @@ const localizationStrings = {
     'snippet-tags': 'Tags', // "1utfvzg":[0,"Tags",null,!0]
     'toastButtton-undo': 'Undo', // 14vtr68
     'toastButtton-undoing': '(Undoing...)', // 63rova
-    'toastContent-descriptionReplaced-var-task': 'Description replaced: {task}',
+    'toastContent-descriptionReplaced-var-task': 'Replaced {counter} item(s) in the description: {task}',
     'toastContent-setParent-var-task': 'Set a new parent task: {task}',
     'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks ', // "31yy2c":[1,"{nameOrEmail}’s Tasks - {domainName}"]
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
@@ -159,7 +159,7 @@ const localizationStrings = {
     'snippet-tags': 'タグ',
     'toastButtton-undo': '元に戻す',
     'toastButtton-undoing': '(元に戻しています...)',
-    'toastContent-descriptionReplaced-var-task': '{task} の説明を置換しました。',
+    'toastContent-descriptionReplaced-var-task': '{task} の説明で {counter} 件を置換しました。',
     'toastContent-setParent-var-task': '新しい親タスクを設定しました: {task}',
     'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail} のタスク',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
