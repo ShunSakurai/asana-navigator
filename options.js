@@ -2,7 +2,6 @@
 
 const saveOptions = function () {
   const inboxEnabled = document.getElementById('inbox').checked;
-  const projectsEnabled = document.getElementById('projects').checked;
   const subtasksEnabled = document.getElementById('subtasks').checked;
   const searchEnabled = document.getElementById('search').checked;
   const shortcutsEnabled = document.getElementById('shortcuts').checked;
@@ -11,7 +10,6 @@ const saveOptions = function () {
   const sectionEnabled = document.getElementById('section').checked;
   chrome.storage.sync.set({
     anOptionsInbox: inboxEnabled,
-    anOptionsProjects: projectsEnabled,
     anOptionsSubtasks: subtasksEnabled,
     anOptionsSearch: searchEnabled,
     anOptionsShortcuts: shortcutsEnabled,
@@ -30,7 +28,6 @@ const saveOptions = function () {
 const loadOptions = function () {
   chrome.storage.sync.get({
     anOptionsInbox: true,
-    anOptionsProjects: true,
     anOptionsSubtasks: true,
     anOptionsSearch: true,
     anOptionsShortcuts: true,
@@ -39,7 +36,6 @@ const loadOptions = function () {
     anOptionsSection: true
   }, function (items) {
     document.getElementById('inbox').checked = items.anOptionsInbox;
-    document.getElementById('projects').checked = items.anOptionsProjects;
     document.getElementById('subtasks').checked = items.anOptionsSubtasks;
     document.getElementById('search').checked = items.anOptionsSearch;
     document.getElementById('shortcuts').checked = items.anOptionsShortcuts;

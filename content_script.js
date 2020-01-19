@@ -183,22 +183,6 @@ const callAsanaApi = function(request, path, options, data, callback) {
   );
 };
 
-const clickSectionSelector = function(a) {
-  const taskProjectsProjectGid = findProjectGid(a.previousSibling.href);
-  const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  let floatingSelectLabel;
-  for (let i = 0; i < taskProjectsProjectList.children.length; i++) {
-    if (findProjectGid(taskProjectsProjectList.children[i].firstElementChild.href) === taskProjectsProjectGid) {
-      floatingSelectLabel = taskProjectsProjectList.children[i].children[1];
-      break;
-    }
-  }
-  floatingSelectLabel.scrollIntoView(false);
-  setTimeout(function() {
-      floatingSelectLabel.click();
-  }, 100);
-};
-
 const closeReplaceDescriptionDialog = function() {
   const replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
   if (replaceDescriptionDialogView) replaceDescriptionDialogView.remove();
@@ -468,11 +452,6 @@ const deleteInContextSearchDropdownItem = function(event) {
   if (inContextSearchDropdown && event.target.value.trim()) inContextSearchDropdown.remove();
 };
 
-const deleteProjectNamesOnTop = function() {
-  const projectNamesOnTop = document.querySelector('#TaskAncestryProjectNamesOnTop');
-  if (projectNamesOnTop) projectNamesOnTop.remove();
-};
-
 const deleteSetParentTypeaheadDropdown = function() {
   const setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
   if (setParentDropdownContainer) setParentDropdownContainer.remove();
@@ -554,49 +533,6 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
         if (arrowToClick) arrowToClick.click();
     }
   });
-};
-
-const displayProjectsOnTop = function() {
-  const taskProjectsProjectList = document.querySelector('.TaskProjects-projectList');
-  if (!taskProjectsProjectList) return;
-  const taskAncestry = document.createElement('DIV');
-  taskAncestry.setAttribute('class', 'TaskAncestry');
-  const taskAncestryAncestorProjects = document.createElement('DIV');
-  taskAncestryAncestorProjects.setAttribute('class', 'TaskAncestry-ancestorProjects');
-  taskAncestryAncestorProjects.setAttribute('id', 'TaskAncestryProjectNamesOnTop');
-  taskAncestry.appendChild(taskAncestryAncestorProjects);
-
-  const taskGid = findTaskGid(window.location.href);
-  Array.from(taskProjectsProjectList.children).forEach(function(li) {
-    const a = li.firstElementChild;
-    const projectUrl = a.href;
-    const projectGid = findProjectGid(projectUrl);
-    if (!a.firstElementChild) return;
-    const projectName = a.firstElementChild.textContent;
-
-    const taskAncestryAncestorProject = document.createElement('A');
-    taskAncestryAncestorProject.setAttribute('class', 'ProjectLinkLabel NavigationLink TaskAncestry-ancestorProject');
-    taskAncestryAncestorProject.setAttribute('href', `https://app.asana.com/0/${projectGid}/${taskGid}`);
-    taskAncestryAncestorProject.setAttribute('id', 'Project' + projectGid);
-    taskAncestryAncestorProject.textContent = projectName;
-    taskAncestryAncestorProject.addEventListener('click', function(event) {
-      a.click();
-      event.preventDefault();
-    });
-    taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProject);
-
-    const taskAncestryAncestorProjectSectionSelector = document.createElement('A');
-    taskAncestryAncestorProjectSectionSelector.setAttribute('class', 'NoBorderBottom FloatingSelect TaskAncestry-ancestorProject');
-    taskAncestryAncestorProjectSectionSelector.innerHTML = '<svg class="Icon DownIcon FloatingSelect-icon" focusable="false" viewBox="0 0 32 32"><path d="M16,22.5c-0.3,0-0.7-0.1-0.9-0.3l-11-9c-0.6-0.5-0.7-1.5-0.2-2.1c0.5-0.6,1.5-0.7,2.1-0.2L16,19.1l10-8.2c0.6-0.5,1.6-0.4,2.1,0.2c0.5,0.6,0.4,1.6-0.2,2.1l-11,9C16.7,22.4,16.3,22.5,16,22.5z"></path></svg>';
-    taskAncestryAncestorProjects.appendChild(taskAncestryAncestorProjectSectionSelector);
-    taskAncestryAncestorProjectSectionSelector.addEventListener('click', function() {
-      clickSectionSelector(this);
-    });
-  });
-  deleteProjectNamesOnTop();
-  const singleTaskPaneBody = document.querySelector('.SingleTaskPane-body');
-  const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPane-titleRow');
-  if (singleTaskPaneBody) singleTaskPaneBody.insertBefore(taskAncestry, singleTaskPaneTitleRow);
 };
 
 const displayReplaceDescriptionDialog = function() {
@@ -1053,14 +989,12 @@ const returnTypeAheadInnerHTML = function(task) {
 
 const runOptionalFunctionsOnLoad = function() {
   chrome.storage.sync.get({
-    anOptionsProjects: true,
     anOptionsSubtasks: true,
     anOptionsSearch: true,
     anOptionsShortcuts: true,
     anOptionsDescription: true,
     anOptionsParent: true
   }, function(items) {
-    if (items.anOptionsProjects) displayProjectsOnTop();
     if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
     if (items.anOptionsSearch) listenToSearchBarExpansion();
     if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
@@ -1072,14 +1006,12 @@ const runOptionalFunctionsOnLoad = function() {
 const runOptionalFunctionsAfterDelay = function(delay) {
   chrome.storage.sync.get({
     anOptionsInbox: true,
-    anOptionsProjects: true,
     anOptionsSubtasks: true,
     anOptionsDescription: true,
     anOptionsParent: true
   }, function(items) {
     setTimeout(function() {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
-      if (items.anOptionsProjects) displayProjectsOnTop();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       if (items.anOptionsParent) addSetParentToExtraActions();

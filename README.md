@@ -16,8 +16,7 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 #### Putting projects on top:
 - [x] ~~[Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)~~
 - [x] ~~Place project section selectors on top~~
-
-No longer needed because of the improved task pane layout now being rolled out
+- [x] Happily drop this feature because of [the improved task pane layout](https://forum.asana.com/t/we-re-updating-our-task-pane/70641)
 
 #### Going to sibling subtasks:
 - [x] Show arrows to go to previous/next sibling subtasks
