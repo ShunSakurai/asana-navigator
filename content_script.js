@@ -159,11 +159,12 @@ const addToKeyboardShortcutsList = function() {
   const separator = 'separator';
   const shortcutsArray = [
     [locStrings['shortcutDescription-backLink'], ['Tab', 'J']],
+    [locStrings['shortcutDescription-attachmentsButton'], ['Tab', 'V']],
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [locStrings['menuButton-replaceDescription'], ['Tab', 'E']],
-    [locStrings['shortcutDescription-convertSection'], ['Tab', ':', separator, platStrings['shift'], 'Tab', ':']],
     [locStrings['menuButton-setParent'], ['Tab', 'G']],
+    [locStrings['shortcutDescription-convertSection'], ['Tab', ':', separator, platStrings['shift'], 'Tab', ':']],
   ];
   for (let i = 0; i < shortcutsArray.length; i++) {
     const [description, keyList] = shortcutsArray[i];
@@ -181,6 +182,13 @@ const callAsanaApi = function(request, path, options, data, callback) {
   chrome.runtime.sendMessage(
     {contentScriptQuery: 'callAsanaApi', parameters: [request, path, options, data]}, callback
   );
+};
+
+const clickNumberedAddAttachmentButton = function(number) {
+  const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
+  if (!addAttachmentsMenuItem) return;
+  const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
+  if (number) listAddAttachmentButtons[number].click();
 };
 
 const closeReplaceDescriptionDialog = function() {
@@ -740,6 +748,22 @@ const getUserReplaceTextList = function() {
   return userReplaceTextList;
 };
 
+const listenToClickOnAddAttachmentsButton = function() {
+  const addAttachmentsButton = document.querySelector('.AddAttachmentsButton');
+  if (!addAttachmentsButton) return;
+  addAttachmentsButton.addEventListener('click', function() {
+    setTimeout(function() {
+      const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
+      if (!addAttachmentsMenuItem) return;
+      const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
+      for (let i = 1; i < listAddAttachmentButtons.length; i++) {
+        listAddAttachmentButtons[i].classList.add('MenuItemLabel-shortcut');
+        listAddAttachmentButtons[i].innerHTML += `<span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">${i}</span></span></span>`;
+      }
+    }, 50);
+  });
+};
+
 const listenToClickOnInboxSavePrevious = function() {
   setTimeout(function() {
     const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
@@ -1004,12 +1028,14 @@ const runOptionalFunctionsAfterDelay = function(delay) {
   chrome.storage.sync.get({
     anOptionsInbox: true,
     anOptionsSubtasks: true,
+    anOptionsAttachment: true,
     anOptionsDescription: true,
     anOptionsParent: true
   }, function(items) {
     setTimeout(function() {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+      if (items.anOptionsAttachment) listenToClickOnAddAttachmentsButton();
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       if (items.anOptionsParent) addSetParentToExtraActions();
     }, delay);
@@ -1125,7 +1151,20 @@ document.addEventListener('keydown', function(event) {
         });
       }
       break;
-      case 'ArrowDown':
+    case ':':
+      if (!document.tabKeyIsDown) break;
+      chrome.storage.sync.get({anOptionsSection: true}, function(items) {
+        if (items.anOptionsSection) convertTaskAndSection();
+      });
+      break;
+    case '*':
+      if (document.tabKeyIsDown && event.code == 'Quote') {
+        chrome.storage.sync.get({anOptionsSection: true}, function(items) {
+          if (items.anOptionsSection) convertTaskAndSection();
+        });
+      }
+      break;
+    case 'ArrowDown':
       if (document.tabKeyIsDown && event.shiftKey) {
         const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
         if (arrowNextSubtask) {
@@ -1135,7 +1174,7 @@ document.addEventListener('keydown', function(event) {
         }
       }
       break;
-      case 'ArrowRight':
+    case 'ArrowRight':
       if (document.tabKeyIsDown && event.shiftKey) {
         if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
@@ -1149,16 +1188,16 @@ document.addEventListener('keydown', function(event) {
         }
       }
       break;
-      case 'ArrowUp':
-        if (document.tabKeyIsDown && event.shiftKey) {
-          const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
-          if (arrowPreviousSubtask) {
-            arrowPreviousSubtask.click();
-          } else if (!document.querySelector('#SiblingButtons')) {
-            displayLinksToSiblingSubtasks('#ArrowPreviousSubtask');
-          }
+    case 'ArrowUp':
+      if (document.tabKeyIsDown && event.shiftKey) {
+        const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+        if (arrowPreviousSubtask) {
+          arrowPreviousSubtask.click();
+        } else if (!document.querySelector('#SiblingButtons')) {
+          displayLinksToSiblingSubtasks('#ArrowPreviousSubtask');
         }
-        break;
+      }
+      break;
     case 'e':
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
         chrome.storage.sync.get({anOptionsDescription: true}, function(items) {
@@ -1197,18 +1236,31 @@ document.addEventListener('keydown', function(event) {
         });
       }
       break;
-    case ':':
+    case 'v': {
       if (!document.tabKeyIsDown) break;
-      chrome.storage.sync.get({anOptionsSection: true}, function(items) {
-        if (items.anOptionsSection) convertTaskAndSection();
-      });
+      const addAttachmentButton = document.querySelector('.AddAttachmentsButton-button');
+      if (addAttachmentButton) addAttachmentButton.click();
       break;
-    case '*':
-      if (document.tabKeyIsDown && event.code == 'Quote') {
-        chrome.storage.sync.get({anOptionsSection: true}, function(items) {
-          if (items.anOptionsSection) convertTaskAndSection();
-        });
-      }
+    }
+    case '1':
+      if (!document.tabKeyIsDown) break;
+      clickNumberedAddAttachmentButton(1);
+      break;
+    case '2':
+      if (!document.tabKeyIsDown) break;
+      clickNumberedAddAttachmentButton(2);
+      break;
+    case '3':
+      if (!document.tabKeyIsDown) break;
+      clickNumberedAddAttachmentButton(3);
+      break;
+    case '4':
+      if (!document.tabKeyIsDown) break;
+      clickNumberedAddAttachmentButton(4);
+      break;
+    case '5':
+      if (!document.tabKeyIsDown) break;
+      clickNumberedAddAttachmentButton(5);
       break;
   }
 });
@@ -1237,6 +1289,6 @@ window.addEventListener('load', function() {
 chrome.runtime.onMessage.addListener(
   function(message, sender, callback) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated' && message.status === 'complete') {
-      runOptionalFunctionsAfterDelay(400);
+      runOptionalFunctionsAfterDelay(500);
     }
 });

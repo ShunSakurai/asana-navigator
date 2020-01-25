@@ -16,6 +16,10 @@
     border-color: #ff5263 !important;
 }
 
+.MenuItemLabel-shortcut {
+    justify-content: space-between;
+}
+
 .NoBorderBottom {
     border-bottom: none !important;
 }
