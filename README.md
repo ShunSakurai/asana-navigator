@@ -42,6 +42,8 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
 - [x] [Implement keyboard shortcut to set new parent task (Tab+G)](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/10)
 - [x] Show additional keyboard shortcuts in the list (Cmd/Ctrl+/)
+- [x] Add keyboard shortcuts to attach files (Tab+V and Tab+1/2/3/4/5)
+- [x] Add a keyboard shortcut to open more actions (Tab+.)
 
 #### More seamless UI:
 - [x] Display undo toast on bottom left

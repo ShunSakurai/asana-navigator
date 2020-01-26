@@ -1,3 +1,28 @@
+const addKeyboardShortcutToTooltipBody = function(button, shortcutString) {
+  const intervalFuncAddKSToTooltipBody = setInterval(function() {
+    const tooltipBody = document.querySelector('.Tooltip-body');
+    if (!tooltipBody) return;
+    if (!tooltipBody.innerHTML.match(/\(Tab\+[!-~]\)/)) tooltipBody.innerHTML += ` (${shortcutString})`;
+    clearInterval(intervalFuncAddKSToTooltipBody);
+  }, 200);
+  button.addEventListener('mouseout', function() {
+    clearInterval(intervalFuncAddKSToTooltipBody);
+  });
+};
+
+const addKeyboardShortcutsToTooltipBodyOnHover = function() {
+  [
+    ['AddAttachmentsButton', 'Tab+V'],
+    ['HeartButton', 'Tab+K'],
+    ['SingleTaskPaneExtraActionsButton', 'Tab+.']
+  ].forEach(function(shortcutPair) {
+    let button = document.querySelector(`.${shortcutPair[0]}`);
+    if (!button) return; // continue
+    button.addEventListener('mouseover', function() {addKeyboardShortcutToTooltipBody(button, shortcutPair[1]);
+    });
+  });
+};
+
 const addReplaceDescriptionToExtraActions = function() {
   const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
@@ -84,7 +109,9 @@ const addSearchDropdownShortcut = function() {
         return;
       }
       setTimeout(function() {
-        const searchInContextInputField = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : (mode == 'InTag') ? 'TagFilter' : 'DomainUserFilter'}`)).firstElementChild.firstElementChild.children[1];
+        const searchInContextFilter = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : (mode == 'InTag') ? 'TagFilter' : 'DomainUserFilter'}`));
+        if (!searchInContextFilter) return;
+        const searchInContextInputField = searchInContextFilter.firstElementChild.firstElementChild.children[1];
         if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
@@ -160,6 +187,7 @@ const addToKeyboardShortcutsList = function() {
   const shortcutsArray = [
     [locStrings['shortcutDescription-backLink'], ['Tab', 'J']],
     [locStrings['shortcutDescription-attachmentsButton'], ['Tab', 'V']],
+    [locStrings['shortcutDescription-moreActionsButton'], ['Tab', '.']],
     [locStrings['shortcutDescription-siblingSubtasks'], [platStrings['shift'], 'Tab', '↑', separator, platStrings['shift'], 'Tab', '↓']],
     [locStrings['shortcutDescription-subtasksDropdown'], [platStrings['shift'], 'Tab', '→']],
     [locStrings['menuButton-replaceDescription'], ['Tab', 'E']],
@@ -330,8 +358,7 @@ const convertTaskAndSection = function() {
     const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
     return;
   }
-  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2].children[1]
-  || (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1].children[1];
+  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : ((isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] ? (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1]).children[1];
   const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
 
   callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,memberships.(project|section),name,parent,projects,subtasks,workspace'}, {}, function(response) {
@@ -950,7 +977,7 @@ const returnReplaceDescriptionInnerHTML = function() {
   return `<div>
     <div class="dialog-background"></div>
     <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
-      <div><div class="dialogView2-closeX borderless-button" id="CloseReplaceDescriptionDialogButton"><svg class="svgIcon" viewBox="0 0 32 32" title="close dialog"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription']}</div></div>
+      <div><div class="dialogView2-closeX borderless-button" id="CloseReplaceDescriptionDialogButton"><svg class="svgIcon" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription']}</div></div>
       <div class="content">
         <div class="loading-boundary">
           <div class="form-view">
@@ -1035,7 +1062,10 @@ const runOptionalFunctionsAfterDelay = function(delay) {
     setTimeout(function() {
       if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-      if (items.anOptionsAttachment) listenToClickOnAddAttachmentsButton();
+      if (items.anOptionsAttachment) {
+        listenToClickOnAddAttachmentsButton();
+        addKeyboardShortcutsToTooltipBodyOnHover();
+      }
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       if (items.anOptionsParent) addSetParentToExtraActions();
     }, delay);
@@ -1164,6 +1194,19 @@ document.addEventListener('keydown', function(event) {
         });
       }
       break;
+    case '.': {
+      if (!document.tabKeyIsDown) break;
+      chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
+        if (items.anOptionsAttachment) {
+          const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+          if (singleTaskPaneExtraActionsButton) {
+            singleTaskPaneExtraActionsButton.click();
+            singleTaskPaneExtraActionsButton.focus();
+          }
+        }
+      });
+      break;
+    }
     case 'ArrowDown':
       if (document.tabKeyIsDown && event.shiftKey) {
         const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
@@ -1238,8 +1281,12 @@ document.addEventListener('keydown', function(event) {
       break;
     case 'v': {
       if (!document.tabKeyIsDown) break;
-      const addAttachmentButton = document.querySelector('.AddAttachmentsButton-button');
-      if (addAttachmentButton) addAttachmentButton.click();
+      chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
+        if (items.anOptionsAttachment) {
+          const addAttachmentButton = document.querySelector('.AddAttachmentsButton-button');
+          if (addAttachmentButton) addAttachmentButton.click();
+        }
+      });
       break;
     }
     case '1':

@@ -9,6 +9,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Finden Sie eine Aufgabe',
     'helpButton-keyboardShortcuts': 'Tastenkombinationen',
     'shortcutDescription-attachmentsButton': 'Datei anhängen',
+    'shortcutDescription-moreActionsButton': 'Weitere Aktionen',
     'snippet-continue': 'Möchten Sie damit wirklich fortfahren?',
     'snippet-example': 'z. B. ',
     'snippet-me': 'mir',
@@ -61,6 +62,7 @@ const localizationStrings = {
     'shortcutDescription-attachmentsButton': 'Attach file', // p28m4o
     'shortcutDescription-backLink': 'Go back from Inbox',
     'shortcutDescription-convertSection': 'Convert task to section and vice versa',
+    'shortcutDescription-moreActionsButton': 'More actions', // 1q1tl3x
     'shortcutDescription-siblingSubtasks': 'Jump to previous/next subtask',
     'shortcutDescription-subtasksDropdown': 'Show sibling subtasks',
     'snippet-continue': 'Do you want to continue?', // l3zrkk:[0,"Your import will be cancelled. Do you want to continue?"]
@@ -85,6 +87,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Encontrar una tarea',
     'helpButton-keyboardShortcuts': 'Atajos del teclado',
     'shortcutDescription-attachmentsButton': 'Adjuntar archivo',
+    'shortcutDescription-moreActionsButton': 'Más acciones',
     'snippet-continue': '¿Deseas continuar?',
     'snippet-example': 'ej. ',
     'snippet-me': 'Mí',
@@ -103,6 +106,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Trouver une tâche',
     'helpButton-keyboardShortcuts': 'Raccourcis clavier',
     'shortcutDescription-attachmentsButton': 'Joindre un fichier',
+    'shortcutDescription-moreActionsButton': 'Plus d\'actions',
     'snippet-continue': 'Souhaitez-vous continuer ?',
     'snippet-example': 'ex. ',
     'snippet-me': 'moi',
@@ -154,6 +158,7 @@ const localizationStrings = {
     'shortcutDescription-attachmentsButton': 'ファイルを添付',
     'shortcutDescription-backLink': '受信トレイから戻る',
     'shortcutDescription-convertSection': 'タスクとセクションを相互に変換',
+    'shortcutDescription-moreActionsButton': 'その他のアクション',
     'shortcutDescription-siblingSubtasks': '前 / 次のサブタスクを開く',
     'shortcutDescription-subtasksDropdown': '前後のサブタスクを表示',
     'snippet-continue': '続行してよろしいですか？',
@@ -178,6 +183,7 @@ const localizationStrings = {
     'drawerPlaceholder-setParent': 'Encontrar tarefa',
     'helpButton-keyboardShortcuts': 'Atalhos do teclado',
     'shortcutDescription-attachmentsButton': 'Anexar arquivo',
+    'shortcutDescription-moreActionsButton': 'Mais ações',
     'snippet-continue': 'Deseja continuar?',
     'snippet-example': 'ex. ',
     'snippet-me': 'mim',
