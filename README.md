@@ -1,6 +1,6 @@
 # Asana Navigator
 
-Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/asana-navigator/) extension to enhance navigation for [Asana](https://asana.com/) tasks
+Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navigator/ckfdnhplhmbingcopckooenamecdckne) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/asana-navigator/) extension to enhance navigation for [Asana](https://asana.com/) -- less mouse moves and key presses.
 
 ## Feature list as well as to-do list
 
