@@ -87,7 +87,14 @@ I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg
 
 ## Privacy policy and terms of use
 
-[We don't store your data. We physically can't.](https://github.com/amitg87/asana-chrome-plugin/wiki/Privacy-policy) All communications are between you and Asana API. All options are saved to your browser, not on our servers.
+We don't collect your data. We don't have our server to store, use, and share such information. We only use your Asana data (URLs, resource IDs, names, task description, etc.) to make API calls to Asana through HTTPS. All communications are between you and Asana API. All options are saved to your browser, not in other places.
+
+The extension requires the following permissions:
+
+- `https://app.asana.com/*` permission is needed to be active on Asana Web app
+- `activeTab` permission is needed to reload all Asana Web app pages when the extension is updated
+- `storage` permission is needed to save your options to the browser
+- `tabs` permission is needed to be compatible with Firefox. The extension doesn't work as expected with only activeTab permission
 
 I try my best to maintain the quality and safety of this extension, but please use it at your own risk. The author doesn't take any responsibility for any damage caused by use of this extension.
 
