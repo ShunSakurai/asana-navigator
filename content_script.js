@@ -244,7 +244,7 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
     <div class="TypeaheadItemStructure-icon">
       <svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">
         ${(mode == 'InInbox') ? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>' :
-        (mode == 'InProject' || mode == 'InTag') ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML :
+        mode == 'InProject' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.children[1].innerHTML : mode == 'InTag' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML :
         '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}
       </svg>
     </div>
@@ -358,7 +358,7 @@ const convertTaskAndSection = function() {
     const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
     return;
   }
-  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[3].children[1] : ((isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] ? (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1]).children[1];
+  const taskTextarea = isProjectTask ? focusedItemRow.firstElementChild.firstElementChild.children[4].children[1] : ((isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] ? (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[2] : (isSeparator ? focusedItemRow : focusedItemRow.children[1]).children[1]).children[1];
   const focusedTaskGid = /_(\d+)$/.exec(taskTextarea.id)[1];
 
   callAsanaApi('GET', `tasks/${focusedTaskGid}`, {opt_fields: 'assignee,memberships.(project|section),name,parent,projects,subtasks,workspace'}, {}, function(response) {
@@ -573,7 +573,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
 const displayReplaceDescriptionDialog = function() {
   const replaceDescriptionDialog = document.createElement('DIV');
   replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
-  replaceDescriptionDialog.setAttribute('class', 'tab-ring');
+  replaceDescriptionDialog.setAttribute('class', 'ModalLayer');
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
@@ -974,13 +974,18 @@ const replaceDescriptionUserText = function() {
 };
 
 const returnReplaceDescriptionInnerHTML = function() {
-  return `<div>
-    <div class="dialog-background"></div>
-    <div id="ReplaceDescriptionDialog" class="dialog-box FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
-      <div><div class="dialogView2-closeX borderless-button" id="CloseReplaceDescriptionDialogButton"><svg class="svgIcon" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div><div class="dialog-title">${locStrings['menuButton-replaceDescription']}</div></div>
-      <div class="content">
-        <div class="loading-boundary">
-          <div class="form-view">
+  return `<div class="ModalBuffer">
+  <div class="ModalBuffer-topBuffer"></div>
+  <div class="ModalBuffer-content">
+    <div class="ModalPaneWithBuffer-pane">
+      <div id="ReplaceDescriptionDialog" class="Dialog FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
+        <header class="Dialog-header">
+          <div class="Dialog-headerTitle">${locStrings['menuButton-replaceDescription']}</div>
+          <div role="button" tabindex="0" class="CloseButton Dialog-closeButton" id="CloseReplaceDescriptionDialogButton"><svg class="Icon--small Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16L27,7.1c0.6-0.6,0.6-1.5,0-2.1s-1.5-0.6-2.1,0L16,13.9l-8.9-9C6.5,4.3,5.6,4.3,5,4.9S4.4,6.4,5,7l8.9,8.9L5,24.8c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div>
+        </header>
+        <div class="content">
+          <div class="Scrollable Scrollable--vertical ReplaceDescriptionStructure-formContents">
+            <div class="FormRowStructure-label--labelPlacementTop">
             <table>
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td></tr>
               <tr class="name-row">
@@ -992,15 +997,12 @@ const returnReplaceDescriptionInnerHTML = function() {
                 <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
               </tr>
             </table>
-          </div>
-        </div>
-      </div>
-      <div class="buttons"><div class="buttonView new-button buttonView--primary buttonView--large" id="ReplaceDescriptionDialogPresetButton" tabindex="0"><span class="new-button-text">${locStrings['dialogButton-usePreset']}</span></div></div>
-      <div class="divider"></div>
-      <div class="content scrollable scrollable--vertical ReplaceUserTextSection">
-        <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-var-link'].replace('{link}', '<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
-        <div class="loading-boundary">
-          <div class="form-view">
+            <div class="Button Button--primary Button--medium DialogFloatButton DialogFloatRight" role="button" id="ReplaceDescriptionDialogPresetButton" tabindex="0">${locStrings['dialogButton-usePreset']}</div>
+          </div></div>
+          <div class="DialogDivider"></div>
+          <div class="Scrollable Scrollable--vertical ReplaceDescriptionStructure-formContents ReplaceUserTextSection">
+            <div class="FormRowStructure-label--labelPlacementTop"><div>
+            <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-var-link'].replace('{link}', '<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
             <table id="UserTextToReplaceDialogTable">
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
               <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
@@ -1008,17 +1010,18 @@ const returnReplaceDescriptionInnerHTML = function() {
               <td><a class="delete-row-link">&nbsp;×</a></td>
             </tr>`).join('')}
             </table>
+            <div>
+              <a id="AddRowToUserReplaceTextListLink">+ ${locStrings['dialogLink-addRow']}</a>
+              <a class="DialogFloatRight" id="SaveUserReplaceTextListLink">${locStrings['snippet-save']}</a>
+            </div>
+            <div class="footer-top"></div>
+            <div class="Button Button--primary Button--medium DialogFloatButton DialogFloatRight" role="button" tabindex="0" id="ReplaceDescriptionDialogUserButton">${locStrings['dialogButton-replaceText']}</div>
+            </div></div>
           </div>
         </div>
-        <div>
-          <a id="AddRowToUserReplaceTextListLink">+ ${locStrings['dialogLink-addRow']}</a>
-          <a class="SaveTextLink" id="SaveUserReplaceTextListLink">${locStrings['snippet-save']}</a>
-        </div>
       </div>
-      <div class="footer-top"></div>
-      <div class="buttons"><div class="buttonView new-button buttonView--primary buttonView--large" tabindex="0" id="ReplaceDescriptionDialogUserButton"><span class="new-button-text">${locStrings['dialogButton-replaceText']}</span></div></div>
     </div>
-  </div>`;
+  </div></div>`;
 };
 
 const returnTypeAheadInnerHTML = function(task) {

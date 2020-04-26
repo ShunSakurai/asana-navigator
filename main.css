@@ -1,4 +1,22 @@
+input, table {
+    width: 100%;
+}
+
+.DialogDivider {
+    border-top: 1px solid #e8ecee;
+}
+
+.DialogFloatButton {
+    margin-top: 10px !important;
+}
+
+.DialogFloatRight {
+    float: right;
+    margin-right: 20px;
+}
+
 .FloatCenterDialog {
+    background-color: white;
     position: fixed;
     top: 50%;
     transform: translateX(-50%) translateY(-50%) !important;
@@ -28,17 +46,17 @@
     margin-right: 5px !important;
 }
 
+.ReplaceDescriptionStructure-formContents {
+    box-sizing: border-box;
+    padding: 16px 32px;
+}
+
 .ReplaceUserTextSection {
     max-height: 400px;
 }
 
 .ReplaceUserTextSectionDescription {
     margin-bottom: 10px;
-}
-
-.SaveTextLink {
-    float: right;
-    margin-right: 20px;
 }
 
 .SetParentDrawer-typeaheadInput {
