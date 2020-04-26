@@ -52,8 +52,8 @@ const addRowToUserReplaceTextList = function() {
   if (!userTextToReplaceDialogTable) return;
   const newUserTextTr = document.createElement('TR');
   newUserTextTr.setAttribute('class', 'name-row');
-  newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
-    <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value=""></td>
+  newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value=""></td>
+    <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value=""></td>
     <td><a class="delete-row-link">&nbsp;×</a></td>`;
   newUserTextTr.lastElementChild.addEventListener('click', function(event) {deleteUserReplaceTextRow(event.target);});
   userTextToReplaceDialogTable.firstElementChild.appendChild(newUserTextTr);
@@ -986,15 +986,15 @@ const returnReplaceDescriptionInnerHTML = function() {
         <div class="content">
           <div class="Scrollable Scrollable--vertical ReplaceDescriptionStructure-formContents">
             <div class="FormRowStructure-label--labelPlacementTop">
-            <table>
+            <table class="ReplaceDescriptionTable">
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td></tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" value="${locStrings['dialogPlaceholder-HTMLEntities']} (${locStrings['snippet-example']}&amp;hearts;)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" value="${locStrings['dialogPlaceholder-HTMLSymbols']} (${locStrings['snippet-example']}♥)" disabled></td>
               </tr>
               <tr class="name-row">
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
-                <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" value="${locStrings['dialogPlaceholder-duplicateLinks']} (${locStrings['snippet-example']}https://app.asana.com/ <https://app.asana.com/>)" disabled></td>
+                <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" value="${locStrings['dialogPlaceholder-singleString']} (${locStrings['snippet-example']}https://app.asana.com/)" disabled></td>
               </tr>
             </table>
             <div class="Button Button--primary Button--medium DialogFloatButton DialogFloatRight" role="button" id="ReplaceDescriptionDialogPresetButton" tabindex="0">${locStrings['dialogButton-usePreset']}</div>
@@ -1003,10 +1003,10 @@ const returnReplaceDescriptionInnerHTML = function() {
           <div class="Scrollable Scrollable--vertical ReplaceDescriptionStructure-formContents ReplaceUserTextSection">
             <div class="FormRowStructure-label--labelPlacementTop"><div>
             <div class="ReplaceUserTextSectionDescription">${locStrings['dialogMessage-userStrings']}<br>${locStrings['dialogMessage-regularExpression']}${locStrings['snippet-spacing']}${locStrings['dialogMessage-visitReference-var-link'].replace('{link}', '<a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions" rel="noopener noreferrer" tabindex="-1" target="_blank">MDN</a>')}</div>
-            <table id="UserTextToReplaceDialogTable">
+            <table class="ReplaceDescriptionTable" id="UserTextToReplaceDialogTable">
               <tr class="name-row"><td>${locStrings['dialogLabel-replaceWith-var-text'].replace('{text}', '</td><td>')}</td><td></td></tr>${document.loadedUserReplaceTextList.map(a => `<tr class="name-row">
-              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
-              <td class="field-value"><input autocomplete="off" class="generic-input showing" type="text" tabindex="0" value="` + escapeHtml(a[1]) + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value="` + escapeHtml(a[0]) + `"></td>
+              <td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value="` + escapeHtml(a[1]) + `"></td>
               <td><a class="delete-row-link">&nbsp;×</a></td>
             </tr>`).join('')}
             </table>
