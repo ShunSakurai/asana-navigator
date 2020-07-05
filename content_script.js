@@ -28,14 +28,14 @@ const addReplaceDescriptionToExtraActions = function() {
   if (singleTaskPaneExtraActionsButton) {
     singleTaskPaneExtraActionsButton.addEventListener('click', function() {
       const replaceDescriptionButton = document.createElement('A');
-      replaceDescriptionButton.setAttribute('class', 'MenuItemBase-button MenuItemBase--small Menu-menuItem SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
+      replaceDescriptionButton.setAttribute('class', 'StaticMenuItemBase-button StaticMenuItemBase--medium MenuItemBase Menu-menuItem SingleTaskPaneExtraActionsButton-replaceDescription SingleTaskPaneExtraActionsButton-menuItem');
       replaceDescriptionButton.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
       replaceDescriptionButton.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
       replaceDescriptionButton.addEventListener('click', function() {
         displayReplaceDescriptionDialog();
         closeTaskPaneExtraActionsMenu();
       });
-      replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">E</span></span></span></div></span>`;
+      replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">E</span></span></span></div></span>`;
 
       setTimeout(function() {
         const previousExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-print');
@@ -154,14 +154,14 @@ const addSetParentToExtraActions = function() {
   if (taskPaneExtraActionsButton) {
     taskPaneExtraActionsButton.addEventListener('click', function() {
       const setParentButton = document.createElement('A');
-      setParentButton.setAttribute('class', `MenuItemBase-button MenuItemBase--small Menu-menuItem ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
+      setParentButton.setAttribute('class', `StaticMenuItemBase-button StaticMenuItemBase--medium MenuItemBase Menu-menuItem ${taskPaneTypeString}TaskPaneExtraActionsButton-setParent ${taskPaneTypeString}TaskPaneExtraActionsButton-menuItem`);
       setParentButton.addEventListener('mouseover', function() {this.classList.add('is-highlighted');});
       setParentButton.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
       setParentButton.addEventListener('click', function() {
         displaySetParentDrawer();
         closeTaskPaneExtraActionsMenu();
       });
-      setParentButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">G</span></span></span></div></span>`;
+      setParentButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">G</span></span></span></div></span>`;
 
       setTimeout(function() {
         const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
@@ -198,7 +198,7 @@ const addToKeyboardShortcutsList = function() {
     const [description, keyList] = shortcutsArray[i];
     const keyboardShortcutsModalRow = document.createElement('DIV');
     keyboardShortcutsModalRow.setAttribute('class', 'KeyboardShortcutsModal-row');
-    keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys"><span class="KeyboardShortcutsModal-key"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal">` +
+    keyboardShortcutsModalRow.innerHTML = `<span class="KeyboardShortcutsModal-description">${description}</span><span class="KeyboardShortcutsModal-keys"><span class="KeyboardShortcutsModal-key"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light">` +
     keyList.map(a => (a === separator) ? ' / ' : '<span class="KeyboardShortcutLabel-key">' + a + '</span>').join('') + '</span></span></span>';
     keyboardShortcutsModalANSection.appendChild(keyboardShortcutsModalRow);
   }
@@ -436,7 +436,7 @@ const createSetParentDropdownContainer = function(input, taskGidList, workspaceG
   const queryValue = input.value || taskName;
   if (!document.querySelector('#SetParentDropdownContainer')) {
     const setParentDropdownContainer = document.createElement('DIV');
-    setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="scrollable scrollable--vertical TypeaheadScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadScrollable-contents"></div></div></div></div></div>';
+    setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="Scrollable Scrollable--vertical TypeaheadScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadScrollable-contents"></div></div></div></div></div>';
     setParentDropdownContainer.setAttribute('id', 'SetParentDropdownContainer');
     input.parentNode.appendChild(setParentDropdownContainer);
   }
@@ -459,9 +459,9 @@ const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGi
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
   const siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
-  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown scrollable scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
+  siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown Scrollable Scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
     subtaskList.map(
-      subtask => `<a class="MenuItemBase-button MenuItemBase--small Menu-menuItem" ${(subtask.is_rendered_as_separator) ? '' : `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
+      subtask => `<a class="StaticMenuItemBase-button StaticMenuItemBase--medium MenuItemBase Menu-menuItem" ${(subtask.is_rendered_as_separator) ? '' : `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
       `${(subtask.is_rendered_as_separator) ? '<u>' + subtask.name + '</u>' : ((subtask.gid === taskGid) ? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;' : (subtask.completed ? completeIcon : incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
@@ -573,7 +573,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
 const displayReplaceDescriptionDialog = function() {
   const replaceDescriptionDialog = document.createElement('DIV');
   replaceDescriptionDialog.setAttribute('id', 'ReplaceDescriptionDialogView');
-  replaceDescriptionDialog.setAttribute('class', 'ModalLayer');
+  replaceDescriptionDialog.setAttribute('class', 'DecorativeModalLayer');
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
@@ -785,7 +785,7 @@ const listenToClickOnAddAttachmentsButton = function() {
       const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
       for (let i = 1; i < listAddAttachmentButtons.length; i++) {
         listAddAttachmentButtons[i].classList.add('MenuItemLabel-shortcut');
-        listAddAttachmentButtons[i].innerHTML += `<span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">${i}</span></span></span>`;
+        listAddAttachmentButtons[i].innerHTML += `<span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">${i}</span></span></span>`;
       }
     }, 50);
   });
@@ -806,10 +806,10 @@ const listenToClickOnInboxSavePrevious = function() {
 };
 
 const listenToClickOnKeyboardShortcutList = function() {
-  const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton');
+  const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton-button');
   if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function() {
     setTimeout(function() {
-      const menuItemsList = Array.from(document.querySelectorAll('.MenuItemBase-button.MenuItemBase--small.Menu-menuItem'));
+      const menuItemsList = Array.from(document.querySelectorAll('.StaticMenuItemBase-button.StaticMenuItemBase--medium.MenuItemBase.Menu-menuItem'));
       const indexKeyboardShortcuts = menuItemsList.map(menuItem => menuItem.firstElementChild.innerText).indexOf(locStrings['helpButton-keyboardShortcuts']);
       const helpButtonKeyboardShortcuts = menuItemsList[indexKeyboardShortcuts];
       helpButtonKeyboardShortcuts.addEventListener('click', function() {
