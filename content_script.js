@@ -1286,8 +1286,8 @@ document.addEventListener('keydown', function(event) {
       if (!document.tabKeyIsDown) break;
       chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
         if (items.anOptionsAttachment) {
-          const addAttachmentButton = document.querySelector('.AddAttachmentsButton-button');
-          if (addAttachmentButton) addAttachmentButton.click();
+          const addAttachmentButton = document.querySelector('.AddAttachmentsButton');
+          if (addAttachmentButton) addAttachmentButton.children[1].click(); // span > div
         }
       });
       break;
