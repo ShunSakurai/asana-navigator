@@ -67,7 +67,6 @@ const addSearchDropdownShortcut = function() {
   let mode, fieldValue;
   const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
   if (!topbarPageHeaderStructure) return;
-  const topbarClasses = topbarPageHeaderStructure.classList;
   if (window.location.href.includes('https://app.asana.com/0/inbox/')) {
     mode = 'InInbox';
     fieldValue = locStrings['snippet-me'];
@@ -127,7 +126,6 @@ const addSearchDropdownShortcutInTeam = function() {
     const teamData = response.data;
     if (teamData.organization.is_organization) {
       const mode = 'InTeam';
-      const fieldValue = document.querySelector('.TopbarPageHeaderStructure-title').textContent;
       const dropdownItem = document.createElement('DIV');
       constructInContextSearchDropdownItem(dropdownItem, mode);
       const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
@@ -622,7 +620,7 @@ const displaySetParentDrawer = function() {
   const setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
-  `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span class="Switch Switch--small"><input id="SetParentSwitch" class="Switch-checkbox" type="checkbox"><label class="Switch-label"></label></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
+  `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span class="SwitchPresentation SwitchPresentation--small"><input id="InputSetParentSwitch" class="Switch-checkbox" type="checkbox"><label class="Switch-label"></label></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   taskPaneBody.insertBefore(setParentDrawer, taskPaneBody.firstElementChild);
   // const singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
@@ -631,11 +629,13 @@ const displaySetParentDrawer = function() {
   document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function() {
     closeSetParentDrawer();
   });
-  document.querySelector('#SetParentSwitch').nextSibling.addEventListener('click', function() {
-    toggleSetParentSwitch(this.previousSibling);
+  document.querySelector('#InputSetParentSwitch').parentNode.addEventListener('click', function() {
+    toggleSetParentSwitch(this.firstElementChild);
   });
 
   const setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
+  setParentDrawerTypeaheadInput.focus();
+
   const taskGid = findTaskGid(window.location.href);
   callAsanaApi('GET', `tasks/${taskGid}`, {}, {}, function(response) {
     let taskGidList;
@@ -653,7 +653,7 @@ const displaySetParentDrawer = function() {
         createSetParentDropdownContainer(that, taskGidList, workspaceGid);
       });
     });
-    setParentDrawerTypeaheadInput.focus();
+    createSetParentDropdownContainer(setParentDrawerTypeaheadInput, taskGidList, workspaceGid);
     saveOriginalParents(taskGidList);
   });
   document.addEventListener('click', listenToClickToCloseSetParentDropdown);
@@ -889,7 +889,7 @@ const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, po
       dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
       dropdownItem.addEventListener('click', function() {
         const setParentData = {parent: response.data[i].gid};
-        if (document.querySelector('#SetParentSwitch').classList.contains('checked')) {
+        if (document.querySelector('#InputSetParentSwitch').hasAttribute('checked')) {
           setParentData.insert_before = null;
         } else {
           setParentData.insert_after = null;
@@ -1125,7 +1125,6 @@ const saveUserReplaceTextList = function() {
 };
 
 const setNewParentTask = function(taskGidList, setParentData, parentTask) {
-  const setParentDrawer = document.querySelector('.SetParentDrawer');
   const originalParentsList = Object.values(document.anOriginalParents);
 
   let counter = 0;
@@ -1161,12 +1160,13 @@ const setNewParentTask = function(taskGidList, setParentData, parentTask) {
 };
 
 const toggleSetParentSwitch = function(input) {
-  if (input.classList.contains('checked')) {
-    input.classList.remove('checked');
-    input.parentNode.classList.remove('Switch--checked');
+  const span = input.parentNode;
+  if (span.classList.contains('SwitchPresentation--checked')) {
+    input.removeAttribute('checked');
+    span.classList.remove('SwitchPresentation--checked');
   } else {
-    input.classList.add('checked');
-    input.parentNode.classList.add('Switch--checked');
+    input.setAttribute('checked', true);
+    span.classList.add('SwitchPresentation--checked');
   }
 };
 

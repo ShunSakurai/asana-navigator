@@ -50,12 +50,12 @@ const localizationStrings = {
     'drawerLabel-setParent': 'Make this task a subtask of another task.', // krtmmb:[0,"Make this task a subtask of another task. It will be removed from the current project."]
     'drawerPlaceholder-setParent': 'Find a task by its name or ID', // "8bkw5o":[0,"Find a task"]
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
-    'dropdown-searchInInbox': 'Search in Tasks I collaborate on',
+    'dropdown-searchInInbox': 'Search in Tasks I Collaborate on',
     'dropdown-searchInProject': 'Search in this Project',
     'dropdown-searchInTag': 'Search in this Tag',
     'dropdown-searchInTeam': 'Search in this Team',
     'dropdown-searchMyTasks': 'Search in My Tasks',
-    'dropdown-searchThisUser': 'Search in this user\'s tasks',
+    'dropdown-searchThisUser': 'Search in this User\'s Tasks',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
     'menuButton-replaceDescription': 'Replace text in description',
     'menuButton-setParent': 'Convert to subtask(s)',
