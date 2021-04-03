@@ -18,7 +18,7 @@ const localizationStrings = {
     'snippet-tags': 'Tags',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Aufgaben von {nameOrEmail} ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Profil von {nameOrEmail}',
     'typeaheadItem-NoMatch': 'Keine Übereinstimmungen gefunden',
   },
   en: {
@@ -42,7 +42,7 @@ const localizationStrings = {
     'dialogLink-addRow': 'Add Row',
     'dialogMessage-userStrings': 'You can define and replace custom strings below.',
     'dialogMessage-regularExpression': 'Regular expression is supported. Please escape special characters (symbols) with a backslash (&#92;) in the left column.',
-    'dialogMessage-visitReference-var-link': 'Please visit the {link} for more information.', // "1pee805":[2,"Deactivation is permanent and cannot be undone. Once your account is deactivated, you can <strong>no longer</strong> log in to any Organizations or Workspaces in Asana. Please visit the <a>Asana Guide</a> for more information."]
+    'dialogMessage-visitReference-var-link': 'Please visit {link} for more information.', // "1pee805":[2,"Deactivation is permanent and cannot be undone. Once your account is deactivated, you can <strong>no longer</strong> log in to any Organizations or Workspaces in Asana. Please visit the <a>Asana Guide</a> for more information."]
     'dialogPlaceholder-duplicateLinks': 'Duplicate links',
     'dialogPlaceholder-HTMLEntities': 'HTML entities',
     'dialogPlaceholder-HTMLSymbols': 'HTML symbols',
@@ -77,7 +77,7 @@ const localizationStrings = {
     'toastContent-descriptionReplaced-var-task': 'Replaced {counter} item(s) in the description: {task}',
     'toastContent-descriptionReplaced-noCount-var-task': 'Description replaced: {task}',
     'toastContent-setParent-var-task': 'Set a new parent task: {task}',
-    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Tasks ', // "31yy2c":[1,"{nameOrEmail}’s Tasks - {domainName}"]
+    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail}’s Profile', // t6w6gd
     'typeaheadItem-NoMatch': 'No matches found', // 1h71d4n
   },
   es: {
@@ -96,7 +96,7 @@ const localizationStrings = {
     'snippet-tags': 'Etiquetas',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tareas de {nameOrEmail} ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Perfil de {nameOrEmail}',
     'typeaheadItem-NoMatch': 'No se encontraron coincidencias',
   },
   fr: {
@@ -115,7 +115,7 @@ const localizationStrings = {
     'snippet-tags': 'Étiquettes',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tâches de {nameOrEmail} ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Perfil de {nameOrEmail}',
     'typeaheadItem-NoMatch': 'Aucune correspondance',
   },
   ja: {
@@ -173,7 +173,7 @@ const localizationStrings = {
     'toastContent-descriptionReplaced-var-task': '{task} の説明で {counter} 件を置換しました。',
     'toastContent-descriptionReplaced-noCount-var-task': '{task} の説明を置換しました。',
     'toastContent-setParent-var-task': '新しい親タスクを設定しました: {task}',
-    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail} のタスク',
+    'topbarTitle-replacement-var-nameOrEmail': '{nameOrEmail} のプロフィール',
     'typeaheadItem-NoMatch': '一致するタスクは見つかりませんでした', // translating differently
   },
   pt: {
@@ -192,7 +192,7 @@ const localizationStrings = {
     'snippet-tags': 'Tags',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
-    'topbarTitle-replacement-var-nameOrEmail': 'Tarefas de {nameOrEmail} ',
+    'topbarTitle-replacement-var-nameOrEmail': 'Perfil — {nameOrEmail}',
     'typeaheadItem-NoMatch': 'Nenhuma correspondência encontrada',
   }
 };

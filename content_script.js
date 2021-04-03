@@ -77,13 +77,11 @@ const addSearchDropdownShortcut = function() {
     mode = 'InTag';
     fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent;
   } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
-    if (document.querySelector('.MyTasksPageHeader-ownAvatar')) {
-      mode = 'MyTasks';
-      fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
-    } else {
-      mode = 'ThisUser';
-      fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)')))[1];
-    }
+    mode = 'MyTasks';
+    fieldValue = locStrings['snippet-me'];
+  } else if (topbarPageHeaderStructure.classList.contains('ProfilePageHeader')) {
+    mode = 'ThisUser';
+    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent.match(new RegExp(locStrings['topbarTitle-replacement-var-nameOrEmail'].replace('{nameOrEmail}', '(.+?)').replace(' ', '\\s')))[1];
   } else {
     return;
   }
@@ -414,7 +412,7 @@ const createBackFromInboxButton = function() {
   const inboxNavigationBar = document.querySelector('.InboxNavigationBar');
   if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
     const backLinkFromInbox = document.createElement('LI');
-    backLinkFromInbox.setAttribute('class', 'InboxNavigationBar-backLink');
+    backLinkFromInbox.setAttribute('class', 'Tab TabNavigationBar-tab InboxNavigationBar-backLink');
     backLinkFromInbox.innerHTML = '<a class="InboxButton-backLink disabled">&times;</a>';
     inboxNavigationBar.firstElementChild.appendChild(backLinkFromInbox);
     if (document.anPreviousUrl) {
@@ -979,9 +977,9 @@ const returnReplaceDescriptionInnerHTML = function() {
   <div class="ModalBuffer-topBuffer"></div>
   <div class="ModalBuffer-content">
     <div class="ModalPaneWithBuffer-pane">
-      <div id="ReplaceDescriptionDialog" class="Dialog FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
-        <header class="Dialog-header">
-          <div class="Dialog-headerTitle">${locStrings['menuButton-replaceDescription']}</div>
+      <div id="ReplaceDescriptionDialog" class="DeprecatedDialog FloatCenterDialog" style="position: fixed; top: 50%; transform: translateX(-50%) translateY(-50%);"> <!-- inline CSS in case main.css is not loaded -->
+        <header class="DeprecatedDialog-header">
+          <div class="DeprecatedDialog-headerTitle"><div>${locStrings['menuButton-replaceDescription']}</div></div>
           <div role="button" tabindex="0" class="CloseButton Dialog-closeButton" id="CloseReplaceDescriptionDialogButton"><svg class="Icon--small Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16L27,7.1c0.6-0.6,0.6-1.5,0-2.1s-1.5-0.6-2.1,0L16,13.9l-8.9-9C6.5,4.3,5.6,4.3,5,4.9S4.4,6.4,5,7l8.9,8.9L5,24.8c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></div>
         </header>
         <div class="content">
