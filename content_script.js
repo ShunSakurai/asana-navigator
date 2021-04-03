@@ -13,7 +13,7 @@ const addKeyboardShortcutToTooltipBody = function(button, shortcutString) {
 const addKeyboardShortcutsToTooltipBodyOnHover = function() {
   [
     ['AddAttachmentsButton', 'Tab+V'],
-    ['HeartButton', 'Tab+K'],
+    ['SubtleHeartButton', 'Tab+K'],
     ['SingleTaskPaneExtraActionsButton', 'Tab+.']
   ].forEach(function(shortcutPair) {
     let button = document.querySelector(`.${shortcutPair[0]}`);
@@ -505,7 +505,7 @@ const deleteUserReplaceTextRow = function(button) {
 };
 
 const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
-  const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  const taskAncestryTaskLinks = document.querySelectorAll('.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) return;
   const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   const taskGid = findTaskGid(window.location.href);
@@ -782,6 +782,7 @@ const listenToClickOnAddAttachmentsButton = function() {
       if (!addAttachmentsMenuItem) return;
       const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
       for (let i = 1; i < listAddAttachmentButtons.length; i++) {
+        if (listAddAttachmentButtons[i].classList.contains('MenuItemLabel-shortcut')) continue;
         listAddAttachmentButtons[i].classList.add('MenuItemLabel-shortcut');
         listAddAttachmentButtons[i].innerHTML += `<span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">${i}</span></span></span>`;
       }
