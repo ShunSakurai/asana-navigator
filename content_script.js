@@ -35,10 +35,6 @@ const addRowToUserReplaceTextList = function() {
 };
 
 const addSearchDropdownShortcut = function() {
-  if (document.querySelector('.TeamPageFacepile-content')) {
-    addSearchDropdownShortcutInTeam();
-    return;
-  }
   let mode, fieldValue;
   const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
   if (!topbarPageHeaderStructure) return;
@@ -47,9 +43,6 @@ const addSearchDropdownShortcut = function() {
     fieldValue = locStrings['snippet-me'];
   } else if (topbarPageHeaderStructure.classList.contains('ProjectPageHeader')) {
     mode = 'InProject';
-    fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent;
-  } else if (topbarPageHeaderStructure.classList.contains('TagPageHeader')) {
-    mode = 'InTag';
     fieldValue = topbarPageHeaderStructure.children[1].firstElementChild.firstElementChild.textContent;
   } else if (topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
     mode = 'MyTasks';
@@ -68,56 +61,18 @@ const addSearchDropdownShortcut = function() {
     topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
     dropdownItem.addEventListener('click', function() {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
-      if (mode == 'InTag') {
-        setTimeout(function() {
-          document.querySelector('.AdvancedSearchFooter-addFilter').click();
-          document.querySelector('.AdvancedSearchFooter-addFilter').focus();
-        }, 30);
-        setTimeout(function() {
-          const addFilterTagsButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-tags'])[0].parentNode;
-          addFilterTagsButtonA.classList.add('is-highlighted');
-        }, 70);
-        // need to click the third button
-        return;
-      }
       setTimeout(function() {
-        const searchInContextFilter = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : (mode == 'InTag') ? 'TagFilter' : 'DomainUserFilter'}`));
+        const searchInContextFilter = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : 'DomainUserFilter'}`));
         if (!searchInContextFilter) return;
         const searchInContextInputField = searchInContextFilter.firstElementChild.firstElementChild.children[1];
         if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
+        document.execCommand('insertText', false, fieldValue);
         searchInContextInputField.dispatchEvent(new Event('input', {bubbles: true, cancelable: true, target: searchInContextInputField}));
       }, 100);
     });
   }, 200);
-};
-
-const addSearchDropdownShortcutInTeam = function() {
-  const teamGid = findTeamGid(window.location.href);
-  callAsanaApi('GET', `teams/${teamGid}`, {opt_fields: 'organization.is_organization'}, {}, function(response) {
-    const teamData = response.data;
-    if (teamData.organization.is_organization) {
-      const mode = 'InTeam';
-      const dropdownItem = document.createElement('DIV');
-      constructInContextSearchDropdownItem(dropdownItem, mode);
-      const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
-      if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
-      topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
-      dropdownItem.addEventListener('click', function() {
-        document.querySelector('.TopbarSearchAdvancedSearchItem').click();
-        setTimeout(function() {
-          document.querySelector('.AdvancedSearchFooter-addFilter').click();
-          document.querySelector('.AdvancedSearchFooter-addFilter').focus();
-        }, 30);
-        setTimeout(function() {
-          const addFilterMoreButtonA = Array.from(document.querySelectorAll('.MenuItem-label')).filter(span => span.textContent === locStrings['snippet-more'])[0].parentNode;
-          addFilterMoreButtonA.classList.add('is-highlighted');
-        }, 60);
-        // I can't display the contents of "More" menu
-      });
-    }
-  });
 };
 
 const addSetParentToExtraActions = function() {
@@ -215,7 +170,7 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
     <div class="TypeaheadItemStructure-icon">
       <svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">
         ${(mode == 'InInbox') ? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>' :
-        mode == 'InProject' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.children[1].innerHTML : mode == 'InTag' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.firstElementChild.innerHTML :
+        mode == 'InProject' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.children[1].innerHTML :
         '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}
       </svg>
     </div>
@@ -686,12 +641,6 @@ const findTaskGid = function(url) { // gid spec might change
     const match = taskGidRegexPatterns[i].exec(url);
     if (match) return match[1];
   }
-};
-
-const findTeamGid = function(url) { // gid spec might change
-  const teamGidRegexPattern = /https:\/\/app\.asana\.com\/0\/(\d+)/;
-  const findTeamGidMatch = teamGidRegexPattern.exec(url);
-  if (findTeamGidMatch) return findTeamGidMatch[1];
 };
 
 const getLocaleAndSetLocalizedStrings = function() {

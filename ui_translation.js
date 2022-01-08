@@ -13,9 +13,7 @@ const localizationStrings = {
     'snippet-continue': 'Möchten Sie damit wirklich fortfahren?',
     'snippet-example': 'z. B. ',
     'snippet-me': 'mir',
-    'snippet-more': 'Mehr',
     'snippet-save': 'Speichern',
-    'snippet-tags': 'Tags',
     'toastButtton-undo': 'Rückgängig machen',
     'toastButtton-undoing': '(Wird rückgängig gemacht...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Profil von {nameOrEmail}',
@@ -52,8 +50,6 @@ const localizationStrings = {
     'drawerSwitch-setParent-var-button': 'Insert at: Top{button}Bottom',
     'dropdown-searchInInbox': 'Search in Tasks I Collaborate on',
     'dropdown-searchInProject': 'Search in this Project',
-    'dropdown-searchInTag': 'Search in this Tag',
-    'dropdown-searchInTeam': 'Search in this Team',
     'dropdown-searchMyTasks': 'Search in My Tasks',
     'dropdown-searchThisUser': 'Search in this User\'s Tasks',
     'helpButton-keyboardShortcuts': 'Keyboard shortcuts', // 5vkqjv
@@ -69,9 +65,7 @@ const localizationStrings = {
     'snippet-example': 'e.g. ', // "1mdunih":[0,"e.g., Priority, Stage, Status"]
     'snippet-save': 'Save', // "14vpdb5"
     'snippet-me': 'me', // ay8rvu
-    'snippet-more': 'More', // yiss4w
     'snippet-spacing': ' ',
-    'snippet-tags': 'Tags', // "1utfvzg":[0,"Tags",null,!0]
     'toastButtton-undo': 'Undo', // 14vtr68
     'toastButtton-undoing': '(Undoing...)', // 63rova
     'toastContent-descriptionReplaced-var-task': 'Replaced {counter} item(s) in the description: {task}',
@@ -91,9 +85,7 @@ const localizationStrings = {
     'snippet-continue': '¿Deseas continuar?',
     'snippet-example': 'ej. ',
     'snippet-me': 'Mí',
-    'snippet-more': 'Más',
     'snippet-save': 'Guardar',
-    'snippet-tags': 'Etiquetas',
     'toastButtton-undo': 'Deshacer',
     'toastButtton-undoing': '(Deshaciendo...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Perfil de {nameOrEmail}',
@@ -110,9 +102,7 @@ const localizationStrings = {
     'snippet-continue': 'Souhaitez-vous continuer ?',
     'snippet-example': 'ex. ',
     'snippet-me': 'moi',
-    'snippet-more': 'Plus',
     'snippet-save': 'Enregistrer',
-    'snippet-tags': 'Étiquettes',
     'toastButtton-undo': 'Annuler',
     'toastButtton-undoing': '(Annulation...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Perfil de {nameOrEmail}',
@@ -148,8 +138,6 @@ const localizationStrings = {
     'drawerSwitch-setParent-var-button': '挿入場所: 上部{button}下部',
     'dropdown-searchInInbox': 'コラボレーターとして参加しているタスクを検索',
     'dropdown-searchInProject': 'このプロジェクト内を検索',
-    'dropdown-searchInTag': 'このタグ内を検索',
-    'dropdown-searchInTeam': 'このチーム内を検索',
     'dropdown-searchMyTasks': 'マイタスクを検索',
     'dropdown-searchThisUser': 'このユーザーのタスクを検索',
     'helpButton-keyboardShortcuts': 'キーボードショートカット',
@@ -165,9 +153,7 @@ const localizationStrings = {
     'snippet-example': '例: ',
     'snippet-save': '保存',
     'snippet-me': '自分',
-    'snippet-more': 'その他',
     'snippet-spacing': '', // no space between sentences
-    'snippet-tags': 'タグ',
     'toastButtton-undo': '元に戻す',
     'toastButtton-undoing': '(元に戻しています...)',
     'toastContent-descriptionReplaced-var-task': '{task} の説明で {counter} 件を置換しました。',
@@ -187,9 +173,7 @@ const localizationStrings = {
     'snippet-continue': 'Deseja continuar?',
     'snippet-example': 'ex. ',
     'snippet-me': 'mim',
-    'snippet-more': 'Mais',
     'snippet-save': 'Salvar',
-    'snippet-tags': 'Tags',
     'toastButtton-undo': 'Desfazer',
     'toastButtton-undoing': '(Desfazendo...)',
     'topbarTitle-replacement-var-nameOrEmail': 'Perfil — {nameOrEmail}',
