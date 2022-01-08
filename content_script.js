@@ -1,28 +1,3 @@
-const addKeyboardShortcutToTooltipBody = function(button, shortcutString) {
-  const intervalFuncAddKSToTooltipBody = setInterval(function() {
-    const tooltipBody = document.querySelector('.Tooltip-body');
-    if (!tooltipBody) return;
-    if (!tooltipBody.innerHTML.match(/\(Tab\+[!-~]\)/)) tooltipBody.innerHTML += ` (${shortcutString})`;
-    clearInterval(intervalFuncAddKSToTooltipBody);
-  }, 200);
-  button.addEventListener('mouseout', function() {
-    clearInterval(intervalFuncAddKSToTooltipBody);
-  });
-};
-
-const addKeyboardShortcutsToTooltipBodyOnHover = function() {
-  [
-    ['AddAttachmentsButton', 'Tab+V'],
-    ['SubtleHeartButton', 'Tab+K'],
-    ['SingleTaskPaneExtraActionsButton', 'Tab+.']
-  ].forEach(function(shortcutPair) {
-    let button = document.querySelector(`.${shortcutPair[0]}`);
-    if (!button) return; // continue
-    button.addEventListener('mouseover', function() {addKeyboardShortcutToTooltipBody(button, shortcutPair[1]);
-    });
-  });
-};
-
 const addReplaceDescriptionToExtraActions = function() {
   const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
@@ -703,15 +678,13 @@ const findProjectGid = function(url) { // gid spec might change
 
 const findTaskGid = function(url) { // gid spec might change
   const taskGidRegexPatterns = [
-    /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)\/?f?/,
-    /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+\/?f?/,
-    /https:\/\/app\.asana\.com\/0\/search\/\d+\/(\d+)\/?f?/
+    /https:\/\/app\.asana\.com\/0\/\d+\/(\d+)/,
+    /https:\/\/app\.asana\.com\/0\/inbox\/\d+\/(\d+)\/\d+/,
+    /https:\/\/app\.asana\.com\/0\/search\/\d+\/(\d+)/
   ];
   for (let i = 0; i < taskGidRegexPatterns.length; i++) {
-    const pattern = taskGidRegexPatterns[i];
-    if (pattern.exec(url)) {
-      return pattern.exec(url)[1];
-    }
+    const match = taskGidRegexPatterns[i].exec(url);
+    if (match) return match[1];
   }
 };
 
@@ -1067,7 +1040,6 @@ const runOptionalFunctionsAfterDelay = function(delay) {
       if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
       if (items.anOptionsAttachment) {
         listenToClickOnAddAttachmentsButton();
-        addKeyboardShortcutsToTooltipBodyOnHover();
       }
       if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
       if (items.anOptionsParent) addSetParentToExtraActions();

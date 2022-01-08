@@ -5,7 +5,6 @@
   },
   "content_scripts": [
     {
-      "all_frames": true,
       "css": ["main.css"],
       "js": ["content_script.js", "ui_platform.js", "ui_translation.js"],
       "matches": ["https://app.asana.com/*"],
@@ -30,5 +29,5 @@
     "activeTab", "storage", "tabs"
   ],
   "short_name": "AsaNavigator",
-  "version": "2.5.9"
+  "version": "2.5.10"
 }

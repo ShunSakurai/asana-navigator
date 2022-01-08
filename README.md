@@ -73,6 +73,7 @@ Firefox:
 Common:
 - The features are automatically enabled when you are on an Asana task page
 - Please reload the Asana task page if this extension doesn't work well
+- In incognito mode, features that interact with Asana API don't work
 
 ## Special thanks
 
