@@ -618,6 +618,35 @@ const displaySuccessToast = function(task, messageVarTask, functionToRunCallback
   }, 15000);
 };
 
+const enableFeaturesAfterDelayOnLoad = function(delay) {
+  chrome.storage.sync.get({
+    anOptionsInbox: true,
+    anOptionsSearch: true
+  }, function(items) {
+    setTimeout(function() {
+      if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
+      if (items.anOptionsSearch) listenToSearchBarExpansion();
+      enableFeaturesAfterDelayOnPageChange(0);
+    }, delay);
+  });
+};
+
+const enableFeaturesAfterDelayOnPageChange = function(delay) {
+  chrome.storage.sync.get({
+    anOptionsAttachment: true,
+    anOptionsDescription: true,
+    anOptionsParent: true,
+    anOptionsSubtasks: true
+  }, function(items) {
+    setTimeout(function() {
+      if (items.anOptionsAttachment) listenToClickOnAddAttachmentsButton();
+      if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
+      if (items.anOptionsParent) addSetParentToExtraActions();
+      if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
+    }, delay);
+  });
+};
+
 const escapeHtml = function(text) {
   const map = {
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&apos;'
@@ -713,33 +742,15 @@ const listenToClickOnAddAttachmentsButton = function() {
 };
 
 const listenToClickOnInboxSavePrevious = function() {
-  setTimeout(function() {
-    const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
-    if (sidebarInboxLink) {
-      sidebarInboxLink.addEventListener('click', function() {
-        document.anPreviousUrl = window.location.href;
-        setTimeout(function() {
-          createBackFromInboxButton();
-        }, 100);
-      });
-    }
-  }, 500);
-};
-
-const listenToClickOnKeyboardShortcutList = function() {
-  const topbarHelpMenuButton = document.querySelector('.TopbarHelpMenuButton-button');
-  if (topbarHelpMenuButton) topbarHelpMenuButton.addEventListener('click', function() {
-    setTimeout(function() {
-      const menuItemsList = Array.from(document.querySelectorAll('.StaticMenuItemBase-button.StaticMenuItemBase--medium.MenuItemBase.Menu-menuItem'));
-      const indexKeyboardShortcuts = menuItemsList.map(menuItem => menuItem.firstElementChild.innerText).indexOf(locStrings['helpButton-keyboardShortcuts']);
-      const helpButtonKeyboardShortcuts = menuItemsList[indexKeyboardShortcuts];
-      helpButtonKeyboardShortcuts.addEventListener('click', function() {
-        setTimeout(function() {
-          addToKeyboardShortcutsList();
-        }, 100);
-      });
-    }, 100);
-  });
+  const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+  if (sidebarInboxLink) {
+    sidebarInboxLink.addEventListener('click', function() {
+      document.anPreviousUrl = window.location.href;
+      setTimeout(function() {
+        createBackFromInboxButton();
+      }, 100);
+    });
+  }
 };
 
 const listenToClickToCloseSetParentDropdown = function(event) {
@@ -960,42 +971,6 @@ const returnTypeAheadInnerHTML = function(task) {
   '</div></div></div>';
 };
 
-const runOptionalFunctionsOnLoad = function() {
-  chrome.storage.sync.get({
-    anOptionsSubtasks: true,
-    anOptionsSearch: true,
-    anOptionsShortcuts: true,
-    anOptionsDescription: true,
-    anOptionsParent: true
-  }, function(items) {
-    if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-    if (items.anOptionsSearch) listenToSearchBarExpansion();
-    if (items.anOptionsShortcuts) listenToClickOnKeyboardShortcutList();
-    if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
-    if (items.anOptionsParent) addSetParentToExtraActions();
-  });
-};
-
-const runOptionalFunctionsAfterDelay = function(delay) {
-  chrome.storage.sync.get({
-    anOptionsInbox: true,
-    anOptionsSubtasks: true,
-    anOptionsAttachment: true,
-    anOptionsDescription: true,
-    anOptionsParent: true
-  }, function(items) {
-    setTimeout(function() {
-      if (items.anOptionsInbox) listenToClickOnInboxSavePrevious();
-      if (items.anOptionsSubtasks) displayLinksToSiblingSubtasks();
-      if (items.anOptionsAttachment) {
-        listenToClickOnAddAttachmentsButton();
-      }
-      if (items.anOptionsDescription) addReplaceDescriptionToExtraActions();
-      if (items.anOptionsParent) addSetParentToExtraActions();
-    }, delay);
-  });
-};
-
 const saveOriginalParents = function(taskGidList) {
   document.anOriginalParents = {};
   const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
@@ -1060,7 +1035,7 @@ const setNewParentTask = function(taskGidList, setParentData, parentTask) {
               counterUndo += 1;
               if (counterUndo === taskGidList.length) {
                 callback();
-                runOptionalFunctionsAfterDelay(100);
+                enableFeaturesAfterDelayOnPageChange(100);
               } else {
                 recursiveUndoParent();
               }
@@ -1068,7 +1043,7 @@ const setNewParentTask = function(taskGidList, setParentData, parentTask) {
           };
           recursiveUndoParent();
         });
-        runOptionalFunctionsAfterDelay(100);
+        enableFeaturesAfterDelayOnPageChange(100);
       } else {
         path = `tasks/${taskGidList[counter]}/setParent`;
         recursiveSetNewParent(path, options, data);
@@ -1248,18 +1223,18 @@ window.addEventListener('blur', function() {
   document.tabKeyIsDownOnModal = false;
 });
 
-// First load or page reload
+// After first load or page reload
 window.addEventListener('load', function() {
   getLocaleAndSetLocalizedStrings();
   getPlatformAndSetPlatStrings();
   loadUserReplaceTextList();
-  runOptionalFunctionsOnLoad();
+  enableFeaturesAfterDelayOnLoad(300);
 });
 
 // After jumping from other resources on Asana
 chrome.runtime.onMessage.addListener(
   function(message, sender, callback) {
     if (message.name && message.name === 'asanaNavigatorOnUpdated' && message.status === 'complete') {
-      runOptionalFunctionsAfterDelay(500);
+      enableFeaturesAfterDelayOnPageChange(400);
     }
 });
