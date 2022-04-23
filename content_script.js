@@ -132,9 +132,9 @@ const addToKeyboardShortcutsList = function() {
 
 // https://www.chromium.org/Home/chromium-security/extension-content-script-fetches
 // Delegate to background.js
-const callAsanaApi = function(request, path, options, data, callback) {
+const callAsanaApi = function(method, path, options, data, callback) {
   chrome.runtime.sendMessage(
-    {contentScriptQuery: 'callAsanaApi', parameters: [request, path, options, data]}, callback
+    {contentScriptQuery: 'callAsanaApi', parameters: [method, path, options, data]}, callback
   );
 };
 

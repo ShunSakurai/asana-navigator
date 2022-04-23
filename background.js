@@ -22,15 +22,12 @@ chrome.runtime.onInstalled.addListener(
 chrome.runtime.onMessage.addListener(
   function(message, sender, callback) {
     if (message.contentScriptQuery != 'callAsanaApi') return;
-    const [request, path, options, data] = message.parameters;
-    const xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', function() {
-      callback(JSON.parse(this.response));
-    });
+    const [method, path, options, data] = message.parameters;
+
     const manifest = chrome.runtime.getManifest();
     const client_name = ['chrome-extension', manifest.version, manifest.name].join(':'); // Be polite to Asana API
     let requestData;
-    if (request === 'POST' || request === 'PUT') {
+    if (method === 'POST' || method === 'PUT') {
       requestData = JSON.stringify({data: data});
       options.client_name = client_name;
     } else {
@@ -47,10 +44,18 @@ chrome.runtime.onMessage.addListener(
       parameters = parameters.slice(0, -1);
       requestUrl += '?' + parameters;
     }
-    xhr.open(request, encodeURI(requestUrl));
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-Allow-Asana-Client', '1'); // Required to authenticate for POST & PUT
-    xhr.send(requestData);
+
+    fetch(requestUrl, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Allow-Asana-Client': '1'
+      },
+      body: requestData
+    })
+    .then(response => {return response.json()})
+    .then(responseJson => callback(responseJson))
+
     return true; // Will respond asynchronously.
   }
 );

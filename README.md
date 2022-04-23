@@ -8,7 +8,7 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 - [x] Register as a Chrome developer
 - [x] Create GitHub project
 - [x] Set up Chrome extension's content script structure
-- [x] Write base XMLHttpRequest function
+- [x] Write base XMLHttpRequest function → fetch()
 - [x] Create the icon
 - [x] Publish on Chrome Web Store after implementing MVP features
 - [x] Publish as a Firefox Browser Add-on
