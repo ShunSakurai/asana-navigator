@@ -1140,6 +1140,7 @@ document.addEventListener('keydown', function(event) {
         }
       }
       break;
+    case 'E':
     case 'e':
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
         chrome.storage.sync.get({anOptionsDescription: true}, function(items) {
@@ -1156,18 +1157,21 @@ document.addEventListener('keydown', function(event) {
     case 'Escape':
       if (document.querySelector('#SiblingSubtasksDropdownContainer')) deleteSiblingSubtasksDropdown();
       break;
+    case 'I':
     case 'i': {
       if (!document.tabKeyIsDown) break;
       const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
       sidebarInboxLink.click();
       break;
     }
+    case 'J':
     case 'j': {
       if (!document.tabKeyIsDown) break;
       const backLinkFromInbox = document.querySelector('.InboxButton-backLink');
       if (backLinkFromInbox) backLinkFromInbox.click();
       break;
     }
+    case 'G':
     case 'g':
       if (!document.tabKeyIsDown) break;
       if (document.querySelector('.SetParentDrawer')) {
@@ -1178,6 +1182,7 @@ document.addEventListener('keydown', function(event) {
         });
       }
       break;
+    case 'V':
     case 'v': {
       if (!document.tabKeyIsDown) break;
       chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
