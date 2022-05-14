@@ -379,7 +379,7 @@ const createSetParentDropdownContainer = function(input, taskGidList, workspaceG
   }
 };
 
-const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGid) {
+const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGid, fullscreenSuffix) {
   const completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
   const incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
   if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
@@ -387,7 +387,7 @@ const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGi
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown Scrollable Scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
     subtaskList.map(
-      subtask => `<a class="StaticMenuItemBase-button StaticMenuItemBase--medium MenuItemBase Menu-menuItem" ${(subtask.is_rendered_as_separator) ? '' : `href="https://app.asana.com/0/${containerGid}/${subtask.gid}`}"><span class="MenuItem-label">` +
+      subtask => `<a class="StaticMenuItemBase-button StaticMenuItemBase--medium MenuItemBase Menu-menuItem" ${(subtask.is_rendered_as_separator) ? '' : `href="https://app.asana.com/0/${containerGid}/${subtask.gid}${fullscreenSuffix}`}"><span class="MenuItem-label">` +
       `${(subtask.is_rendered_as_separator) ? '<u>' + subtask.name + '</u>' : ((subtask.gid === taskGid) ? '<strong id="currentSubtaskMarker">&gt;</strong>&nbsp;' : (subtask.completed ? completeIcon : incompleteIcon)) + '&nbsp;' + subtask.name}</span></a>`
     ).join('') +
     '</div></div></div>';
@@ -440,6 +440,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
   const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   const taskGid = findTaskGid(window.location.href);
   const containerGid = findProjectGid(window.location.href) || '0';
+  const fullscreenSuffix = window.location.href.endsWith('/f')? '/f': '';
 
   callAsanaApi('GET', `tasks/${parentGid}/subtasks`, {opt_fields: 'completed,is_rendered_as_separator,name'}, {}, function(response) {
     const subtaskList = response.data;
@@ -458,32 +459,34 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
     if (indexPrevious || indexPrevious === 0) {
       const divArrowPreviousSubtask = document.createElement('DIV');
       divArrowPreviousSubtask.setAttribute('class', 'SmallTextButtons');
-      divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
+      divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}${fullscreenSuffix}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
       siblingButtons.appendChild(divArrowPreviousSubtask);
       const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
       if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function(event) {
-        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}`);
+        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}${fullscreenSuffix}`);
         event.preventDefault();
       });
     } else {
       siblingButtons.appendChild(document.createElement('BR'));
     }
+
     const divArrowMiddleSubtask = document.createElement('DIV');
     divArrowMiddleSubtask.setAttribute('class', 'SmallTextButtons');
     divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
     siblingButtons.appendChild(divArrowMiddleSubtask);
     const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
     if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function(event) {
-      createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid);
+      createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid, fullscreenSuffix);
     });
+
     if (indexNext) {
       const divArrowNextSubtask = document.createElement('DIV');
       divArrowNextSubtask.setAttribute('class', 'SmallTextButtons');
-      divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
+      divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}${fullscreenSuffix}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
       siblingButtons.appendChild(divArrowNextSubtask);
       const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
       if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function(event) {
-        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}`);
+        openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}${fullscreenSuffix}`);
         event.preventDefault();
       });
     } else {

@@ -1,27 +1,16 @@
-chrome.runtime.onInstalled.addListener(
-  function (details) {
-
-    // Don't do this until I find a way to prevent the promise error
-    // caused by the disconnected message channel
-    if (details.reason === 'install' || details.reason === 'update') {
-      chrome.tabs.query({url: 'https://app.asana.com/*'}, function (arrayOfTabs) {
-        arrayOfTabs.forEach(function (tab) {
-          chrome.tabs.reload(tab.id);
-        });
-      });
-    }
-
-    // Use only when an important update is made
-    // if (details.reason === 'update') {
-    //   const browserLanguages = window.navigator.languages;
-    //   if (browserLanguages.indexOf('ja') + 1 || browserLanguages.indexOf('ja-JP') + 1) {
-    //    chrome.tabs.create({url: 'pages/update-ja.html'});
-    //   } else {
-    //     chrome.tabs.create({url: 'pages/update-en.html'});
-    //   }
-    // }
-  }
-);
+// Use only when an important update is made
+// chrome.runtime.onInstalled.addListener(
+//   function (details) {
+//     if (details.reason === 'update') {
+//       const browserLanguages = window.navigator.languages;
+//       if (browserLanguages.indexOf('ja') + 1 || browserLanguages.indexOf('ja-JP') + 1) {
+//        chrome.tabs.create({url: 'pages/update-ja.html'});
+//       } else {
+//         chrome.tabs.create({url: 'pages/update-en.html'});
+//       }
+//     }
+//   }
+// );
 
 chrome.runtime.onMessage.addListener(
   function(message, sender, callback) {

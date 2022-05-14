@@ -28,8 +28,8 @@
     "page": "options.html"
   },
   "permissions": [
-    "activeTab", "storage", "tabs"
+    "storage", "tabs"
   ],
   "short_name": "AsaNavigator",
-  "version": "2.6.2"
+  "version": "3.0.0"
 }
