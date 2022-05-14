@@ -24,7 +24,7 @@ const localizationStrings = {
     'arrowTitle-nextSubtask': 'Next subtask',
     'arrowTitle-previousSubtask': 'Previous subtask',
     'arrowTitle-subtasksDropdown': 'Subtasks', // u2c2cf
-    'buttonTitle-backLink': 'Go back to what you were doing',
+    'buttonTitle-backLink': 'Go back to what you were doing before opening Inbox',
     'confirmMessage-abortConversionUnsupportedPlace': 'Task-section conversion is not supported here.',
     'confirmMessage-abortConversionWithSubtasks': 'A task containing one or more subtasks cannot be converted to a section.',
     'confirmMessage-convertToSection': 'Create a section with the same name and delete the original task.',
@@ -112,7 +112,7 @@ const localizationStrings = {
     'arrowTitle-nextSubtask': '次のサブタスク',
     'arrowTitle-previousSubtask': '前のサブタスク',
     'arrowTitle-subtasksDropdown': '前後のサブタスク', // translating differently
-    'buttonTitle-backLink': '前の作業に戻る',
+    'buttonTitle-backLink': '受信トレイを開く前にやっていた作業に戻る',
     'confirmMessage-abortConversionUnsupportedPlace': 'タスクとセクションの変換は、ここではサポートされていません。',
     'confirmMessage-abortConversionWithSubtasks': 'サブタスクを持つタスクをセクションに変換することはできません。',
     'confirmMessage-convertToSection': '同名のセクションを作成して元のタスクを削除します。',

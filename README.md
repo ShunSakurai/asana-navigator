@@ -15,28 +15,26 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 
 #### Putting projects on top:
 - [x] ~~[Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)~~
-- [x] ~~Place project section selectors on top~~
 - [x] Happily drop this feature because of [the improved task pane layout](https://forum.asana.com/t/we-re-updating-our-task-pane/70641)
 
 #### Going to sibling subtasks:
 - [x] Show arrows to go to previous/next sibling subtasks
 - [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
 - [x] Update only the right pane when navigating subtasks
-- [x] Jump to sibling subtasks even when the arrows fail to be added
 
 #### Setting new parent tasks:
 - [x] [Set new parent task from the toolbar](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/7)
 - [x] Search for task ID when the input is an integer
 - [x] Show information such as projects and completed/incomplete
-- [x] Convert multiple tasks to subtasks
+- [x] ~~Convert multiple tasks to subtasks~~　Not working
 
 #### Replacing text:
 - [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
 - [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/34586/6)
 
 #### Convecting task to section and vice versa:
-- [x] [Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207)
-- [x] Support task/section conversion in the new list/board switchable projects -- [Watch it in action](https://youtu.be/BJz_p7d-WAE)
+- [x] ~~[Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207)~~ Not fully working
+- [x] ~~Support task/section conversion in the new list/board switchable projects -- [Watch it in action](https://youtu.be/BJz_p7d-WAE)~~ Not fully working
 
 #### Keyboard shortcuts:
 - [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
@@ -47,8 +45,7 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 
 #### More seamless UI:
 - [x] Display undo toast on bottom left
-- [ ] Use tool tips with black background
-- [x] Support other languages
+- [x] ~~Support other languages~~ Limited support
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
@@ -72,7 +69,7 @@ Firefox:
 
 Common:
 - The features are automatically enabled when you are on an Asana task page
-- Please reload the Asana task page if this extension doesn't work well
+- Please reload the Asana task page if this extension doesn't work well, especially after it was updated to a new version
 - In incognito mode, features that interact with Asana API don't work
 
 ## Special thanks

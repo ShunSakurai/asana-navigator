@@ -1,5 +1,8 @@
 chrome.runtime.onInstalled.addListener(
   function (details) {
+
+    // Don't do this until I find a way to prevent the promise error
+    // caused by the disconnected message channel
     if (details.reason === 'install' || details.reason === 'update') {
       chrome.tabs.query({url: 'https://app.asana.com/*'}, function (arrayOfTabs) {
         arrayOfTabs.forEach(function (tab) {
@@ -7,6 +10,7 @@ chrome.runtime.onInstalled.addListener(
         });
       });
     }
+
     // Use only when an important update is made
     // if (details.reason === 'update') {
     //   const browserLanguages = window.navigator.languages;
