@@ -24,7 +24,7 @@ const addReplaceDescriptionToExtraActions = function() {
 
 const addRowToUserReplaceTextList = function() {
   const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
-  if (!userTextToReplaceDialogTable) return;
+  if (notFound(userTextToReplaceDialogTable)) return;
   const newUserTextTr = document.createElement('TR');
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value=""></td>
@@ -37,7 +37,7 @@ const addRowToUserReplaceTextList = function() {
 const addSearchDropdownShortcut = function() {
   let mode, fieldValue;
   const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-  if (!topbarPageHeaderStructure) return;
+  if (notFound(topbarPageHeaderStructure)) return;
   if (window.location.href.includes('https://app.asana.com/0/inbox/')) {
     mode = 'InInbox';
     fieldValue = locStrings['snippet-me'];
@@ -57,15 +57,15 @@ const addSearchDropdownShortcut = function() {
   constructInContextSearchDropdownItem(dropdownItem, mode);
   setTimeout(function() {
     const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
-    if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+    if (notFound(topbarSearchDropdownContainer) || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
     topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
     dropdownItem.addEventListener('click', function() {
       document.querySelector('.TopbarSearchAdvancedSearchItem').click();
       setTimeout(function() {
         const searchInContextFilter = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : 'DomainUserFilter'}`));
-        if (!searchInContextFilter) return;
+        if (notFound(searchInContextFilter)) return;
         const searchInContextInputField = searchInContextFilter.firstElementChild.firstElementChild.children[1];
-        if (!searchInContextInputField) return;
+        if (notFound(searchInContextInputField)) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
         document.execCommand('insertText', false, fieldValue);
@@ -102,7 +102,7 @@ const addSetParentToExtraActions = function() {
 
 const addToKeyboardShortcutsList = function() {
   const keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
-  if (!keyboardShortcutsModal) return;
+  if (notFound(keyboardShortcutsModal)) return;
   if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
   const keyboardShortcutsModalANSection = document.createElement('DIV');
   keyboardShortcutsModalANSection.setAttribute('class', 'KeyboardShortcutsModal-section');
@@ -140,7 +140,7 @@ const callAsanaApi = function(method, path, options, data, callback) {
 
 const clickNumberedAddAttachmentButton = function(number) {
   const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
-  if (!addAttachmentsMenuItem) return;
+  if (notFound(addAttachmentsMenuItem)) return;
   const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
   if (number) listAddAttachmentButtons[number].click();
 };
@@ -308,7 +308,7 @@ const convertTaskAndSection = function() {
       (isSeparator ? '' : (locStrings['confirmMessage-deleteInformation'] + '\n' + locStrings['confirmMessage-taskIdChanged'] + '\n')) +
       locStrings['snippet-continue']
     );
-    if (!confirmed) return;
+    if (notFound(confirmed)) return;
 
     if (isProjectTask) {
       convertProjectTask(focusedTaskData);
@@ -547,7 +547,7 @@ const displayReplaceDescriptionDialog = function() {
 const displaySetParentDrawer = function() {
   if (document.querySelector('.SetParentDrawer')) return;
   const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body', true) || getTaskPaneTypeAndElement('Spreadsheet-body');
-  if (!taskPaneBody) return;
+  if (notFound(taskPaneBody)) return;
   const setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
@@ -592,7 +592,7 @@ const displaySetParentDrawer = function() {
 
 const displaySuccessToast = function(task, messageVarTask, functionToRunCallbackAtLast) {
   const toastManager = document.querySelector('.ToastManager');
-  if (!toastManager) return;
+  if (notFound(toastManager)) return;
   const toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toast"><div class="ToastContainer SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
   messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed) ? '✓ ' : ''}${escapeHtml(task.name)}</a> `) +
@@ -716,7 +716,7 @@ const getTaskPaneTypeAndElement = function(subsequentClassName, returnBoolean) {
 
 const getUserReplaceTextList = function() {
   const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
-  if (!userTextToReplaceDialogTable) return;
+  if (notFound(userTextToReplaceDialogTable)) return;
   const userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
   const userReplaceTextList = [];
   for (let i = 1; i < userTextToReplaceDialogTr.length; i++) {
@@ -729,11 +729,11 @@ const getUserReplaceTextList = function() {
 
 const listenToClickOnAddAttachmentsButton = function() {
   const addAttachmentsButton = document.querySelector('.AddAttachmentsButton');
-  if (!addAttachmentsButton) return;
+  if (notFound(addAttachmentsButton)) return;
   addAttachmentsButton.addEventListener('click', function() {
     setTimeout(function() {
       const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
-      if (!addAttachmentsMenuItem) return;
+      if (notFound(addAttachmentsMenuItem)) return;
       const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
       for (let i = 1; i < listAddAttachmentButtons.length; i++) {
         if (listAddAttachmentButtons[i].classList.contains('MenuItemLabel-shortcut')) continue;
@@ -777,7 +777,7 @@ const listenToClickToCloseSiblingSubtasksDropdown = function(event) {
 
 const listenToSearchBarExpansion = function() {
   const targetNode = document.querySelector('#topbar_search_input');
-  if (!targetNode) return;
+  if (notFound(targetNode)) return;
   const observerConfig = {attributes: true, childList: false, subtree: false};
   const mutationObserver = new MutationObserver(function(mutationsList, observer) {
     mutationsList.forEach(function(mutation) {
@@ -795,6 +795,20 @@ const loadUserReplaceTextList = function() {
   }, function(items) {
     document.loadedUserReplaceTextList = items.anOptionsPairs;
   });
+};
+
+const notFound = function(element) {
+  if (!element) {
+    const getOptionDebug = new Promise(resolve => {
+      chrome.storage.sync.get({anOptionsDebug: false}, function(items) {
+        resolve(items.anOptionsDebug);
+      });
+    });
+    getOptionDebug.then(value => {
+      if (value) console.trace(element);
+    });
+  }
+  return !element;
 };
 
 const openPageWithoutRefresh = function(newUrl) {

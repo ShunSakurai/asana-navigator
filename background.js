@@ -46,8 +46,8 @@ chrome.runtime.onMessage.addListener(
       },
       body: requestData
     })
-    .then(response => {return response.json()})
-    .then(responseJson => callback(responseJson))
+    .then(response => {return response.json();})
+    .then(responseJson => callback(responseJson));
 
     return true; // Will respond asynchronously.
   }

@@ -9,6 +9,7 @@ const saveOptions = function () {
   const descriptionEnabled = document.getElementById('description').checked;
   const parentEnabled = document.getElementById('parent').checked;
   const sectionEnabled = document.getElementById('section').checked;
+  const debugEnabled = document.getElementById('debug').checked;
   chrome.storage.sync.set({
     anOptionsInbox: inboxEnabled,
     anOptionsSubtasks: subtasksEnabled,
@@ -17,7 +18,8 @@ const saveOptions = function () {
     anOptionsAttachment: attachmentEnabled,
     anOptionsDescription: descriptionEnabled,
     anOptionsParent: parentEnabled,
-    anOptionsSection: sectionEnabled
+    anOptionsSection: sectionEnabled,
+    anOptionsDebug: debugEnabled
   }, function () {
     const status = document.getElementById('status');
     status.textContent = 'Options saved';
@@ -36,7 +38,8 @@ const loadOptions = function () {
     anOptionsAttachment: true,
     anOptionsDescription: true,
     anOptionsParent: true,
-    anOptionsSection: true
+    anOptionsSection: true,
+    anOptionsDebug: false
   }, function (items) {
     document.getElementById('inbox').checked = items.anOptionsInbox;
     document.getElementById('subtasks').checked = items.anOptionsSubtasks;
@@ -46,6 +49,7 @@ const loadOptions = function () {
     document.getElementById('description').checked = items.anOptionsDescription;
     document.getElementById('parent').checked = items.anOptionsParent;
     document.getElementById('section').checked = items.anOptionsSection;
+    document.getElementById('debug').checked = items.anOptionsDebug;
   });
 };
 
