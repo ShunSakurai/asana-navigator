@@ -1,5 +1,5 @@
 const addReplaceDescriptionToExtraActions = function() {
-  const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+  const singleTaskPaneExtraActionsButton = loggingQuerySelector('.SingleTaskPaneExtraActionsButton');
   if (singleTaskPaneExtraActionsButton) {
     singleTaskPaneExtraActionsButton.addEventListener('click', function() {
       const replaceDescriptionButton = document.createElement('A');
@@ -13,8 +13,8 @@ const addReplaceDescriptionToExtraActions = function() {
       replaceDescriptionButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-replaceDescription']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">E</span></span></span></div></span>`;
 
       setTimeout(function() {
-        const previousExtraActionButton = document.querySelector('.SingleTaskPaneExtraActionsButton-print');
-        if (previousExtraActionButton && !document.querySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
+        const previousExtraActionButton = loggingQuerySelector('.SingleTaskPaneExtraActionsButton-print');
+        if (previousExtraActionButton && !loggingQuerySelector('.SingleTaskPaneExtraActionsButton-replaceDescription')) {
           previousExtraActionButton.parentNode.insertBefore(replaceDescriptionButton, previousExtraActionButton.nextSibling);
         }
       }, 100);
@@ -23,8 +23,8 @@ const addReplaceDescriptionToExtraActions = function() {
 };
 
 const addRowToUserReplaceTextList = function() {
-  const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
-  if (notFound(userTextToReplaceDialogTable)) return;
+  const userTextToReplaceDialogTable = loggingQuerySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
   const newUserTextTr = document.createElement('TR');
   newUserTextTr.setAttribute('class', 'name-row');
   newUserTextTr.innerHTML = `<td class="field-value"><input autocomplete="off" class="generic-input showing ReplaceDescriptionInput" type="text" tabindex="0" value=""></td>
@@ -36,8 +36,8 @@ const addRowToUserReplaceTextList = function() {
 
 const addSearchDropdownShortcut = function() {
   let mode, fieldValue;
-  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
-  if (notFound(topbarPageHeaderStructure)) return;
+  const topbarPageHeaderStructure = loggingQuerySelector('.TopbarPageHeaderStructure');
+  if (!topbarPageHeaderStructure) return;
   if (window.location.href.includes('https://app.asana.com/0/inbox/')) {
     mode = 'InInbox';
     fieldValue = locStrings['snippet-me'];
@@ -56,16 +56,16 @@ const addSearchDropdownShortcut = function() {
   const dropdownItem = document.createElement('DIV');
   constructInContextSearchDropdownItem(dropdownItem, mode);
   setTimeout(function() {
-    const topbarSearchDropdownContainer = document.querySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
-    if (notFound(topbarSearchDropdownContainer) || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
+    const topbarSearchDropdownContainer = loggingQuerySelector('.TopbarSearchTypeaheadDropdownContents-scrollableList').firstElementChild;
+    if (!topbarSearchDropdownContainer || topbarSearchDropdownContainer.firstElementChild.id == 'InContextSearch') return;
     topbarSearchDropdownContainer.insertBefore(dropdownItem, topbarSearchDropdownContainer.firstElementChild);
     dropdownItem.addEventListener('click', function() {
-      document.querySelector('.TopbarSearchAdvancedSearchItem').click();
+      loggingQuerySelector('.TopbarSearchAdvancedSearchItem').click();
       setTimeout(function() {
-        const searchInContextFilter = ((mode == 'InInbox') ? document.querySelectorAll('.DomainUserFilter')[1] : document.querySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : 'DomainUserFilter'}`));
-        if (notFound(searchInContextFilter)) return;
+        const searchInContextFilter = ((mode == 'InInbox') ? loggingQuerySelectorAll('.DomainUserFilter')[1] : loggingQuerySelector(`.${(mode == 'InProject') ? 'ProjectFilter' : 'DomainUserFilter'}`));
+        if (!searchInContextFilter) return;
         const searchInContextInputField = searchInContextFilter.firstElementChild.firstElementChild.children[1];
-        if (notFound(searchInContextInputField)) return;
+        if (!searchInContextInputField) return;
         searchInContextInputField.focus();
         searchInContextInputField.value = fieldValue;
         document.execCommand('insertText', false, fieldValue);
@@ -90,9 +90,9 @@ const addSetParentToExtraActions = function() {
       setParentButton.innerHTML = `<span class="MenuItem-label"><div class="ExtraActionsMenuItemLabel"><span class="ExtraActionsMenuItemLabel-body">${locStrings['menuButton-setParent']}</span><span class="ExtraActionsMenuItemLabel-shortcut"><span class="KeyboardShortcutLabel KeyboardShortcutLabel--normal KeyboardShortcutLabel--light"><span class="KeyboardShortcutLabel-key">Tab</span><span class="KeyboardShortcutLabel-key">G</span></span></span></div></span>`;
 
       setTimeout(function() {
-        const advancedActionsMenuItemButton = document.querySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
-        const nextExtraActionButton = advancedActionsMenuItemButton ? advancedActionsMenuItemButton.parentNode : document.querySelector('.MenuSeparator');
-        if (nextExtraActionButton && !document.querySelector(`.${taskPaneTypeString}TaskPaneExtraActionsButton-setParent`)) {
+        const advancedActionsMenuItemButton = loggingQuerySelector('.SingleTaskPaneExtraActionsButton-advancedActionsMenuItem');
+        const nextExtraActionButton = advancedActionsMenuItemButton ? advancedActionsMenuItemButton.parentNode : loggingQuerySelector('.MenuSeparator');
+        if (nextExtraActionButton && !loggingQuerySelector(`.${taskPaneTypeString}TaskPaneExtraActionsButton-setParent`)) {
           nextExtraActionButton.parentNode.insertBefore(setParentButton, nextExtraActionButton);
         }
       }, 100);
@@ -101,9 +101,9 @@ const addSetParentToExtraActions = function() {
 };
 
 const addToKeyboardShortcutsList = function() {
-  const keyboardShortcutsModal = document.querySelector('.KeyboardShortcutsModal');
-  if (notFound(keyboardShortcutsModal)) return;
-  if (document.querySelector('#KeyboardShortcutsModalANSection')) return;
+  const keyboardShortcutsModal = loggingQuerySelector('.KeyboardShortcutsModal');
+  if (!keyboardShortcutsModal) return;
+  if (loggingQuerySelector('#KeyboardShortcutsModalANSection')) return;
   const keyboardShortcutsModalANSection = document.createElement('DIV');
   keyboardShortcutsModalANSection.setAttribute('class', 'KeyboardShortcutsModal-section');
   keyboardShortcutsModalANSection.setAttribute('id', 'KeyboardShortcutsModalANSection');
@@ -139,19 +139,19 @@ const callAsanaApi = function(method, path, options, data, callback) {
 };
 
 const clickNumberedAddAttachmentButton = function(number) {
-  const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
-  if (notFound(addAttachmentsMenuItem)) return;
+  const addAttachmentsMenuItem = loggingQuerySelector('.AddAttachmentsMenuItem');
+  if (!addAttachmentsMenuItem) return;
   const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
   if (number) listAddAttachmentButtons[number].click();
 };
 
 const closeReplaceDescriptionDialog = function() {
-  const replaceDescriptionDialogView = document.querySelector('#ReplaceDescriptionDialogView');
+  const replaceDescriptionDialogView = loggingQuerySelector('#ReplaceDescriptionDialogView');
   if (replaceDescriptionDialogView) replaceDescriptionDialogView.remove();
 };
 
 const closeSetParentDrawer = function() {
-  const setParentDrawer = document.querySelector('.SetParentDrawer');
+  const setParentDrawer = loggingQuerySelector('.SetParentDrawer');
   if (setParentDrawer) setParentDrawer.remove();
   document.removeEventListener('click', listenToClickToCloseSetParentDropdown);
 };
@@ -170,7 +170,7 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
     <div class="TypeaheadItemStructure-icon">
       <svg class="Icon InContextIcon" focusable="false" viewBox="0 0 32 32">
         ${(mode == 'InInbox') ? '<path d="M30,20.6c-1.3-1.1-2-2.7-2-4.4v-3.9C28,5.7,22.7,0.1,16.2,0C13,0,9.9,1.2,7.6,3.4C5.3,5.7,4,8.8,4,12v4.2  c0,1.7-0.7,3.3-2,4.4c-1,0.9-1.3,2.4-0.7,3.7c0.5,1,1.6,1.7,2.8,1.7h23.7c1.2,0,2.3-0.7,2.8-1.7C31.3,23,31,21.6,30,20.6z M28.9,23.4c-0.2,0.3-0.6,0.6-1,0.6H4.2c-0.4,0-0.9-0.2-1-0.6c-0.2-0.5-0.1-1,0.2-1.3C5,20.6,6,18.5,6,16.2V12c0-2.7,1.1-5.2,3-7.1S13.4,2,16,2c0.1,0,0.1,0,0.2,0C21.6,2.1,26,6.7,26,12.4v3.9c0,2.2,1,4.4,2.6,5.9C29,22.5,29.1,23,28.9,23.4z M20.6,27.1c-0.5-0.2-1.1,0.1-1.3,0.6C18.8,29.1,17.5,30,16,30s-2.8-0.9-3.3-2.3c-0.2-0.5-0.8-0.8-1.3-0.6c-0.5,0.2-0.8,0.8-0.6,1.3c0.8,2.2,2.9,3.7,5.2,3.7s4.4-1.5,5.2-3.7C21.4,27.8,21.1,27.2,20.6,27.1z"></path>' :
-        mode == 'InProject' ? document.querySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.children[1].innerHTML :
+        mode == 'InProject' ? loggingQuerySelector('.TopbarPageHeaderStructure').firstElementChild.firstElementChild.children[1].innerHTML :
         '<path d="M29.1,20.9 M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path>'}
       </svg>
     </div>
@@ -183,7 +183,7 @@ const constructInContextSearchDropdownItem = function(dropdownItem, mode) {
 };
 
 const convertProjectSection = function(workspaceGid, projectGid, projectSectionDOM) {
-  const taskGroupHeaders = Array.from(document.querySelectorAll('.TaskGroupHeader'));
+  const taskGroupHeaders = Array.from(loggingQuerySelectorAll('.TaskGroupHeader'));
   callAsanaApi('GET', `projects/${projectGid}/sections`, {}, {}, function(response) {
     const projectSections = response.data;
     const sectionIndex = taskGroupHeaders.indexOf(projectSectionDOM) + (projectSections.length - taskGroupHeaders.length); // The first section might be "(no section)"
@@ -256,7 +256,7 @@ const convertProjectTask = function(focusedTaskData) {
 
 // Works only where Tab+N is supported (project view, my tasks view, and subtask list)
 const convertTaskAndSection = function() {
-  const projectSectionDOM = document.querySelector('.TaskGroupHeader[draggable~="false"]');
+  const projectSectionDOM = loggingQuerySelector('.TaskGroupHeader[draggable~="false"]');
   if (projectSectionDOM) {
     const confirmed = window.confirm(
       'Asana Navigator: ' +
@@ -270,16 +270,16 @@ const convertTaskAndSection = function() {
     return;
   }
 
-  const focusedItemRow = document.querySelector('.ItemRow--focused') || document.querySelector('.SpreadsheetRow--highlighted')|| document.querySelector('.SpreadsheetRow--withShadedBackground');
+  const focusedItemRow = loggingQuerySelector('.ItemRow--focused') || loggingQuerySelector('.SpreadsheetRow--highlighted')|| loggingQuerySelector('.SpreadsheetRow--withShadedBackground');
   if (!focusedItemRow) {
     const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
     return;
   }
   const isProjectTask = !focusedItemRow.classList.contains('ItemRow--focused');
-  const isMultiple = document.querySelectorAll('.ItemRow--focused').length > 1 || document.querySelectorAll('.SpreadsheetRow--highlighted').length > 1 || document.querySelectorAll('.SpreadsheetRow--withShadedBackground').length > 1;
+  const isMultiple = loggingQuerySelectorAll('.ItemRow--focused').length > 1 || loggingQuerySelectorAll('.SpreadsheetRow--highlighted').length > 1 || loggingQuerySelectorAll('.SpreadsheetRow--withShadedBackground').length > 1;
   const isSeparator = focusedItemRow.classList.contains('SectionRow');
 
-  const topbarPageHeaderStructure = document.querySelector('.TopbarPageHeaderStructure');
+  const topbarPageHeaderStructure = loggingQuerySelector('.TopbarPageHeaderStructure');
   if (!isSeparator && !topbarPageHeaderStructure.classList.contains('ProjectPageHeader') && !topbarPageHeaderStructure.classList.contains('MyTasksPageHeader')) {
     const returning = window.confirm(locStrings['confirmMessage-abortConversionUnsupportedPlace']);
     return;
@@ -308,7 +308,7 @@ const convertTaskAndSection = function() {
       (isSeparator ? '' : (locStrings['confirmMessage-deleteInformation'] + '\n' + locStrings['confirmMessage-taskIdChanged'] + '\n')) +
       locStrings['snippet-continue']
     );
-    if (notFound(confirmed)) return;
+    if (!confirmed) return;
 
     if (isProjectTask) {
       convertProjectTask(focusedTaskData);
@@ -339,8 +339,8 @@ const convertTaskAndSection = function() {
 };
 
 const createBackFromInboxButton = function() {
-  const inboxNavigationBar = document.querySelector('.InboxNavigationBar');
-  if (inboxNavigationBar && !document.querySelector('.InboxNavigationBar-backLink')) {
+  const inboxNavigationBar = loggingQuerySelector('.InboxNavigationBar');
+  if (inboxNavigationBar && !loggingQuerySelector('.InboxNavigationBar-backLink')) {
     const backLinkFromInbox = document.createElement('LI');
     backLinkFromInbox.setAttribute('class', 'Tab TabNavigationBar-tab InboxNavigationBar-backLink');
     backLinkFromInbox.innerHTML = '<a class="InboxButton-backLink disabled">&times;</a>';
@@ -357,10 +357,10 @@ const createBackFromInboxButton = function() {
 };
 
 const createSetParentDropdownContainer = function(input, taskGidList, workspaceGid) {
-  const singleTaskTitleInput = document.querySelector('.SingleTaskTitleInput-taskName');
+  const singleTaskTitleInput = loggingQuerySelector('.SingleTaskTitleInput-taskName');
   const taskName = (singleTaskTitleInput) ? singleTaskTitleInput.children[1].textContent : '';
   const queryValue = input.value || taskName;
-  if (!document.querySelector('#SetParentDropdownContainer')) {
+  if (!loggingQuerySelector('#SetParentDropdownContainer')) {
     const setParentDropdownContainer = document.createElement('DIV');
     setParentDropdownContainer.innerHTML = '<div class="LayerPositioner LayerPositioner--alignLeft LayerPositioner--below"><div class="LayerPositioner-layer"><div class="Dropdown" role="listbox"><div class="Scrollable Scrollable--vertical TypeaheadScrollable SetParentTypeaheadDropdownContents"><div class="TypeaheadScrollable-contents"></div></div></div></div></div>';
     setParentDropdownContainer.setAttribute('id', 'SetParentDropdownContainer');
@@ -382,7 +382,7 @@ const createSetParentDropdownContainer = function(input, taskGidList, workspaceG
 const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGid, fullscreenSuffix) {
   const completeIcon = '<svg class="SiblingSubtasksIcon CheckCircleFullIcon SiblingSubtasksItem-completedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M23.3,13.3L14,22.6c-0.3,0.3-0.7,0.4-1.1,0.4s-0.8-0.1-1.1-0.4L8,18.8c-0.6-0.6-0.6-1.5,0-2.1s1.5-0.6,2.1,0l2.8,2.8l8.3-8.3c0.6-0.6,1.5-0.6,2.1,0S23.9,12.7,23.3,13.3z"></path></svg>';
   const incompleteIcon = '<svg class="SiblingSubtasksIcon CheckCircleIcon SiblingSubtasksItem-incompletedIcon" focusable="false" viewBox="0 0 32 32"><path d="M16,32C7.2,32,0,24.8,0,16S7.2,0,16,0s16,7.2,16,16S24.8,32,16,32z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z"></path><path d="M12.9,22.6c-0.3,0-0.5-0.1-0.7-0.3l-3.9-3.9C8,18,8,17.4,8.3,17s1-0.4,1.4,0l3.1,3.1l8.6-8.6c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-9.4,9.4C13.4,22.5,13.2,22.6,12.9,22.6z"></path></svg>';
-  if (document.querySelector('#SiblingSubtasksDropdownContainer')) return;
+  if (loggingQuerySelector('#SiblingSubtasksDropdownContainer')) return;
   const siblingDropdown = document.createElement('DIV');
   siblingDropdown.setAttribute('id', 'SiblingSubtasksDropdownContainer');
   siblingDropdown.innerHTML = '<div class="LayerPositioner LayerPositioner--alignRight LayerPositioner--below SiblingSubtasksDropdownLayer"><div class="LayerPositioner-layer"><div class="Dropdown Scrollable Scrollable--vertical SiblingSubtasksDropdownContainer"><div class="menu">' +
@@ -396,7 +396,7 @@ const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGi
     subtask.addEventListener('mouseout', function() {this.classList.remove('is-highlighted');});
   });
   document.body.appendChild(siblingDropdown);
-  document.querySelector('#currentSubtaskMarker').scrollIntoView(false);
+  loggingQuerySelector('#currentSubtaskMarker').scrollIntoView(false);
   siblingDropdown.addEventListener('click', function(event) {
     if (event.target.href) {
       openPageWithoutRefresh(event.target.href);
@@ -409,22 +409,22 @@ const createSiblingSubtasksDropdown = function(subtaskList, taskGid, containerGi
 };
 
 const deleteInContextSearchDropdownItem = function(event) {
-  const inContextSearchDropdown = document.querySelector('#InContextSearch');
+  const inContextSearchDropdown = loggingQuerySelector('#InContextSearch');
   if (inContextSearchDropdown && event.target.value.trim()) inContextSearchDropdown.remove();
 };
 
 const deleteSetParentTypeaheadDropdown = function() {
-  const setParentDropdownContainer = document.querySelector('#SetParentDropdownContainer');
+  const setParentDropdownContainer = loggingQuerySelector('#SetParentDropdownContainer');
   if (setParentDropdownContainer) setParentDropdownContainer.remove();
 };
 
 const deleteSiblingButtons = function() {
-  const SiblingButtons = document.querySelector('#SiblingButtons');
+  const SiblingButtons = loggingQuerySelector('#SiblingButtons');
   if (SiblingButtons) SiblingButtons.remove();
 };
 
 const deleteSiblingSubtasksDropdown = function() {
-  const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+  const siblingDropdown = loggingQuerySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) siblingDropdown.remove();
   document.removeEventListener('click', listenToClickToCloseSiblingSubtasksDropdown);
 };
@@ -435,7 +435,7 @@ const deleteUserReplaceTextRow = function(button) {
 };
 
 const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
-  const taskAncestryTaskLinks = document.querySelectorAll('.TaskAncestry-ancestorLink');
+  const taskAncestryTaskLinks = loggingQuerySelectorAll('.TaskAncestry-ancestorLink');
   if (!taskAncestryTaskLinks.length) return;
   const parentGid = findTaskGid(taskAncestryTaskLinks[taskAncestryTaskLinks.length - 1].href);
   const taskGid = findTaskGid(window.location.href);
@@ -453,7 +453,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
     deleteSiblingButtons();
     const siblingButtons = document.createElement('SPAN');
     siblingButtons.setAttribute('id', 'SiblingButtons');
-    const singleTaskPaneTitleRow = document.querySelector('.SingleTaskPaneSpreadsheet-titleRow') || document.querySelector('.SingleTaskPane-titleRow');
+    const singleTaskPaneTitleRow = loggingQuerySelector('.SingleTaskPaneSpreadsheet-titleRow') || loggingQuerySelector('.SingleTaskPane-titleRow');
     if (singleTaskPaneTitleRow) singleTaskPaneTitleRow.appendChild(siblingButtons);
 
     if (indexPrevious || indexPrevious === 0) {
@@ -461,7 +461,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
       divArrowPreviousSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowPreviousSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}${fullscreenSuffix}" id="ArrowPreviousSubtask" title="${locStrings['arrowTitle-previousSubtask']} (${[platStrings['shift'], 'Tab', '↑'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexPrevious].name)}">∧</a>`;
       siblingButtons.appendChild(divArrowPreviousSubtask);
-      const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+      const arrowPreviousSubtask = loggingQuerySelector('#ArrowPreviousSubtask');
       if (arrowPreviousSubtask) arrowPreviousSubtask.addEventListener('click', function(event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexPrevious].gid}${fullscreenSuffix}`);
         event.preventDefault();
@@ -474,7 +474,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
     divArrowMiddleSubtask.setAttribute('class', 'SmallTextButtons');
     divArrowMiddleSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" id="ArrowMiddleSubtask" title="${locStrings['arrowTitle-subtasksDropdown']} (${[platStrings['shift'], 'Tab', '→'].join(platStrings['sep'])})">&gt;</a>`;
     siblingButtons.appendChild(divArrowMiddleSubtask);
-    const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+    const arrowMiddleSubtask = loggingQuerySelector('#ArrowMiddleSubtask');
     if (arrowMiddleSubtask) arrowMiddleSubtask.addEventListener('click', function(event) {
       createSiblingSubtasksDropdown(subtaskList, taskGid, containerGid, fullscreenSuffix);
     });
@@ -484,7 +484,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
       divArrowNextSubtask.setAttribute('class', 'SmallTextButtons');
       divArrowNextSubtask.innerHTML = `<a class="NoBorderBottom TaskAncestry-ancestorLink" href="https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}${fullscreenSuffix}" id="ArrowNextSubtask" title="${locStrings['arrowTitle-nextSubtask']} (${[platStrings['shift'], 'Tab', '↓'].join(platStrings['sep'])})\n${escapeHtml(subtaskListFiltered[indexNext].name)}">∨</a>`;
       siblingButtons.appendChild(divArrowNextSubtask);
-      const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+      const arrowNextSubtask = loggingQuerySelector('#ArrowNextSubtask');
       if (arrowNextSubtask) arrowNextSubtask.addEventListener('click', function(event) {
         openPageWithoutRefresh(`https://app.asana.com/0/${containerGid}/${subtaskListFiltered[indexNext].gid}${fullscreenSuffix}`);
         event.preventDefault();
@@ -493,7 +493,7 @@ const displayLinksToSiblingSubtasks = function(idOfArrowToClick) {
       siblingButtons.appendChild(document.createElement('BR'));
     }
     if (idOfArrowToClick) {
-        const arrowToClick = document.querySelector(idOfArrowToClick);
+        const arrowToClick = loggingQuerySelector(idOfArrowToClick);
         if (arrowToClick) arrowToClick.click();
     }
   });
@@ -506,14 +506,14 @@ const displayReplaceDescriptionDialog = function() {
   replaceDescriptionDialog.setAttribute('tabindex', '-1');
   replaceDescriptionDialog.innerHTML = returnReplaceDescriptionInnerHTML();
   document.body.appendChild(replaceDescriptionDialog);
-  document.querySelector('#CloseReplaceDescriptionDialogButton').addEventListener('click', closeReplaceDescriptionDialog);
-  document.querySelectorAll('.delete-row-link').forEach(link => link.addEventListener('click', function(event) {deleteUserReplaceTextRow(event.target);}));
-  document.querySelector('#AddRowToUserReplaceTextListLink').addEventListener('click', addRowToUserReplaceTextList);
-  document.querySelector('#SaveUserReplaceTextListLink').addEventListener('click', saveUserReplaceTextList);
+  loggingQuerySelector('#CloseReplaceDescriptionDialogButton').addEventListener('click', closeReplaceDescriptionDialog);
+  loggingQuerySelectorAll('.delete-row-link').forEach(link => link.addEventListener('click', function(event) {deleteUserReplaceTextRow(event.target);}));
+  loggingQuerySelector('#AddRowToUserReplaceTextListLink').addEventListener('click', addRowToUserReplaceTextList);
+  loggingQuerySelector('#SaveUserReplaceTextListLink').addEventListener('click', saveUserReplaceTextList);
   addRowToUserReplaceTextList();
-  const replaceDescriptionDialogPresetButton = document.querySelector('#ReplaceDescriptionDialogPresetButton');
+  const replaceDescriptionDialogPresetButton = loggingQuerySelector('#ReplaceDescriptionDialogPresetButton');
   replaceDescriptionDialogPresetButton.addEventListener('click', replaceDescriptionPreset);
-  const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+  const replaceDescriptionDialogUserButton = loggingQuerySelector('#ReplaceDescriptionDialogUserButton');
   replaceDescriptionDialogUserButton.addEventListener('click', replaceDescriptionUserText);
   replaceDescriptionDialogPresetButton.focus();
 
@@ -545,26 +545,26 @@ const displayReplaceDescriptionDialog = function() {
 };
 
 const displaySetParentDrawer = function() {
-  if (document.querySelector('.SetParentDrawer')) return;
+  if (loggingQuerySelector('.SetParentDrawer')) return;
   const [taskPaneTypeString, taskPaneBody] = getTaskPaneTypeAndElement('-body', true) || getTaskPaneTypeAndElement('Spreadsheet-body');
-  if (notFound(taskPaneBody)) return;
+  if (!taskPaneBody) return;
   const setParentDrawer = document.createElement('DIV');
   setParentDrawer.setAttribute('class', 'Drawer SetParentDrawer');
   setParentDrawer.innerHTML = '<a class="CloseButton Drawer-closeButton" id="SetParentDrawerCloseButton"><svg class="Icon XIcon CloseButton-xIcon" focusable="false" viewBox="0 0 32 32"><path d="M18.1,16l8.9-8.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L16,13.9L7.1,4.9c-0.6-0.6-1.5-0.6-2.1,0c-0.6,0.6-0.6,1.5,0,2.1l8.9,8.9l-8.9,8.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4l8.9-8.9l8.9,8.9c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L18.1,16z"></path></svg></a>' +
   `<div class="switch-view SetParentSwitchView"><p>${locStrings['drawerLabel-setParent']}</p><p>${locStrings['drawerSwitch-setParent-var-button'].replace('{button}', '&nbsp;<span class="SwitchPresentation SwitchPresentation--small"><input id="InputSetParentSwitch" class="Switch-checkbox" type="checkbox"><label class="Switch-label"></label></span>&nbsp;')}</p></div><input autocomplete="off" class="textInput textInput--medium SetParentDrawer-typeaheadInput" placeholder="${locStrings['drawerPlaceholder-setParent']}" type="text" role="combobox" value=""><noscript></noscript></div>`;
 
   taskPaneBody.insertBefore(setParentDrawer, taskPaneBody.firstElementChild);
-  // const singleTaskPaneTopmostElement = document.querySelector('.SingleTaskPaneBanners') || document.querySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
+  // const singleTaskPaneTopmostElement = loggingQuerySelector('.SingleTaskPaneBanners') || loggingQuerySelector(`.${taskPaneTypeString}TaskPaneToolbar`);
   // taskPaneBody.insertBefore(setParentDrawer, singleTaskPaneTopmostElement.nextSibling);
 
-  document.querySelector('#SetParentDrawerCloseButton').addEventListener('click', function() {
+  loggingQuerySelector('#SetParentDrawerCloseButton').addEventListener('click', function() {
     closeSetParentDrawer();
   });
-  document.querySelector('#InputSetParentSwitch').parentNode.addEventListener('click', function() {
+  loggingQuerySelector('#InputSetParentSwitch').parentNode.addEventListener('click', function() {
     toggleSetParentSwitch(this.firstElementChild);
   });
 
-  const setParentDrawerTypeaheadInput = document.querySelector('.SetParentDrawer-typeaheadInput');
+  const setParentDrawerTypeaheadInput = loggingQuerySelector('.SetParentDrawer-typeaheadInput');
   setParentDrawerTypeaheadInput.focus();
 
   const taskGid = findTaskGid(window.location.href);
@@ -574,8 +574,8 @@ const displaySetParentDrawer = function() {
     if (taskPaneTypeString === 'Single') {
       taskGidList = [taskGid];
     } else {
-      const taskRowHighlightedOrFocused = Array.from(document.querySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
-      const spreadsheetRowsHighlighted = Array.from(document.querySelectorAll('.SpreadsheetRow--highlighted'));
+      const taskRowHighlightedOrFocused = Array.from(loggingQuerySelectorAll('.TaskRow--highlighted, .TaskRow--focused'));
+      const spreadsheetRowsHighlighted = Array.from(loggingQuerySelectorAll('.SpreadsheetRow--highlighted'));
       taskGidList = (taskRowHighlightedOrFocused.length ? taskRowHighlightedOrFocused : spreadsheetRowsHighlighted).map(divTaskRow => /_(\d+)$/.exec((taskRowHighlightedOrFocused.length ? divTaskRow.children[1].children[1] : divTaskRow.firstElementChild.firstElementChild.children[3]).children[1].id)[1]);
     }
     ['click', 'focus', 'input'].forEach(function(e) {
@@ -591,8 +591,8 @@ const displaySetParentDrawer = function() {
 };
 
 const displaySuccessToast = function(task, messageVarTask, functionToRunCallbackAtLast) {
-  const toastManager = document.querySelector('.ToastManager');
-  if (notFound(toastManager)) return;
+  const toastManager = loggingQuerySelector('.ToastManager');
+  if (!toastManager) return;
   const toastDiv = document.createElement('DIV');
   toastDiv.innerHTML = '<div class="ToastManager-toast"><div class="ToastContainer SuccessToast"><div class="ToastNotificationContent"><div class="ToastNotificationContent-firstRow"><div class="ToastNotificationContent-text"><span>' +
   messageVarTask.replace('{task}', `<a class="NavigationLink ToastNotification-link" href="https://app.asana.com/0/0/${task.gid}">${(task.completed) ? '✓ ' : ''}${escapeHtml(task.name)}</a> `) +
@@ -707,16 +707,16 @@ const getPlatformAndSetPlatStrings = function() {
 };
 
 const getTaskPaneTypeAndElement = function(subsequentClassName, returnBoolean) {
-  const singleTaskPaneElement = document.querySelector('.SingleTaskPane' + subsequentClassName);
+  const singleTaskPaneElement = loggingQuerySelector('.SingleTaskPane' + subsequentClassName);
   if (singleTaskPaneElement) return ['Single', singleTaskPaneElement];
-  const multiTaskPaneElement = document.querySelector('.MultiTaskPane' + subsequentClassName);
+  const multiTaskPaneElement = loggingQuerySelector('.MultiTaskPane' + subsequentClassName);
   if (multiTaskPaneElement) return ['Multi', multiTaskPaneElement];
   return returnBoolean? false: ['', undefined];
 };
 
 const getUserReplaceTextList = function() {
-  const userTextToReplaceDialogTable = document.querySelector('#UserTextToReplaceDialogTable');
-  if (notFound(userTextToReplaceDialogTable)) return;
+  const userTextToReplaceDialogTable = loggingQuerySelector('#UserTextToReplaceDialogTable');
+  if (!userTextToReplaceDialogTable) return;
   const userTextToReplaceDialogTr = userTextToReplaceDialogTable.firstElementChild.children;
   const userReplaceTextList = [];
   for (let i = 1; i < userTextToReplaceDialogTr.length; i++) {
@@ -728,12 +728,12 @@ const getUserReplaceTextList = function() {
 };
 
 const listenToClickOnAddAttachmentsButton = function() {
-  const addAttachmentsButton = document.querySelector('.AddAttachmentsButton');
-  if (notFound(addAttachmentsButton)) return;
+  const addAttachmentsButton = loggingQuerySelector('.AddAttachmentsButton');
+  if (!addAttachmentsButton) return;
   addAttachmentsButton.addEventListener('click', function() {
     setTimeout(function() {
-      const addAttachmentsMenuItem = document.querySelector('.AddAttachmentsMenuItem');
-      if (notFound(addAttachmentsMenuItem)) return;
+      const addAttachmentsMenuItem = loggingQuerySelector('.AddAttachmentsMenuItem');
+      if (!addAttachmentsMenuItem) return;
       const listAddAttachmentButtons = addAttachmentsMenuItem.parentNode.children;
       for (let i = 1; i < listAddAttachmentButtons.length; i++) {
         if (listAddAttachmentButtons[i].classList.contains('MenuItemLabel-shortcut')) continue;
@@ -745,7 +745,7 @@ const listenToClickOnAddAttachmentsButton = function() {
 };
 
 const listenToClickOnInboxSavePrevious = function() {
-  const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+  const sidebarInboxLink = loggingQuerySelector('.SidebarTopNavLinks-notificationsButton');
   if (sidebarInboxLink) {
     sidebarInboxLink.addEventListener('click', function() {
       document.anPreviousUrl = window.location.href;
@@ -757,7 +757,7 @@ const listenToClickOnInboxSavePrevious = function() {
 };
 
 const listenToClickToCloseSetParentDropdown = function(event) {
-  const setParentDrawer = document.querySelector('.SetParentDrawer');
+  const setParentDrawer = loggingQuerySelector('.SetParentDrawer');
   if (setParentDrawer) {
     if (!setParentDrawer.contains(event.target)) {
       deleteSetParentTypeaheadDropdown();
@@ -766,8 +766,8 @@ const listenToClickToCloseSetParentDropdown = function(event) {
 };
 
 const listenToClickToCloseSiblingSubtasksDropdown = function(event) {
-  const siblingButtons = document.querySelector('#SiblingButtons');
-  const siblingDropdown = document.querySelector('#SiblingSubtasksDropdownContainer');
+  const siblingButtons = loggingQuerySelector('#SiblingButtons');
+  const siblingDropdown = loggingQuerySelector('#SiblingSubtasksDropdownContainer');
   if (siblingDropdown) {
     if (!siblingButtons || !siblingButtons.contains(event.target) && !siblingDropdown.contains(event.target)) {
         deleteSiblingSubtasksDropdown();
@@ -776,17 +776,17 @@ const listenToClickToCloseSiblingSubtasksDropdown = function(event) {
 };
 
 const listenToSearchBarExpansion = function() {
-  const targetNode = document.querySelector('#topbar_search_input');
-  if (notFound(targetNode)) return;
+  const searchInput = loggingQuerySelector('.TopbarSearchTypeahead-searchInput');
+  if (!searchInput) return;
   const observerConfig = {attributes: true, childList: false, subtree: false};
   const mutationObserver = new MutationObserver(function(mutationsList, observer) {
     mutationsList.forEach(function(mutation) {
-      if (targetNode.getAttribute('value').trim()) return; // Keep dropdown item when the input field only contains spaces
-      if ((mutation.attributeName == 'aria-expanded' && targetNode.getAttribute('aria-expanded') == 'true') || mutation.attributeName == 'value') addSearchDropdownShortcut();
+      if (searchInput.getAttribute('value').trim()) return; // Keep dropdown item when the input field only contains spaces
+      if ((mutation.attributeName == 'aria-expanded' && searchInput.getAttribute('aria-expanded') == 'true') || mutation.attributeName == 'value') addSearchDropdownShortcut();
     });
   });
-  mutationObserver.observe(targetNode, observerConfig);
-  targetNode.addEventListener('input', deleteInContextSearchDropdownItem);
+  mutationObserver.observe(searchInput, observerConfig);
+  searchInput.addEventListener('input', deleteInContextSearchDropdownItem);
 };
 
 const loadUserReplaceTextList = function() {
@@ -797,7 +797,8 @@ const loadUserReplaceTextList = function() {
   });
 };
 
-const notFound = function(element) {
+const loggingQuerySelector = function(selector) {
+  const element = document.querySelector(selector);
   if (!element) {
     const getOptionDebug = new Promise(resolve => {
       chrome.storage.sync.get({anOptionsDebug: false}, function(items) {
@@ -808,7 +809,22 @@ const notFound = function(element) {
       if (value) console.trace(element);
     });
   }
-  return !element;
+  return element;
+};
+
+const loggingQuerySelectorAll = function(selector) {
+  const element = document.querySelectorAll(selector);
+  if (!element.length) {
+    const getOptionDebug = new Promise(resolve => {
+      chrome.storage.sync.get({anOptionsDebug: false}, function(items) {
+        resolve(items.anOptionsDebug);
+      });
+    });
+    getOptionDebug.then(value => {
+      if (value) console.trace(element);
+    });
+  }
+  return element;
 };
 
 const openPageWithoutRefresh = function(newUrl) {
@@ -821,7 +837,7 @@ const openPageWithoutRefresh = function(newUrl) {
 
 const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, potentialTask) {
   callAsanaApi('GET', `workspaces/${workspaceGid}/typeahead`, {type: 'task',query: queryValue, opt_fields: 'completed,is_rendered_as_separator,name,parent.name,projects.name,subtasks'}, {}, function(response) {
-    const typeaheadScrollableContents = document.querySelector('.TypeaheadScrollable-contents');
+    const typeaheadScrollableContents = loggingQuerySelector('.TypeaheadScrollable-contents');
     while (typeaheadScrollableContents && typeaheadScrollableContents.lastElementChild) {
       typeaheadScrollableContents.lastElementChild.remove();
     }
@@ -838,7 +854,7 @@ const populateFromTypeahead = function(taskGidList, workspaceGid, queryValue, po
       dropdownItem.addEventListener('mouseout', function() {this.firstElementChild.firstElementChild.classList.remove('TypeaheadItemStructure--highlighted');});
       dropdownItem.addEventListener('click', function() {
         const setParentData = {parent: response.data[i].gid};
-        if (document.querySelector('#InputSetParentSwitch').hasAttribute('checked')) {
+        if (loggingQuerySelector('#InputSetParentSwitch').hasAttribute('checked')) {
           setParentData.insert_before = null;
         } else {
           setParentData.insert_after = null;
@@ -895,7 +911,7 @@ const replaceDescriptionUserText = function() {
     try {
       userReplaceTextList[i][0] = new RegExp(escapeHtml(userReplaceTextList[i][0]).replace('(?&lt;', '(?<'), 'gm');
     } catch (error) {
-      const userTextToReplaceDialogTr = document.querySelector('#UserTextToReplaceDialogTable').firstElementChild.children;
+      const userTextToReplaceDialogTr = loggingQuerySelector('#UserTextToReplaceDialogTable').firstElementChild.children;
       let counter = 0;
       for (let row = 1; row < userTextToReplaceDialogTr.length; row++) {
         const userTextToReplaceInput = userTextToReplaceDialogTr[row].firstElementChild.firstElementChild;
@@ -915,7 +931,7 @@ const replaceDescriptionUserText = function() {
   if (userReplaceTextList.length) {
     replaceDescription(userReplaceTextList);
   } else {
-    const replaceDescriptionDialogUserButton = document.querySelector('#ReplaceDescriptionDialogUserButton');
+    const replaceDescriptionDialogUserButton = loggingQuerySelector('#ReplaceDescriptionDialogUserButton');
     replaceDescriptionDialogUserButton.classList.add('is-disabled');
     setTimeout(function() {
       replaceDescriptionDialogUserButton.classList.remove('is-disabled');
@@ -990,7 +1006,7 @@ const returnTypeAheadInnerHTML = function(task) {
 
 const saveOriginalParents = function(taskGidList) {
   document.anOriginalParents = {};
-  const taskAncestryTaskLinks = document.querySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
+  const taskAncestryTaskLinks = loggingQuerySelectorAll('.NavigationLink.TaskAncestry-ancestorLink');
   const taskGid = findTaskGid(window.location.href);
   if (taskGidList.length >= 2) {
     for (let i = 0; i < taskGidList.length; i++) {
@@ -1027,7 +1043,7 @@ const saveUserReplaceTextList = function() {
     anOptionsPairs: userReplaceTextList
   }, function() {
     document.loadedUserReplaceTextList = userReplaceTextList;
-    const saveTextLink = document.querySelector('#SaveUserReplaceTextListLink');
+    const saveTextLink = loggingQuerySelector('#SaveUserReplaceTextListLink');
     const savedText = '✓ ';
     saveTextLink.textContent = savedText + saveTextLink.textContent;
     setTimeout(function() {
@@ -1114,7 +1130,7 @@ document.addEventListener('keydown', function(event) {
       if (!document.tabKeyIsDown) break;
       chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
         if (items.anOptionsAttachment) {
-          const singleTaskPaneExtraActionsButton = document.querySelector('.SingleTaskPaneExtraActionsButton');
+          const singleTaskPaneExtraActionsButton = loggingQuerySelector('.SingleTaskPaneExtraActionsButton');
           if (singleTaskPaneExtraActionsButton) {
             singleTaskPaneExtraActionsButton.click();
             singleTaskPaneExtraActionsButton.focus();
@@ -1125,23 +1141,23 @@ document.addEventListener('keydown', function(event) {
     }
     case 'ArrowDown':
       if (document.tabKeyIsDown && event.shiftKey) {
-        const arrowNextSubtask = document.querySelector('#ArrowNextSubtask');
+        const arrowNextSubtask = loggingQuerySelector('#ArrowNextSubtask');
         if (arrowNextSubtask) {
           arrowNextSubtask.click();
-        } else if (!document.querySelector('#SiblingButtons')) {
+        } else if (!loggingQuerySelector('#SiblingButtons')) {
           displayLinksToSiblingSubtasks('#ArrowNextSubtask');
         }
       }
       break;
     case 'ArrowRight':
       if (document.tabKeyIsDown && event.shiftKey) {
-        if (document.querySelector('#SiblingSubtasksDropdownContainer')) {
+        if (loggingQuerySelector('#SiblingSubtasksDropdownContainer')) {
           deleteSiblingSubtasksDropdown();
         } else {
-          const arrowMiddleSubtask = document.querySelector('#ArrowMiddleSubtask');
+          const arrowMiddleSubtask = loggingQuerySelector('#ArrowMiddleSubtask');
           if (arrowMiddleSubtask) {
             arrowMiddleSubtask.click();
-          } else if (!document.querySelector('#SiblingButtons')) {
+          } else if (!loggingQuerySelector('#SiblingButtons')) {
             displayLinksToSiblingSubtasks('#ArrowMiddleSubtask');
           }
         }
@@ -1149,10 +1165,10 @@ document.addEventListener('keydown', function(event) {
       break;
     case 'ArrowUp':
       if (document.tabKeyIsDown && event.shiftKey) {
-        const arrowPreviousSubtask = document.querySelector('#ArrowPreviousSubtask');
+        const arrowPreviousSubtask = loggingQuerySelector('#ArrowPreviousSubtask');
         if (arrowPreviousSubtask) {
           arrowPreviousSubtask.click();
-        } else if (!document.querySelector('#SiblingButtons')) {
+        } else if (!loggingQuerySelector('#SiblingButtons')) {
           displayLinksToSiblingSubtasks('#ArrowPreviousSubtask');
         }
       }
@@ -1162,36 +1178,36 @@ document.addEventListener('keydown', function(event) {
       if (document.tabKeyIsDown || document.tabKeyIsDownOnModal) {
         chrome.storage.sync.get({anOptionsDescription: true}, function(items) {
           if (items.anOptionsDescription) {
-            if (document.querySelector('#ReplaceDescriptionDialogView')) {
+            if (loggingQuerySelector('#ReplaceDescriptionDialogView')) {
               closeReplaceDescriptionDialog();
             } else {
-              if (document.querySelector('.SingleTaskPane') || document.querySelector('.SingleTaskPaneSpreadsheet')) displayReplaceDescriptionDialog();
+              if (loggingQuerySelector('.SingleTaskPane') || loggingQuerySelector('.SingleTaskPaneSpreadsheet')) displayReplaceDescriptionDialog();
             }
           }
         });
       }
       break;
     case 'Escape':
-      if (document.querySelector('#SiblingSubtasksDropdownContainer')) deleteSiblingSubtasksDropdown();
+      if (loggingQuerySelector('#SiblingSubtasksDropdownContainer')) deleteSiblingSubtasksDropdown();
       break;
     case 'I':
     case 'i': {
       if (!document.tabKeyIsDown) break;
-      const sidebarInboxLink = document.querySelector('.SidebarTopNavLinks-notificationsButton');
+      const sidebarInboxLink = loggingQuerySelector('.SidebarTopNavLinks-notificationsButton');
       sidebarInboxLink.click();
       break;
     }
     case 'J':
     case 'j': {
       if (!document.tabKeyIsDown) break;
-      const backLinkFromInbox = document.querySelector('.InboxButton-backLink');
+      const backLinkFromInbox = loggingQuerySelector('.InboxButton-backLink');
       if (backLinkFromInbox) backLinkFromInbox.click();
       break;
     }
     case 'G':
     case 'g':
       if (!document.tabKeyIsDown) break;
-      if (document.querySelector('.SetParentDrawer')) {
+      if (loggingQuerySelector('.SetParentDrawer')) {
         closeSetParentDrawer();
       } else {
         chrome.storage.sync.get({anOptionsParent: true}, function(items) {
@@ -1204,7 +1220,7 @@ document.addEventListener('keydown', function(event) {
       if (!document.tabKeyIsDown) break;
       chrome.storage.sync.get({anOptionsAttachment: true}, function(items) {
         if (items.anOptionsAttachment) {
-          const addAttachmentButton = document.querySelector('.AddAttachmentsButton');
+          const addAttachmentButton = loggingQuerySelector('.AddAttachmentsButton');
           if (addAttachmentButton) addAttachmentButton.children[1].click(); // span > div
         }
       });
