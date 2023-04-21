@@ -61,3 +61,13 @@ chrome.tabs.onUpdated.addListener(
     }
   }
 );
+
+chrome.commands.onCommand.addListener((command) => {
+    if (command === 'displaySubtasksDropdown' || command === 'replaceTextInDescription') {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.tabs.sendMessage(tabs[0].id, { command: command });
+        }
+      );
+    }
+  }
+);

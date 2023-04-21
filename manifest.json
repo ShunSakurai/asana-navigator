@@ -3,10 +3,26 @@
   "background": {
     "service_worker": "background.js"
   },
+  "commands": {
+    "displaySubtasksDropdown": {
+       "description": "Open links to sibling subtasks",
+       "suggested_key": {
+        "default": "Ctrl+Shift+Right",
+        "mac": "MacCtrl+Shift+Right"
+      }
+    },
+    "replaceTextInDescription": {
+       "description": "Replace text in task description",
+       "suggested_key": {
+        "default": "Ctrl+Shift+R",
+        "mac": "MacCtrl+Shift+R"
+      }
+    }
+  },
   "content_scripts": [
     {
       "css": ["main.css"],
-      "js": ["content_script.js", "ui_platform.js", "ui_translation.js"],
+      "js": ["content_script.js", "ui_translation.js"],
       "matches": ["https://app.asana.com/*"],
       "run_at": "document_end"
     }
@@ -31,5 +47,5 @@
     "storage", "tabs"
   ],
   "short_name": "AsaNavigator",
-  "version": "3.0.2"
+  "version": "3.1.0"
 }

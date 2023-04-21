@@ -18,28 +18,12 @@
     transform: translateX(-50%) translateY(-50%) !important;
 }
 
-.InboxButton-backLink {
-    color: #848f99;
-}
-
-.InboxButton-backLink.disabled {
-    cursor: not-allowed;
-}
-
 .IsInvalid {
     border-color: #ff5263 !important;
 }
 
-.MenuItemLabel-shortcut {
-    justify-content: space-between;
-}
-
 .NoBorderBottom {
     border-bottom: none !important;
-}
-
-.ProjectLinkLabel {
-    margin-right: 5px !important;
 }
 
 .ReplaceDescriptionInput {
@@ -61,21 +45,6 @@
 
 .ReplaceDescriptionTable {
     width: 100%;
-}
-
-.SetParentDrawer-typeaheadInput {
-    margin-top: 10px;
-    width: 100%;
-}
-
-.SetParentSwitchView {
-    display: block !important;
-}
-
-/* #7ac8ee comes from the average of two background colors #14aaf5 and #e0e6e8, used in Asana's My Profile Settings */
-.SetParentSwitchView .switch.checked {
-    background-color: #7ac8ee !important;
-    border-color: #7ac8ee !important;
 }
 
 .SiblingSubtasksDropdownContainer {

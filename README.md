@@ -4,44 +4,17 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 
 ## Feature list as well as to-do list
 
-### Prep:
-- [x] Register as a Chrome developer
-- [x] Create GitHub project
-- [x] Set up Chrome extension's content script structure
-- [x] Write base XMLHttpRequest function → fetch()
-- [x] Create the icon
-- [x] Publish on Chrome Web Store after implementing MVP features
-- [x] Publish as a Firefox Browser Add-on
-
-#### Putting projects on top:
-- [x] ~~[Show projects on top](https://forum.asana.com/t/ui-change-project-tabs-buttons-in-tasks-pushed-down/20394/208)~~
-- [x] Happily drop this feature because of [the improved task pane layout](https://forum.asana.com/t/we-re-updating-our-task-pane/70641)
-
 #### Going to sibling subtasks:
 - [x] Show arrows to go to previous/next sibling subtasks
-- [x] Show drop-down list to go to sibling subtasks (Shift+Tab+→)
-- [x] Update only the right pane when navigating subtasks
+- [x] Show drop-down list to go to sibling subtasks
 
 #### Setting new parent tasks:
-- [x] [Set new parent task from the toolbar](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/7)
-- [x] Search for task ID when the input is an integer
-- [x] Show information such as projects and completed/incomplete
-- [x] ~~Convert multiple tasks to subtasks~~　Not working
+- [x] ~~[Set new parent task from the toolbar](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/7)~~
+- [x] ~~Convert multiple tasks to subtasks~~
 
 #### Replacing text:
-- [x] Remove duplicate links and replace HTML entities in the task description (Tab+E)
-- [x] [Replace text in the task description (Tab+E)](https://forum.asana.com/t/34586/6)
-
-#### Convecting task to section and vice versa:
-- [x] ~~[Convert task to section and vice versa (Tab+: or Shift+Tab+:)](https://forum.asana.com/t/tab-n-our-new-shortcut-to-create-sections/38525/207)~~ Not fully working
-- [x] ~~Support task/section conversion in the new list/board switchable projects -- [Watch it in action](https://youtu.be/BJz_p7d-WAE)~~ Not fully working
-
-#### Keyboard shortcuts:
-- [x] Implement keyboard shortcuts to go to sibling subtasks (Shift+Tab+↑/↓)
-- [x] [Implement keyboard shortcut to set new parent task (Tab+G)](https://forum.asana.com/t/convert-task-to-sub-task-and-vice-versa/12072/10)
-- [x] Show additional keyboard shortcuts in the list (Cmd/Ctrl+/)
-- [x] Add keyboard shortcuts to attach files (Tab+V and Tab+1/2/3/4/5)
-- [x] Add a keyboard shortcut to open more actions (Tab+.)
+- [x] Remove duplicate links and replace HTML entities in the task description
+- [x] [Replace text in the task description](https://forum.asana.com/t/34586/6)
 
 #### More seamless UI:
 - [x] Display undo toast on bottom left
@@ -49,11 +22,8 @@ Unofficial [Google Chrome](https://chrome.google.com/webstore/detail/asana-navig
 
 #### Others:
 - [x] Write an options page to enable/disable each feature
-- [x] Implement donation button
-- [x] [Search tasks in a context-aware way, from my tasks, inbox, current open project~~, tag, user, or team~~ or user in the workspace (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)
-- [x] [Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/34586/10)
-- [ ] Display preview of @mentioned tasks
-- [ ] Display subtasks in calendar and/or timeline
+- [x] ~~[Search tasks in a context-aware way, from my tasks, inbox, current open project, or user in the workspace (Advanced search)](https://forum.asana.com/t/when-searching-from-within-a-project-only-show-results-from-within-that-project/45638/5)~~
+- [x] ~~[Move back from inbox to where the user has left off (Tab+J)](https://forum.asana.com/t/34586/10)~~
 
 ## Usage
 
@@ -72,15 +42,10 @@ Common:
 - Please reload the Asana task page if this extension doesn't work well, especially after it was updated to a new version
 - In incognito mode, features that interact with Asana API don't work
 
-## Special thanks
-
-I was highly inspired and motivated by Amit's [AsanaNG](https://github.com/amitg87/asana-chrome-plugin) project. That extension is very nicely made. I learned a lot from him and his code.
-
-### Motivation and design decisions
+## Motivation and design decisions
 
 - I love Asana and use it every day to manage everything from personal to work stuff. It’s already great but I’m an efficiency-oriented person so I wanted to make it a little quicker. I hope some day Asana will implement those features on their own.
-- Amit's extension is for working with Asana regardless of what webpage you are on. My extension is focused on working in Asana task webpages, using content scripts and DOM methods.
-- By doing so, I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
+- My extension is focused on working in Asana task webpages, using content scripts and DOM methods. I can implement features seamlessly using the same classes/CSS used by Asana. This involves a lot of "Inspect" actions on Asana task pages.
 - I'd like to make all tools I create be customizable to each user's preference. Therefore, I created an options page where users can switch features on/off.
 
 ## Privacy policy and terms of use
@@ -104,7 +69,7 @@ Please feel free to post feature requests, bug reports, and questions through th
 ### Localization style guide:
 - Follow the style in localized UI in Asana as much as possible
 - EN: Capitalize UI elements in the menu lists and the keyboard shortcut list, e.g. "Mark as **M**ilestone" and "Jump to **I**nbox."
-- JP: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use full-width characters for "?" and "!" in UI translation, use half-width characters for other symbols and occasions
+- JA: Insert space between half-width character and full-width character. Don't insert space between Katakana compounds. Use full-width characters for "?" and "!" in UI translation, use half-width characters for other symbols and occasions
 
 ## License
 
